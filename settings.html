@@ -1,0 +1,68 @@
+<div id="marvel-nexus-settings" class="marvel-nexus-settings">
+  <div class="inline-drawer">
+    <div class="inline-drawer-toggle inline-drawer-header interactable" tabindex="0" role="button" aria-expanded="false">
+      <b><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i> Marvel Nexus</b>
+      <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down" aria-hidden="true"></div>
+    </div>
+    <div class="inline-drawer-content">
+      <p data-mn-i18n="settingsIntro">A persistent Marvel role-play interface linked to the active chat.</p>
+      <label class="checkbox_label" for="marvel-nexus-enabled">
+        <input id="marvel-nexus-enabled" type="checkbox">
+        <span data-mn-i18n="enabled">Enable Marvel Nexus</span>
+      </label>
+      <label class="checkbox_label" for="marvel-nexus-show-launcher">
+        <input id="marvel-nexus-show-launcher" type="checkbox">
+        <span data-mn-i18n="showLauncher">Show the launcher in the wand menu</span>
+      </label>
+      <label class="checkbox_label" for="marvel-nexus-ai-sync">
+        <input id="marvel-nexus-ai-sync" type="checkbox">
+        <span data-mn-i18n="aiSync">Update from normal role-play replies</span>
+      </label>
+      <label class="checkbox_label" for="marvel-nexus-inject-state">
+        <input id="marvel-nexus-inject-state" type="checkbox">
+        <span data-mn-i18n="injectState">Include the current Nexus state in prompts</span>
+      </label>
+
+      <div class="mn-settings-grid">
+        <label for="marvel-nexus-language">
+          <span data-mn-i18n="language">Language / ภาษา</span>
+          <select id="marvel-nexus-language">
+            <option value="auto">Auto</option>
+            <option value="en">English</option>
+            <option value="th">ไทย</option>
+          </select>
+        </label>
+        <label for="marvel-nexus-motion">
+          <span data-mn-i18n="motion">Interface motion</span>
+          <select id="marvel-nexus-motion">
+            <option value="full" data-mn-i18n="motionFull">Full</option>
+            <option value="reduced" data-mn-i18n="motionReduced">Reduced</option>
+            <option value="off" data-mn-i18n="motionOff">Off</option>
+          </select>
+        </label>
+        <label for="marvel-nexus-density">
+          <span data-mn-i18n="density">Mobile density</span>
+          <select id="marvel-nexus-density">
+            <option value="compact" data-mn-i18n="compact">Compact</option>
+            <option value="comfortable" data-mn-i18n="comfortable">Comfortable</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mn-settings-note">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        <span data-mn-i18n="syncExplanation">Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.</span>
+      </div>
+      <div class="mn-settings-actions">
+        <button id="marvel-nexus-open-settings" class="menu_button">
+          <i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i>
+          <span data-mn-i18n="openNexus">Open Marvel Nexus</span>
+        </button>
+        <button id="marvel-nexus-reset-chat" class="menu_button">
+          <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+          <span data-mn-i18n="resetChat">Reset this chat's Nexus state</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

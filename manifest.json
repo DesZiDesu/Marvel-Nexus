@@ -1,0 +1,13 @@
+{
+  "display_name": "Marvel Nexus",
+  "loading_order": 11,
+  "requires": [],
+  "optional": [],
+  "dependencies": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "DesZiDesu",
+  "version": "1.0.0",
+  "homePage": "https://github.com/DesZiDesu/Marvel-Nexus",
+  "auto_update": true
+}
