@@ -5,6 +5,14 @@ Marvel Nexus is a mobile-first SillyTavern extension that turns the active Marve
 ## Features
 
 - Fullscreen Status, Intel, Missions, World, and Archive tabs
+- Secret-identity exposure, secrecy status, and identity-witness tracking
+- Per-contact knowledge boundaries with Unknown, Suspected, and Confirmed states
+- Faction reputation, hostility, awareness, influence, and stance intelligence
+- Investigation Board for discovered facts, theories, contradictions, confidence, and record links
+- Mission deadlines, threat levels, linked people/places/factions, consequences, and hidden objectives
+- Travel state, destination, ETA, nearby contacts, and location history
+- Timeline ledger with Earth-aware events and continuity-conflict alerts
+- Multiverse anomaly, variant, and incursion-risk monitoring
 - Wand-menu launcher and an Extensions settings drawer
 - Responsive iPhone safe-area layout and desktop split views
 - English, Thai, and automatic language selection
@@ -34,7 +42,9 @@ Time-advance requests are only queued. They are included with the next user mess
 
 ## Character Life integration
 
-When [Character Life](https://github.com/DesZiDesu/character-life) is installed, the Intel tab reads its public RPG bridge. Known Contacts are matched to Character Life NPCs by name or alias, and their active portrait is displayed automatically. Character Life-only NPCs also appear in the contact list. Marvel Nexus keeps its own trust, suspicion, respect, fear, and knowledge-boundary values in the current chat and never overwrites Character Life data.
+When [Character Life](https://github.com/DesZiDesu/character-life) is installed, the Intel tab reads its public RPG bridge. Known Contacts are matched to Character Life NPCs by name or alias, and their active portrait is displayed automatically. Character Life-only NPCs also appear in the contact list. The contact detail shows the active form, life status, relationship, and location, and can open the Character Life dossier directly.
+
+Character Life remains read-only from Marvel Nexus. Marvel Nexus keeps its own trust, suspicion, respect, fear, and knowledge-boundary values in the current chat and never overwrites Character Life data.
 
 The integration is optional. Initials remain as the avatar fallback when Character Life or a portrait is unavailable.
 
@@ -49,4 +59,4 @@ The integration is optional. Initials remain as the avatar fallback when Charact
 
 ## Privacy and scope
 
-All state is local to the active SillyTavern chat. The extension does not contact a separate API and does not send a second AI request.
+All state is local to the active SillyTavern chat. The extension does not contact a separate API and does not send a second AI request. Every enabled system is evaluated through the normal role-play reply and merged through the same validated hidden patch.
