@@ -53,6 +53,10 @@ let previousFocused = null;
 let pendingSave = Promise.resolve();
 let selectedContact = '';
 let selectedArchive = '';
+let activeTabIndex = 0;
+let contactRenderToken = 0;
+const contactPortraitCache = new Map();
+const modalCloseTimers = new WeakMap();
 
 const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 const text = (value, fallback = '', max = 240) => typeof value === 'string' ? value.trim().slice(0, max) : fallback;
@@ -261,7 +265,7 @@ function interfaceMarkup() {
     </header>
     <main class="mn-content">
       <section id="mn-page-status" class="mn-page is-active" data-page="status">
-        <div class="mn-page-title"><div><small data-t="operator"></small><h2 id="mn-operator-name"></h2></div><span id="mn-earth" class="mn-code"></span></div>
+        <div class="mn-status-top"><span id="mn-earth" class="mn-code"></span></div>
         <article class="mn-panel mn-identity">
           <div class="mn-panel-head"><h3 data-t="identity"></h3><button id="mn-edit-profile" class="mn-text-button" type="button" data-t="edit"></button></div>
           <div class="mn-identity-grid" id="mn-identity-grid"></div>
@@ -300,23 +304,55 @@ function buildInterface() {
   overlay.querySelector('#mn-edit-profile').addEventListener('click', () => openProfile());
   overlay.querySelector('#mn-universe-button').addEventListener('click', () => openUniverse());
   overlay.querySelector('#mn-advance-time').addEventListener('click', () => openModal('mn-time-modal'));
-  overlay.querySelectorAll('[data-modal-close]').forEach(button => button.addEventListener('click', () => button.closest('.mn-modal').hidden = true));
-  overlay.querySelectorAll('.mn-modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) modal.hidden = true; }));
+  overlay.querySelectorAll('[data-modal-close]').forEach(button => button.addEventListener('click', () => closeModal(button.closest('.mn-modal'))));
+  overlay.querySelectorAll('.mn-modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModal(modal); }));
   overlay.querySelector('#mn-profile-form').addEventListener('submit', saveProfile);
   overlay.querySelector('#mn-universe-form').addEventListener('submit', saveUniverse);
   overlay.querySelector('#mn-time-form').addEventListener('submit', queueTime);
   applyAppearance();
 }
 
-function openModal(id) { const modal = document.getElementById(id); if (modal) modal.hidden = false; }
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  window.clearTimeout(modalCloseTimers.get(modal));
+  modal.hidden = false;
+  modal.classList.remove('is-closing');
+  requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+}
+function closeModal(modal) {
+  if (!(modal instanceof HTMLElement) || modal.hidden || modal.classList.contains('is-closing')) return;
+  modal.classList.remove('is-open');
+  modal.classList.add('is-closing');
+  const timer = window.setTimeout(() => {
+    modal.hidden = true;
+    modal.classList.remove('is-closing');
+    modalCloseTimers.delete(modal);
+  }, getSettings().motion === 'off' ? 0 : 280);
+  modalCloseTimers.set(modal, timer);
+}
 function showTab(key) {
-  document.querySelectorAll('#marvel-nexus-overlay [data-tab]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.tab === key)));
-  document.querySelectorAll('#marvel-nexus-overlay .mn-page').forEach(page => { page.hidden = page.dataset.page !== key; page.classList.toggle('is-active', page.dataset.page === key); });
+  const tabs = [...document.querySelectorAll('#marvel-nexus-overlay [data-tab]')];
+  const nextIndex = Math.max(0, tabs.findIndex(button => button.dataset.tab === key));
+  tabs.forEach(button => button.setAttribute('aria-selected', String(button.dataset.tab === key)));
+  document.querySelectorAll('#marvel-nexus-overlay .mn-page').forEach(page => {
+    const active = page.dataset.page === key;
+    page.hidden = !active;
+    page.classList.toggle('is-active', active);
+    if (!active) page.classList.remove('is-entering');
+    else {
+      page.dataset.direction = nextIndex < activeTabIndex ? 'back' : 'forward';
+      page.classList.remove('is-entering');
+      void page.offsetWidth;
+      page.classList.add('is-entering');
+    }
+  });
+  activeTabIndex = nextIndex;
 }
 function openProfile() { const state = getState(); const form = document.getElementById('mn-profile-form'); for (const key of ['name','alias','role','origin','affiliation']) form.elements[key].value = state.operator[key]; openModal('mn-profile-modal'); }
 function openUniverse() { const state = getState(); const form = document.getElementById('mn-universe-form'); for (const key of ['earth','continuity','timeline']) form.elements[key].value = state.operator[key]; openModal('mn-universe-modal'); }
-async function saveProfile(event) { event.preventDefault(); const state = getState(); for (const key of ['name','alias','role','origin','affiliation']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); event.currentTarget.closest('.mn-modal').hidden = true; await persistState(state, 'manual'); }
-async function saveUniverse(event) { event.preventDefault(); const state = getState(); for (const key of ['earth','continuity','timeline']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); event.currentTarget.closest('.mn-modal').hidden = true; await persistState(state, 'manual'); }
+async function saveProfile(event) { event.preventDefault(); const state = getState(); for (const key of ['name','alias','role','origin','affiliation']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
+async function saveUniverse(event) { event.preventDefault(); const state = getState(); for (const key of ['earth','continuity','timeline']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
 async function queueTime(event) {
   event.preventDefault();
   if (!context().getCurrentChatId?.()) { notify('warning', tr('openChat')); return; }
@@ -325,16 +361,107 @@ async function queueTime(event) {
   const multiplier = { minutes: 1, hours: 60, days: 1440 }[unit] || 1;
   const state = getState();
   state.pendingActions.push({ id: uid(), type: 'advance_time', amount, unit, totalMinutes: amount * multiplier, queuedAt: new Date().toISOString() });
-  event.currentTarget.closest('.mn-modal').hidden = true;
+  closeModal(event.currentTarget.closest('.mn-modal'));
   await persistState(state, 'queued-action');
   notify('info', tr('queued'));
 }
 
 function metric(label, value, tone = '') { return `<div class="mn-metric"><div><span>${escapeHtml(label)}</span><b>${number(value, 0, 0, 100)}</b></div><i><em style="width:${number(value, 0, 0, 100)}%;${tone ? `--tone:${tone}` : ''}"></em></i></div>`; }
+
+function characterLifeBridge() {
+  const bridge = globalThis.CharacterLifeRpgBridge;
+  return bridge?.compatibilityVersion >= 3 && typeof bridge.listNpcs === 'function' ? bridge : null;
+}
+function contactIdentity(value) { return text(value, '', 140).toLocaleLowerCase().replace(/\s+/g, ' '); }
+function contactInitials(name) { return text(name, '?', 100).split(/\s+/).slice(0, 2).map(part => part.charAt(0)).join('').toUpperCase().slice(0, 2); }
+function characterLifeMeta(npc) {
+  return [text(npc?.role, '', 80), text(npc?.affiliation, '', 80)].filter(Boolean).join(' · ') || 'Character Life';
+}
+function characterLifeStatus(npc) {
+  if (npc?.isDead || npc?.lifeStatus === 'dead') return 'Deceased';
+  return text(npc?.relationshipToUser || npc?.currentState, 'Known', 80);
+}
+function syncedContacts(state) {
+  const bridge = characterLifeBridge();
+  if (!bridge) return state.contacts;
+  let npcs = [];
+  try { npcs = bridge.listNpcs({ includeDisabled: false, includeDead: true }) || []; }
+  catch (error) { console.warn('[Marvel Nexus] Character Life contact sync was unavailable.', error); return state.contacts; }
+  const identityMap = new Map();
+  for (const npc of npcs) {
+    for (const name of [npc?.name, ...(Array.isArray(npc?.aliases) ? npc.aliases : [])]) {
+      const identity = contactIdentity(name);
+      if (identity && !identityMap.has(identity)) identityMap.set(identity, npc);
+    }
+  }
+  const used = new Set();
+  const contacts = state.contacts.map(contact => {
+    const npc = identityMap.get(contactIdentity(contact.name));
+    if (!npc) return contact;
+    const linkKey = `${npc.scope || 'unknown'}:${npc.id || contactIdentity(npc.name)}`;
+    used.add(linkKey);
+    return {
+      ...contact,
+      meta: contact.meta || characterLifeMeta(npc),
+      status: contact.status && contact.status !== 'Unknown' ? contact.status : characterLifeStatus(npc),
+      __characterLife: { id: npc.id || '', scope: npc.scope || '', name: npc.name || contact.name },
+    };
+  });
+  for (const npc of npcs) {
+    const linkKey = `${npc.scope || 'unknown'}:${npc.id || contactIdentity(npc.name)}`;
+    if (used.has(linkKey) || !text(npc?.name, '', 100)) continue;
+    contacts.push({
+      id: `character-life:${linkKey}`,
+      name: text(npc.name, 'Unknown contact', 100),
+      meta: characterLifeMeta(npc),
+      status: characterLifeStatus(npc),
+      trust: 0, suspicion: 0, respect: 0, fear: 0, knowledge: [],
+      __characterLife: { id: npc.id || '', scope: npc.scope || '', name: npc.name },
+    });
+  }
+  return contacts;
+}
+function clearContactPortraitCache() {
+  contactRenderToken += 1;
+  for (const entry of contactPortraitCache.values()) if (entry.owned && entry.url) URL.revokeObjectURL(entry.url);
+  contactPortraitCache.clear();
+}
+function contactAvatarNode(id) {
+  return [...document.querySelectorAll('#mn-contact-list [data-contact-avatar]')].find(element => element.dataset.contactAvatar === id) || null;
+}
+function applyContactPortrait(id, url) {
+  const avatar = contactAvatarNode(id);
+  if (!avatar || !url) return;
+  const image = document.createElement('img');
+  image.alt = '';
+  image.decoding = 'async';
+  image.src = url;
+  avatar.replaceChildren(image);
+}
+async function hydrateContactPortraits(contacts) {
+  const bridge = characterLifeBridge();
+  if (!bridge?.capabilities?.portraits || typeof bridge.portrait !== 'function') return;
+  const token = ++contactRenderToken;
+  await Promise.all(contacts.map(async contact => {
+    if (!contact.__characterLife) return;
+    const cached = contactPortraitCache.get(contact.id);
+    if (cached?.url) { applyContactPortrait(contact.id, cached.url); return; }
+    try {
+      const portrait = await bridge.portrait({ ...contact.__characterLife, thumbnailSize: 96 });
+      if (token !== contactRenderToken || !portrait) return;
+      let url = text(portrait.url, '', 4000);
+      let owned = false;
+      if (!url && portrait.blob instanceof Blob) { url = URL.createObjectURL(portrait.blob); owned = true; }
+      if (!url) return;
+      contactPortraitCache.set(contact.id, { url, owned, portraitId: text(portrait.portraitId, '', 180) });
+      applyContactPortrait(contact.id, url);
+    } catch (error) { console.warn(`[Marvel Nexus] Could not load Character Life portrait for ${contact.name}.`, error); }
+  }));
+}
+
 function render(state = getState()) {
   const root = document.getElementById('marvel-nexus-overlay'); if (!root) return;
   localize(root);
-  root.querySelector('#mn-operator-name').textContent = state.operator.name;
   root.querySelector('#mn-earth').textContent = state.operator.earth;
   root.querySelector('#mn-condition').textContent = state.operator.condition;
   root.querySelector('#mn-identity-grid').innerHTML = ['alias','role','origin','affiliation','location'].map(key => `<div><span>${escapeHtml(tr(key))}</span><strong>${escapeHtml(state.operator[key])}</strong></div>`).join('');
@@ -346,11 +473,13 @@ function render(state = getState()) {
 
 function renderContacts(state) {
   const root = document.getElementById('marvel-nexus-overlay');
-  if (!state.contacts.some(item => item.id === selectedContact)) selectedContact = state.contacts[0]?.id || '';
-  root.querySelector('#mn-contact-list').innerHTML = state.contacts.length ? state.contacts.map(contact => `<button type="button" data-contact="${escapeHtml(contact.id)}" aria-pressed="${contact.id === selectedContact}"><span>${escapeHtml(contact.name.split(/\s+/).slice(0,2).map(part => part[0]).join('').toUpperCase())}</span><div><strong>${escapeHtml(contact.name)}</strong><small>${escapeHtml(contact.meta)}</small></div><i></i></button>`).join('') : `<p class="mn-empty">${escapeHtml(tr('contacts'))}: —</p>`;
+  const contacts = syncedContacts(state);
+  if (!contacts.some(item => item.id === selectedContact)) selectedContact = contacts[0]?.id || '';
+  root.querySelector('#mn-contact-list').innerHTML = contacts.length ? contacts.map(contact => `<button type="button" data-contact="${escapeHtml(contact.id)}" aria-pressed="${contact.id === selectedContact}"><span class="mn-list-avatar" data-contact-avatar="${escapeHtml(contact.id)}"><b>${escapeHtml(contactInitials(contact.name))}</b></span><div><strong>${escapeHtml(contact.name)}</strong><small>${escapeHtml(contact.meta)}</small></div><i></i></button>`).join('') : `<p class="mn-empty">${escapeHtml(tr('contacts'))}: —</p>`;
   root.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => { selectedContact = button.dataset.contact; renderContacts(state); }));
-  const contact = state.contacts.find(item => item.id === selectedContact);
+  const contact = contacts.find(item => item.id === selectedContact);
   root.querySelector('#mn-contact-detail').innerHTML = contact ? `<div class="mn-panel-head"><div><h3>${escapeHtml(contact.name)}</h3><small>${escapeHtml(contact.meta)}</small></div><span class="mn-badge">${escapeHtml(contact.status)}</span></div><div class="mn-metric-grid">${metric(tr('trust'),contact.trust)}${metric(tr('suspicion'),contact.suspicion,'#d59f53')}${metric(tr('respect'),contact.respect,'#48a8e8')}${metric(tr('fear'),contact.fear,'#9a7de0')}</div><div class="mn-knowledge"><h4>${escapeHtml(tr('knowledge'))}</h4>${contact.knowledge.map(item => `<div><span>${escapeHtml(item.label)}</span><b>${escapeHtml(tr(item.state))}</b></div>`).join('')}</div>` : `<p class="mn-empty">${escapeHtml(tr('contacts'))}: —</p>`;
+  void hydrateContactPortraits(contacts);
 }
 
 function renderMissions(state) {
@@ -390,11 +519,19 @@ function openInterface() {
   buildInterface(); render();
   const overlay = document.getElementById('marvel-nexus-overlay');
   previousFocused = document.activeElement;
+  overlay.classList.remove('is-ready');
   overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden', 'false'); document.body.classList.add('marvel-nexus-open');
-  requestAnimationFrame(() => overlay.classList.add('is-ready'));
+  void overlay.offsetWidth;
+  requestAnimationFrame(() => {
+    overlay.classList.add('is-ready');
+    window.setTimeout(() => {
+      if (overlay.classList.contains('is-open')) showTab(overlay.querySelector('[data-tab][aria-selected="true"]')?.dataset.tab || 'status');
+    }, getSettings().motion === 'full' ? 620 : 0);
+  });
 }
 function closeInterface() {
   const overlay = document.getElementById('marvel-nexus-overlay'); if (!overlay?.classList.contains('is-open')) return;
+  overlay.querySelectorAll('.mn-modal:not([hidden])').forEach(modal => closeModal(modal));
   overlay.classList.remove('is-open','is-ready'); overlay.setAttribute('aria-hidden','true'); document.body.classList.remove('marvel-nexus-open');
   if (previousFocused instanceof HTMLElement) previousFocused.focus({ preventScroll: true });
 }
@@ -429,17 +566,31 @@ async function addSettingsDrawer() {
 
 function bindChatEvents() {
   const { eventSource, eventTypes } = context();
-  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
+  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
   if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
   eventSource.on(eventTypes.MESSAGE_RECEIVED, (messageId,generationType) => processAssistantPatch(messageId,generationType));
+}
+
+function refreshCharacterLifeContacts() {
+  clearContactPortraitCache();
+  renderContacts(getState());
 }
 
 async function initialize() {
   if (initialized) return; initialized = true;
   try {
     getSettings(); buildInterface(); await addSettingsDrawer(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') { document.querySelectorAll('#marvel-nexus-overlay .mn-modal:not([hidden])').forEach(modal => modal.hidden = true); closeInterface(); } });
-    console.info('[Marvel Nexus] Extension v1.0.0 loaded.');
+    globalThis.addEventListener('character-life:rpg-bridge-ready', refreshCharacterLifeContacts);
+    globalThis.addEventListener('character-life:rpg-compatibility-updated', refreshCharacterLifeContacts);
+    globalThis.addEventListener('character-life:portrait-replaced', refreshCharacterLifeContacts);
+    globalThis.addEventListener('character-life:map-markers-updated', refreshCharacterLifeContacts);
+    globalThis.addEventListener('beforeunload', clearContactPortraitCache, { once: true });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
+      if (modal) closeModal(modal); else closeInterface();
+    });
+    console.info('[Marvel Nexus] Extension v1.1.0 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 

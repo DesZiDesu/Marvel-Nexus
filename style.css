@@ -1,3 +1,25 @@
+@font-face {
+  font-family: "Marvel Nexus Tech";
+  src: url("assets/fonts/Oxanium-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Marvel Nexus Thai";
+  src: url("assets/fonts/ChakraPetch-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Marvel Nexus Thai";
+  src: url("assets/fonts/ChakraPetch-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+}
+
 :root {
   --mn-bg: #111116;
   --mn-panel: rgba(23, 22, 30, .88);
@@ -29,10 +51,10 @@ body.marvel-nexus-open { overflow: hidden !important; }
     radial-gradient(circle at 88% 12%, rgba(88, 57, 113, .24), transparent 31%),
     radial-gradient(circle at 15% 82%, rgba(51, 89, 117, .12), transparent 32%),
     var(--mn-bg);
-  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Marvel Nexus Tech", "Marvel Nexus Thai", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   isolation: isolate;
 }
-.mn-overlay.is-open { display: grid; }
+.mn-overlay.is-open { display: grid; animation: mn-shell-boot .7s cubic-bezier(.2,.8,.2,1) both; }
 .mn-overlay::before {
   content: "";
   position: absolute;
@@ -77,12 +99,12 @@ body.marvel-nexus-open { overflow: hidden !important; }
   opacity: 0;
   transform: translateY(-12px);
 }
-.mn-overlay.is-ready .mn-header { animation: mn-element-in .48s cubic-bezier(.2,.8,.2,1) forwards 1.2s; }
+.mn-overlay.is-ready .mn-header { animation: mn-element-in .52s cubic-bezier(.2,.8,.2,1) forwards .18s; }
 .mn-brand { display: flex; min-width: 0; align-items: center; gap: 12px; }
-.mn-brand img { width: 62px; height: 48px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,.11)); }
+.mn-brand img { width: 82px; height: 62px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(255,255,255,.14)); }
 .mn-brand p, .mn-brand h1 { margin: 0; }
 .mn-brand p { color: var(--mn-muted); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; }
-.mn-brand h1 { margin-top: 3px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(18px, 3vw, 27px); font-weight: 500; letter-spacing: .11em; }
+.mn-brand h1 { margin-top: 3px; font-family: "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; font-size: clamp(18px, 3vw, 27px); font-weight: 500; letter-spacing: .11em; }
 .mn-header-actions { display: flex; align-items: center; gap: 8px; }
 .mn-icon-button, .mn-text-button, .mn-primary-button, .mn-tabs button, .mn-list button, .mn-archive-grid button {
   color: inherit;
@@ -105,12 +127,17 @@ body.marvel-nexus-open { overflow: hidden !important; }
   opacity: 0;
   transform: translateY(16px);
 }
-.mn-overlay.is-ready .mn-content { animation: mn-element-in .54s cubic-bezier(.2,.8,.2,1) forwards 1.28s; }
+.mn-overlay.is-ready .mn-content { animation: mn-element-in .58s cubic-bezier(.2,.8,.2,1) forwards .62s; }
 .mn-page { width: min(1080px, 100%); margin: 0 auto; }
-.mn-page.is-active { animation: mn-page-in .38s cubic-bezier(.2,.8,.2,1); }
+.mn-page.is-entering { animation: mn-page-in-right .42s cubic-bezier(.2,.8,.2,1) both; }
+.mn-page.is-entering[data-direction="back"] { animation-name: mn-page-in-left; }
+.mn-page.is-entering .mn-panel { animation: mn-panel-cascade .45s cubic-bezier(.2,.8,.2,1) both; }
+.mn-page.is-entering .mn-panel:nth-of-type(2) { animation-delay: .07s; }
+.mn-page.is-entering .mn-panel:nth-of-type(3) { animation-delay: .12s; }
+.mn-status-top { display: flex; justify-content: flex-end; margin-bottom: 14px; }
 .mn-page-title { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
 .mn-page-title small { display: block; margin-bottom: 6px; color: var(--mn-gold); font-size: 10px; letter-spacing: .24em; text-transform: uppercase; }
-.mn-page-title h2 { margin: 0; font: 500 clamp(25px, 5vw, 43px)/1.05 Georgia, "Times New Roman", serif; letter-spacing: .035em; }
+.mn-page-title h2 { margin: 0; font: 500 clamp(25px, 5vw, 43px)/1.05 "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; letter-spacing: .035em; }
 .mn-page-title p { margin: 8px 0 0; color: var(--mn-muted); font-size: 12px; }
 .mn-code { padding: 7px 10px; border: 1px solid var(--mn-line); color: var(--mn-muted); font: 10px ui-monospace, SFMono-Regular, monospace; letter-spacing: .13em; text-transform: uppercase; }
 
@@ -121,13 +148,15 @@ body.marvel-nexus-open { overflow: hidden !important; }
   border-radius: 0;
   background: linear-gradient(135deg, rgba(255,255,255,.035), transparent 40%), var(--mn-panel);
   box-shadow: 0 22px 50px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.04);
-  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  clip-path: none;
+  overflow: hidden;
   transition: transform .22s ease, border-color .22s ease, background .22s ease;
 }
 .mn-panel:hover { border-color: rgba(224,219,225,.44); }
-.mn-panel::after { content: ""; position: absolute; right: -1px; top: -1px; width: 14px; height: 14px; border-right: 1px solid rgba(255,255,255,.65); transform: rotate(-45deg) translate(2px,-5px); transform-origin: top right; pointer-events: none; }
+.mn-panel::after { display: none; }
+.mn-panel::before { content: ""; position: absolute; top: 0; left: -45%; width: 40%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.76), transparent); animation: mn-panel-sweep 5.5s ease-in-out infinite; pointer-events: none; }
 .mn-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
-.mn-panel-head h3 { margin: 0; font: 500 18px Georgia, "Times New Roman", serif; letter-spacing: .06em; }
+.mn-panel-head h3 { margin: 0; font: 500 18px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; letter-spacing: .06em; }
 .mn-panel-head small { color: var(--mn-muted); }
 .mn-text-button { min-height: 38px; padding: 7px 12px; border: 1px solid var(--mn-line); border-radius: 0; background: transparent; cursor: pointer; letter-spacing: .08em; text-transform: uppercase; font-size: 10px; transition: transform .18s ease, background .18s ease; }
 .mn-text-button:hover, .mn-text-button:focus-visible { transform: translateY(-2px); background: rgba(255,255,255,.07); }
@@ -138,13 +167,13 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-identity-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--mn-line-soft); border-left: 1px solid var(--mn-line-soft); }
 .mn-identity-grid > div { min-width: 0; padding: 14px; border-right: 1px solid var(--mn-line-soft); border-bottom: 1px solid var(--mn-line-soft); }
 .mn-identity-grid span { display: block; margin-bottom: 7px; color: var(--mn-muted); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
-.mn-identity-grid strong { display: block; overflow-wrap: anywhere; font: 600 14px Georgia, "Times New Roman", serif; }
+.mn-identity-grid strong { display: block; overflow-wrap: anywhere; font: 500 14px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; }
 .mn-divider { display: flex; align-items: center; gap: 14px; margin: 22px 0 14px; color: var(--mn-muted); font-size: 10px; letter-spacing: .24em; text-transform: uppercase; }
 .mn-divider::before, .mn-divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--mn-line)); }
 .mn-divider::after { transform: scaleX(-1); }
 .mn-vitals { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-bottom: 16px; }
-.mn-vital { display: grid; grid-template-columns: 64px minmax(0,1fr); align-items: center; gap: 0; min-height: 70px; padding: 6px 12px 6px 6px; border: 1px solid rgba(224,219,225,.42); background: rgba(8,8,12,.78); clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px); }
-.mn-vital-icon { position: relative; z-index: 1; display: grid; place-items: center; width: 54px; aspect-ratio: 1; color: #fff; background: color-mix(in srgb, var(--tone) 75%, #15131a); border: 1px solid color-mix(in srgb, var(--tone) 80%, white); clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%); font: 700 14px Georgia, serif; text-shadow: 0 1px 2px #000; box-shadow: 0 0 24px color-mix(in srgb, var(--tone) 24%, transparent); animation: mn-icon-pulse 2.8s ease-in-out infinite; }
+.mn-vital { display: grid; grid-template-columns: 64px minmax(0,1fr); align-items: center; gap: 0; min-height: 70px; padding: 6px 12px 6px 6px; border: 1px solid rgba(224,219,225,.42); background: rgba(8,8,12,.78); clip-path: none; }
+.mn-vital-icon { position: relative; z-index: 1; display: grid; place-items: center; width: 54px; aspect-ratio: 1; color: #fff; background: color-mix(in srgb, var(--tone) 75%, #15131a); border: 1px solid color-mix(in srgb, var(--tone) 80%, white); clip-path: none; font: 700 14px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; text-shadow: 0 1px 2px #000; box-shadow: 0 0 24px color-mix(in srgb, var(--tone) 24%, transparent); animation: mn-icon-pulse 2.8s ease-in-out infinite; }
 .mn-vital > div { min-width: 0; }
 .mn-vital label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 9px; font-size: 12px; }
 .mn-vital label b { letter-spacing: .1em; text-transform: uppercase; }
@@ -163,9 +192,11 @@ body.marvel-nexus-open { overflow: hidden !important; }
 
 .mn-split { display: grid; grid-template-columns: minmax(250px,.8fr) minmax(0,1.5fr); gap: 14px; align-items: start; }
 .mn-list { display: grid; gap: 6px; }
-.mn-list button { display: grid; grid-template-columns: 42px minmax(0,1fr) 8px; align-items: center; gap: 11px; width: 100%; min-height: 58px; padding: 8px; border: 1px solid transparent; border-radius: 0; color: inherit; text-align: left; background: rgba(255,255,255,.025); cursor: pointer; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.mn-list button { display: grid; grid-template-columns: 46px minmax(0,1fr) 8px; align-items: center; gap: 11px; width: 100%; min-height: 62px; padding: 8px; border: 1px solid transparent; border-radius: 0; color: inherit; text-align: left; background: rgba(255,255,255,.025); cursor: pointer; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
 .mn-list button:hover, .mn-list button[aria-pressed="true"] { transform: translateX(3px); border-color: var(--mn-line); background: rgba(255,255,255,.07); }
-.mn-list button > span { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--mn-line); color: var(--mn-gold); font: 600 13px Georgia, serif; }
+.mn-list button > span { display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid var(--mn-line); color: var(--mn-gold); font: 500 13px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; overflow: hidden; background: rgba(255,255,255,.025); }
+.mn-list-avatar b { font: inherit; }
+.mn-list-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; animation: mn-portrait-in .3s ease forwards; }
 .mn-list button strong, .mn-list button small { display: block; }
 .mn-list button small { margin-top: 3px; color: var(--mn-muted); }
 .mn-list button > i { width: 6px; height: 6px; background: #72c7a2; }
@@ -187,7 +218,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-world-stats > div { padding: 16px; background: var(--mn-panel-strong); }
 .mn-world-stats span, .mn-world-stats strong { display: block; }
 .mn-world-stats span { margin-bottom: 8px; color: var(--mn-muted); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
-.mn-world-stats strong { overflow-wrap: anywhere; font: 500 15px Georgia,serif; }
+.mn-world-stats strong { overflow-wrap: anywhere; font: 500 15px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; }
 .mn-location-path { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; color: #ddd8de; }
 .mn-location-path i { color: var(--mn-muted); font-size: 9px; }
 .mn-pending { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; padding: 10px; border-left: 2px solid var(--mn-gold); background: rgba(200,169,121,.08); }
@@ -207,7 +238,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-archive-grid small { margin-top: 3px; color: var(--mn-muted); }
 .mn-archive-detail { min-height: 92px; margin-top: 15px; padding: 16px; border-top: 1px solid var(--mn-line); background: rgba(0,0,0,.12); }
 .mn-archive-detail small { color: var(--mn-gold); letter-spacing: .1em; text-transform: uppercase; }
-.mn-archive-detail h3 { margin: 6px 0 8px; font: 500 19px Georgia,serif; }
+.mn-archive-detail h3 { margin: 6px 0 8px; font: 500 19px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; }
 .mn-archive-detail p { margin: 0; color: #cfccd2; line-height: 1.6; }
 .mn-empty { color: var(--mn-muted); }
 
@@ -222,7 +253,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
   opacity: 0;
   transform: translateY(12px);
 }
-.mn-overlay.is-ready .mn-tabs { animation: mn-element-in .48s cubic-bezier(.2,.8,.2,1) forwards 1.34s; }
+.mn-overlay.is-ready .mn-tabs { animation: mn-element-in .5s cubic-bezier(.2,.8,.2,1) forwards .76s; }
 .mn-tabs button { position: relative; display: grid; place-items: center; align-content: center; gap: 6px; min-width: 0; min-height: 64px; border: 0; border-right: 1px solid var(--mn-line-soft); border-radius: 0; color: var(--mn-muted); background: transparent; cursor: pointer; transition: color .2s ease, background .2s ease, transform .2s ease; }
 .mn-tabs button:last-child { border-right: 0; }
 .mn-tabs button::before { content: ""; position: absolute; left: 20%; right: 20%; top: 0; height: 1px; background: transparent; box-shadow: none; transition: all .2s ease; }
@@ -232,13 +263,16 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-tabs i { font-size: 15px; }
 .mn-tabs span { overflow: hidden; max-width: 100%; font-size: 9px; letter-spacing: .1em; text-overflow: ellipsis; text-transform: uppercase; }
 
-.mn-modal { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left)); background: rgba(0,0,0,.72); backdrop-filter: blur(12px); }
+.mn-modal { position: fixed; inset: 0; z-index: 4; display: grid; place-items: center; padding: max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left)); background: rgba(0,0,0,.72); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity .22s ease; }
 .mn-modal[hidden] { display: none; }
-.mn-sheet { width: min(540px,100%); max-height: min(720px,90dvh); overflow-y: auto; padding: 20px; border: 1px solid rgba(239,234,238,.5); border-radius: 0; color: var(--mn-text); background: #18171e; box-shadow: 0 30px 90px rgba(0,0,0,.65); animation: mn-sheet-in .26s cubic-bezier(.2,.8,.2,1); }
+.mn-modal.is-open { opacity: 1; pointer-events: auto; }
+.mn-sheet { box-sizing: border-box; width: min(520px,calc(100vw - 24px)); max-height: min(560px,calc(100dvh - max(24px,env(safe-area-inset-top)) - max(24px,env(safe-area-inset-bottom)))); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 18px; border: 1px solid rgba(239,234,238,.5); border-radius: 0; color: var(--mn-text); background: #18171e; box-shadow: 0 30px 90px rgba(0,0,0,.65); opacity: 0; transform: translateY(18px) scale(.98); transition: opacity .24s ease, transform .28s cubic-bezier(.2,.8,.2,1); }
+.mn-modal.is-open .mn-sheet { opacity: 1; transform: none; }
+.mn-modal.is-closing .mn-sheet { opacity: 0; transform: translateY(10px) scale(.985); }
 .mn-sheet > p { color: var(--mn-muted); line-height: 1.55; }
 .mn-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
 .mn-form-grid label, .mn-time-fields label { display: grid; gap: 7px; color: var(--mn-muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-.mn-form-grid input, .mn-time-fields input, .mn-time-fields select { min-width: 0; min-height: 44px; padding: 9px 11px; border: 1px solid var(--mn-line); border-radius: 0; color: var(--mn-text); background: rgba(0,0,0,.28); font: 14px Inter, sans-serif; }
+.mn-form-grid input, .mn-time-fields input, .mn-time-fields select { min-width: 0; min-height: 44px; padding: 9px 11px; border: 1px solid var(--mn-line); border-radius: 0; color: var(--mn-text); background: rgba(0,0,0,.28); font: 14px "Marvel Nexus Tech", "Marvel Nexus Thai", sans-serif; }
 .mn-form-grid input:focus, .mn-time-fields input:focus, .mn-time-fields select:focus { outline: 1px solid rgba(255,255,255,.65); border-color: transparent; }
 .mn-time-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 17px; }
 .mn-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
@@ -253,7 +287,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
 @media (max-width: 700px) {
   .mn-header { min-height: 68px; padding-left: 12px; padding-right: 12px; }
   .mn-brand { gap: 7px; }
-  .mn-brand img { width: 48px; height: 40px; }
+  .mn-brand img { width: 68px; height: 52px; }
   .mn-brand p { max-width: 165px; font-size: 7px; letter-spacing: .12em; }
   .mn-brand h1 { font-size: 16px; letter-spacing: .08em; }
   .mn-sync { display: none; }
@@ -293,6 +327,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-overlay[data-motion="reduced"] *, .mn-overlay[data-motion="reduced"] *::before, .mn-overlay[data-motion="reduced"] *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .12s !important; }
 .mn-overlay[data-motion="off"] *, .mn-overlay[data-motion="off"] *::before, .mn-overlay[data-motion="off"] *::after { animation: none !important; transition: none !important; }
 .mn-overlay[data-motion="off"] .mn-header, .mn-overlay[data-motion="off"] .mn-content, .mn-overlay[data-motion="off"] .mn-tabs { opacity: 1; transform: none; }
+.mn-overlay[data-motion="off"].is-open { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .mn-overlay *, .mn-overlay *::before, .mn-overlay *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
@@ -300,6 +335,12 @@ body.marvel-nexus-open { overflow: hidden !important; }
 
 @keyframes mn-background-in { to { opacity: 1; transform: scale(1); } }
 @keyframes mn-element-in { to { opacity: 1; transform: translate(0); } }
+@keyframes mn-shell-boot { from { opacity: 0; transform: translateY(8px); filter: brightness(.68); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes mn-page-in-right { from { opacity: 0; transform: translateX(18px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes mn-page-in-left { from { opacity: 0; transform: translateX(-18px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes mn-panel-cascade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mn-panel-sweep { 0%, 68%, 100% { left: -45%; opacity: 0; } 74% { opacity: .7; } 88% { left: 110%; opacity: 0; } }
+@keyframes mn-portrait-in { from { opacity: 0; transform: scale(1.06); filter: saturate(.5); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes mn-page-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes mn-sheet-in { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
 @keyframes mn-drift { 0%,100% { transform: translateY(0) rotate(45deg); opacity: .15; } 50% { transform: translateY(-35px) rotate(135deg); opacity: .5; } }
