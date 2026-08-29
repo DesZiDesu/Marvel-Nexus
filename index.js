@@ -87,9 +87,16 @@ let spiderWatchCommandRegistered = false;
 function setSpiderWatchOffset(value = spiderWatchOffset, { reset = false } = {}) {
   const device = document.getElementById('mn-sw-device');
   if (!device) return;
-  const viewportHeight = globalThis.visualViewport?.height || window.innerHeight;
-  const deviceHeight = device.offsetHeight;
-  const limit = Math.max(0, (viewportHeight - deviceHeight) / 2 - 12);
+  const viewport = globalThis.visualViewport;
+  const viewportLeft = Number(viewport?.offsetLeft) || 0;
+  const viewportTop = Number(viewport?.offsetTop) || 0;
+  const viewportWidth = Number(viewport?.width) || window.innerWidth;
+  const viewportHeight = Number(viewport?.height) || window.innerHeight;
+  const deviceSize = Math.max(1, Math.min(viewportWidth * .96, 560, viewportHeight - 24));
+  device.style.setProperty('--mn-sw-center-x', `${Math.round(viewportLeft + viewportWidth / 2)}px`);
+  device.style.setProperty('--mn-sw-center-y', `${Math.round(viewportTop + viewportHeight / 2)}px`);
+  device.style.setProperty('--mn-sw-size', `${Math.round(deviceSize)}px`);
+  const limit = Math.max(0, (viewportHeight - deviceSize) / 2 - 12);
   spiderWatchOffset = reset ? 0 : Math.max(-limit, Math.min(limit, Number(value) || 0));
   device.style.setProperty('--mn-sw-offset', `${Math.round(spiderWatchOffset)}px`);
 }
@@ -387,6 +394,7 @@ function buildSpiderWatch() {
   const keepWatchVisible = () => setSpiderWatchOffset();
   window.addEventListener('resize', keepWatchVisible);
   globalThis.visualViewport?.addEventListener('resize', keepWatchVisible);
+  globalThis.visualViewport?.addEventListener('scroll', keepWatchVisible, { passive: true });
 }
 
 function spiderPendingAction(state = getState()) {
@@ -1136,7 +1144,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.1.1 loaded.');
+    console.info('[Marvel Nexus] Extension v2.1.2 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 

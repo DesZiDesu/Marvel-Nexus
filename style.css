@@ -422,10 +422,13 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-sw.is-open { opacity: 1; }
 .mn-sw-device {
   --mn-sw-offset: 0px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(96vw, 560px, calc(100dvh - 24px));
+  --mn-sw-center-x: 50vw;
+  --mn-sw-center-y: 50dvh;
+  --mn-sw-size: min(96vw, 560px, calc(100dvh - 24px));
+  position: fixed;
+  left: var(--mn-sw-center-x);
+  top: var(--mn-sw-center-y);
+  width: var(--mn-sw-size);
   aspect-ratio: 1;
   pointer-events: auto;
   user-select: none;
