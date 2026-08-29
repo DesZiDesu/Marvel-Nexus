@@ -40,7 +40,11 @@ const COPY = {
     timeTitle: 'Queue time advancement', timeHelp: 'This request will be batched with your next main-chat message. The AI will resolve consequences and update the Nexus state in that same reply.', amount: 'Amount', unit: 'Unit', minutes: 'Minutes', hours: 'Hours', days: 'Days', queue: 'Queue for next message', pending: 'Pending for next message', queued: 'Time request queued for your next main-chat message.',
     waiting: 'Waiting for chat', ready: 'Nexus synchronized', checking: 'Checking role-play reply', updated: 'Nexus state updated', unchanged: 'No confirmed state changes', disabled: 'AI synchronization is off', openChat: 'Open a chat to use Marvel Nexus.',
     settingsIntro: 'A persistent Marvel role-play interface linked to the active chat.', enabled: 'Enable Marvel Nexus', showLauncher: 'Show the launcher in the wand menu', aiSync: 'Update from normal role-play replies', injectState: 'Include the current Nexus state in prompts', language: 'Language / ภาษา', motion: 'Interface motion', motionFull: 'Full', motionReduced: 'Reduced', motionOff: 'Off', density: 'Mobile density', compact: 'Compact', comfortable: 'Comfortable', watchSounds: 'Spider Watch sound effects', watchVolume: 'Spider Watch volume', syncExplanation: 'Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.', openNexus: 'Open Marvel Nexus', resetChat: "Reset this chat's Nexus state", resetConfirm: "Reset Marvel Nexus data for this chat? This cannot be undone.", resetDone: 'The current chat state was reset.',
-    spiderWatch: 'Spider Watch', dimensionGate: 'Dimension Gate', currentLocation: 'Current location', chooseEarth: 'Choose Earth', destinations: 'Destinations', risk: 'Risk', confirmTravel: 'Press the red button to confirm', gateArmed: 'Gate armed', nextMessageTravel: 'Send your next main-chat message to travel.', arrival: 'Arrival', newDestination: 'New destination', stable: 'Stable', routeUnavailable: 'Choose an Earth first.',
+    spiderWatch: 'Spider Watch', dimensionGate: 'Dimension Gate', currentLocation: 'Current location', chooseEarth: 'Choose Earth', destinations: 'Destinations', risk: 'Risk', confirmTravel: 'Press the red button to confirm', gateArmed: 'Gate armed', nextMessageTravel: 'The route will resolve after the next AI reply.', arrival: 'Arrival', newDestination: 'New destination', stable: 'Stable', routeUnavailable: 'Choose an Earth first.',
+    customDestination: 'Custom destination', earthOrDimension: 'Earth or dimension', arrivalPoint: 'Arrival point (optional)', scanRoute: 'Scan route', dynamicRoutes: 'Nexus and AI-discovered routes update after normal replies.', transitLock: 'SPIDER-WATCH // TRANSIT LOCK',
+    appearanceFrame: 'Identity Frame', civilian: 'Civilian', hero: 'Hero / Costume', configureImages: 'Configure images', civilianImage: 'Civilian image URL', heroImage: 'Hero / costume image URL', imageUpload: 'Or choose an image file', portraitHelp: 'Images are stored for this chat. The active frame can switch manually or from confirmed story context.',
+    teamSystem: 'Team Network', teamName: 'Team name', teamStatus: 'Team status', teamObjective: 'Current objective', teamMembers: 'Members', editTeam: 'Edit team', noTeamMembers: 'No teammates recorded.', teamMemberHelp: 'One member per line: Name | Role | Status',
+    trainingSystem: 'Training System', trainingLevel: 'Training level', sessions: 'Sessions', progress: 'Progress', trainingFocus: 'Focus', queueTraining: 'Queue training', trainingHelp: 'Training is resolved with the next normal role-play reply. Confirmed training can raise maximum HP and energy.', intensity: 'Intensity', duration: 'Duration', customFocus: 'Custom focus',
   },
   th: {
     title: 'Marvel Nexus', subtitle: 'อินเทอร์เฟซปฏิบัติการพหุจักรวาล', close: 'ปิด',
@@ -60,7 +64,11 @@ const COPY = {
     timeTitle: 'จัดคิวเลื่อนเวลา', timeHelp: 'คำขอนี้จะถูกรวมกับข้อความถัดไปในแชตหลัก AI จะประมวลผลผลกระทบและอัปเดต Nexus ในคำตอบเดียวกัน', amount: 'จำนวน', unit: 'หน่วย', minutes: 'นาที', hours: 'ชั่วโมง', days: 'วัน', queue: 'จัดคิวสำหรับข้อความถัดไป', pending: 'รอข้อความถัดไป', queued: 'จัดคิวคำขอเลื่อนเวลาไว้สำหรับข้อความถัดไปแล้ว',
     waiting: 'กำลังรอแชต', ready: 'Nexus เชื่อมต่อแล้ว', checking: 'กำลังตรวจคำตอบโรลเพลย์', updated: 'อัปเดตสถานะ Nexus แล้ว', unchanged: 'ไม่มีข้อมูลที่ยืนยันให้เปลี่ยนแปลง', disabled: 'ปิดการซิงก์กับ AI อยู่', openChat: 'เปิดแชตก่อนใช้งาน Marvel Nexus',
     settingsIntro: 'อินเทอร์เฟซโรลเพลย์ Marvel แบบถาวรที่เชื่อมกับแชตปัจจุบัน', enabled: 'เปิดใช้งาน Marvel Nexus', showLauncher: 'แสดงปุ่มเปิดในเมนูคทา', aiSync: 'อัปเดตจากคำตอบโรลเพลย์ปกติ', injectState: 'ใส่สถานะ Nexus ปัจจุบันในพรอมต์', language: 'ภาษา / Language', motion: 'การเคลื่อนไหวของ UI', motionFull: 'เต็มรูปแบบ', motionReduced: 'ลดลง', motionOff: 'ปิด', density: 'ความหนาแน่นบนมือถือ', compact: 'กระชับ', comfortable: 'สบายตา', watchSounds: 'เอฟเฟกต์เสียง Spider Watch', watchVolume: 'ระดับเสียง Spider Watch', syncExplanation: 'Marvel Nexus ใช้คำตอบปกติของ AI และไม่เรียกสร้างคำตอบครั้งที่สอง การเปลี่ยนแปลงที่ยืนยันแล้วจะกลับมาเป็นแพตช์ที่ซ่อนอยู่ ผ่านการตรวจสอบ และบันทึกเฉพาะแชตปัจจุบัน', openNexus: 'เปิด Marvel Nexus', resetChat: 'รีเซ็ตสถานะ Nexus ของแชตนี้', resetConfirm: 'รีเซ็ตข้อมูล Marvel Nexus ของแชตนี้หรือไม่ การดำเนินการนี้ย้อนกลับไม่ได้', resetDone: 'รีเซ็ตสถานะของแชตปัจจุบันแล้ว',
-    spiderWatch: 'Spider Watch', dimensionGate: 'ประตูมิติ', currentLocation: 'ตำแหน่งปัจจุบัน', chooseEarth: 'เลือกจักรวาล', destinations: 'จักรวาลปลายทาง', risk: 'ความเสี่ยง', confirmTravel: 'กดปุ่มสีแดงเพื่อยืนยัน', gateArmed: 'เปิดระบบประตูแล้ว', nextMessageTravel: 'ส่งข้อความถัดไปในแชตหลักเพื่อเดินทาง', arrival: 'เดินทางถึงแล้ว', newDestination: 'เลือกจุดหมายใหม่', stable: 'เสถียร', routeUnavailable: 'กรุณาเลือกจักรวาลก่อน',
+    spiderWatch: 'Spider Watch', dimensionGate: 'ประตูมิติ', currentLocation: 'ตำแหน่งปัจจุบัน', chooseEarth: 'เลือกจักรวาล', destinations: 'จักรวาลปลายทาง', risk: 'ความเสี่ยง', confirmTravel: 'กดปุ่มสีแดงเพื่อยืนยัน', gateArmed: 'เปิดระบบประตูแล้ว', nextMessageTravel: 'เส้นทางจะเสร็จสมบูรณ์หลัง AI ตอบข้อความถัดไป', arrival: 'เดินทางถึงแล้ว', newDestination: 'เลือกจุดหมายใหม่', stable: 'เสถียร', routeUnavailable: 'กรุณาเลือกจักรวาลก่อน',
+    customDestination: 'จุดหมายกำหนดเอง', earthOrDimension: 'Earth หรือมิติ', arrivalPoint: 'จุดเดินทางถึง (ไม่บังคับ)', scanRoute: 'สแกนเส้นทาง', dynamicRoutes: 'เส้นทางจาก Nexus และที่ AI ค้นพบจะอัปเดตหลังคำตอบปกติ', transitLock: 'SPIDER-WATCH // ล็อกเส้นทางข้ามมิติ',
+    appearanceFrame: 'กรอบข้อมูลตัวตน', civilian: 'พลเรือน', hero: 'ฮีโร่ / ชุดคอสตูม', configureImages: 'ตั้งค่ารูปภาพ', civilianImage: 'URL รูปชุดพลเรือน', heroImage: 'URL รูปฮีโร่ / ชุดคอสตูม', imageUpload: 'หรือเลือกไฟล์รูปภาพ', portraitHelp: 'รูปจะบันทึกไว้กับแชตนี้ สามารถสลับกรอบเองหรือให้เปลี่ยนตามเหตุการณ์ที่ยืนยันในเนื้อเรื่อง',
+    teamSystem: 'เครือข่ายทีม', teamName: 'ชื่อทีม', teamStatus: 'สถานะทีม', teamObjective: 'เป้าหมายปัจจุบัน', teamMembers: 'สมาชิก', editTeam: 'แก้ไขทีม', noTeamMembers: 'ยังไม่มีเพื่อนร่วมทีมที่บันทึกไว้', teamMemberHelp: 'หนึ่งคนต่อหนึ่งบรรทัด: ชื่อ | บทบาท | สถานะ',
+    trainingSystem: 'ระบบฝึกฝน', trainingLevel: 'ระดับการฝึก', sessions: 'จำนวนครั้ง', progress: 'ความคืบหน้า', trainingFocus: 'จุดเน้น', queueTraining: 'จัดคิวฝึกฝน', trainingHelp: 'การฝึกจะประมวลผลพร้อมคำตอบโรลเพลย์ปกติครั้งถัดไป การฝึกที่ยืนยันแล้วสามารถเพิ่ม HP และพลังงานสูงสุดได้', intensity: 'ความเข้มข้น', duration: 'ระยะเวลา', customFocus: 'กำหนดจุดเน้นเอง',
   },
 };
 
@@ -102,6 +110,7 @@ function setSpiderWatchOffset(value = spiderWatchOffset, { reset = false } = {})
 }
 
 const SPIDER_WATCH_ROUTES = Object.freeze([
+  { earth: 'Earth-616', name: { en: 'Prime Marvel Universe', th: 'จักรวาลมาร์เวลหลัก' }, location: 'New York City', risk: 'Moderate', riskValue: 28, detail: { en: 'Primary Marvel reality and a stable Spider Watch return anchor.', th: 'จักรวาลมาร์เวลหลักและจุดยึดสำหรับเดินทางกลับที่เสถียรของ Spider Watch' } },
   { earth: 'Earth-65', name: { en: "Gwen's Universe", th: 'จักรวาลของเกวน' }, location: 'Chelsea, New York', risk: 'Low', riskValue: 12, detail: { en: 'Watercolor skyline, active Spider-Woman, stable portal signature.', th: 'เส้นขอบฟ้าสีน้ำ มี Spider-Woman ปฏิบัติการ และสัญญาณประตูมิติเสถียร' } },
   { earth: 'Earth-1610', name: { en: "Miles' World", th: 'จักรวาลของไมลส์' }, location: 'Brooklyn, New York', risk: 'Moderate', riskValue: 34, detail: { en: 'Modern Brooklyn, active Spider-Man, collider residue detected.', th: 'บรูคลินยุคใหม่ มี Spider-Man ปฏิบัติการ และตรวจพบร่องรอยคอลลิเดอร์' } },
   { earth: 'Earth-928', name: { en: 'Nueva York 2099', th: 'นูเอวา ยอร์ก ปี 2099' }, location: 'Nueva York', risk: 'High', riskValue: 67, detail: { en: 'Corporate megacity, Alchemax authority, advanced surveillance.', th: 'มหานครภายใต้อำนาจ Alchemax พร้อมระบบเฝ้าระวังขั้นสูง' } },
@@ -127,6 +136,7 @@ function defaultRegistration() {
     universe: 'Earth-616', continuity: 'Hybrid continuity', timeline: '', world: '', canonDivergence: '', worldState: '', knownFactions: '', relationships: '',
     startingLocation: '', startingTime: '', tone: 'Cinematic and tense', pointOfView: 'Second person', canonHandling: 'Canon-consistent with divergence', characterControl: 'User controls registered character',
     appearance: '', personality: '', backstory: '', openingSituation: '', objective: '', firstMessage: '',
+    inputModes: {},
   };
 }
 
@@ -142,6 +152,9 @@ function normalizeRegistration(source = {}) {
   for (const [key, max] of Object.entries(fields)) out[key] = text(source?.[key], out[key], max);
   out.completed = source?.completed === true;
   out.completedAt = text(source?.completedAt, '', 60);
+  out.inputModes = source?.inputModes && typeof source.inputModes === 'object'
+    ? Object.fromEntries(Object.entries(source.inputModes).filter(([, mode]) => ['preset', 'custom'].includes(mode)).slice(0, 20))
+    : {};
   out.abilities = Array.isArray(source?.abilities) ? source.abilities.map((ability, index) => ({
     id: text(ability?.id, `registered-ability-${index + 1}`, 80),
     name: text(ability?.name, '', 120),
@@ -155,15 +168,18 @@ function normalizeRegistration(source = {}) {
 function defaultState() {
   const personaName = currentPersonaName();
   return {
-    version: 3,
+    version: 4,
     personaName,
     registration: defaultRegistration(),
     operator: { name: personaName, alias: 'Unassigned', role: 'Independent Operative', origin: 'Unknown', affiliation: 'Unaffiliated', condition: 'Stable', location: 'Unknown', earth: 'Earth-616', continuity: 'Hybrid', timeline: 'Open Chronicle' },
     identity: { secrecy: 'Protected', exposure: 0, publicStatus: 'Unknown' },
-    vitals: { health: 1000, healthMax: 1000, energy: 800, energyMax: 800, suitIntegrity: 100, fatigue: 0 },
+    vitals: { health: 100, healthMax: 100, energy: 100, energyMax: 100, suitIntegrity: 100, fatigue: 0 },
+    portraits: { active: 'civilian', civilian: '', hero: '' },
+    team: { name: 'Independent', status: 'Solo', objective: '', members: [] },
+    training: { level: 1, sessions: 0, progress: 0, focus: 'Untrained' },
     powers: [], contacts: [], identityWitnesses: [], factions: [], evidence: [], missions: [],
     world: { date: 'Unconfirmed', time: 'Unconfirmed', multiverse: 'Restricted', locationPath: ['Unknown'], previousLocation: '', travelStatus: 'Stationary', destination: '', eta: '', nearbyContacts: [], incidents: [] },
-    timelineEvents: [], continuityIssues: [], anomalies: [],
+    timelineEvents: [], continuityIssues: [], anomalies: [], destinations: [],
     archive: [], pendingActions: [], updatedAt: '', updateSource: 'default',
   };
 }
@@ -181,6 +197,8 @@ function normalizeItem(item, type) {
   if (type === 'timeline') return { id, title: text(item.title, 'Timeline event', 140), detail: text(item.detail, '', 500), date: text(item.date, '', 80), time: text(item.time, '', 80), earth: text(item.earth, '', 80), location: text(item.location, '', 160), type: text(item.type, 'Event', 60), impact: text(item.impact, '', 240) };
   if (type === 'continuity') return { id, title: text(item.title, 'Continuity alert', 140), detail: text(item.detail, '', 400), severity: ['low', 'medium', 'high', 'critical'].includes(item.severity) ? item.severity : 'medium', status: text(item.status, 'Open', 60), related: Array.isArray(item.related) ? item.related.map(value => text(value, '', 120)).filter(Boolean).slice(0, 10) : [] };
   if (type === 'anomaly') return { id, title: text(item.title, 'Unknown anomaly', 140), type: text(item.type, 'Anomaly', 80), originEarth: text(item.originEarth, 'Unknown', 80), currentEarth: text(item.currentEarth, 'Unknown', 80), risk: number(item.risk, 0, 0, 100), status: text(item.status, 'Observed', 80), detail: text(item.detail, '', 400), variants: Array.isArray(item.variants) ? item.variants.map(value => text(value, '', 120)).filter(Boolean).slice(0, 16) : [] };
+  if (type === 'destination') return { id, earth: text(item.earth, '', 80), name: text(item.name, 'Discovered dimension', 140), location: text(item.location, 'Arrival point unknown', 160), risk: text(item.risk, 'Unknown', 40), riskValue: number(item.riskValue, 25, 0, 100), detail: text(item.detail, 'Route recorded by Marvel Nexus.', 500), source: text(item.source, 'AI discovery', 80) };
+  if (type === 'teammate') return { id, name: text(item.name, 'Unknown teammate', 120), role: text(item.role, 'Member', 100), status: text(item.status, 'Active', 80), earth: text(item.earth, '', 80), location: text(item.location, '', 160), condition: text(item.condition, 'Stable', 80), detail: text(item.detail, '', 300) };
   if (type === 'archive') return { id, title: text(item.title, 'Unknown record', 140), category: text(item.category, 'Record', 80), detail: text(item.detail, '', 500) };
   return null;
 }
@@ -208,7 +226,25 @@ function normalize(source = {}, base = defaultState()) {
   out.vitals.energy = number(vitals.energy, out.vitals.energy, 0, out.vitals.energyMax);
   out.vitals.suitIntegrity = number(vitals.suitIntegrity, out.vitals.suitIntegrity, 0, 100);
   out.vitals.fatigue = number(vitals.fatigue, out.vitals.fatigue, 0, 100);
-  for (const [key, type, cap] of [['powers', 'power', 20], ['contacts', 'contact', 60], ['identityWitnesses', 'witness', 60], ['factions', 'faction', 40], ['evidence', 'evidence', 100], ['missions', 'mission', 40], ['timelineEvents', 'timeline', 120], ['continuityIssues', 'continuity', 60], ['anomalies', 'anomaly', 60], ['archive', 'archive', 100]]) {
+  if (number(source.version, 0, 0, 999) < 4) {
+    if (Number(vitals.healthMax) === 1000) { out.vitals.health = Math.round(out.vitals.health / 10); out.vitals.healthMax = 100; }
+    if (Number(vitals.energyMax) === 800) { out.vitals.energy = Math.round(out.vitals.energy / 8); out.vitals.energyMax = 100; }
+  }
+  const portraits = source.portraits && typeof source.portraits === 'object' ? source.portraits : {};
+  out.portraits.active = portraits.active === 'hero' ? 'hero' : 'civilian';
+  out.portraits.civilian = text(portraits.civilian, '', 600000);
+  out.portraits.hero = text(portraits.hero, '', 600000);
+  const team = source.team && typeof source.team === 'object' ? source.team : {};
+  out.team.name = text(team.name, out.team.name, 140);
+  out.team.status = text(team.status, out.team.status, 100);
+  out.team.objective = text(team.objective, out.team.objective, 500);
+  out.team.members = Array.isArray(team.members) ? team.members.map(item => normalizeItem(item, 'teammate')).filter(Boolean).slice(0, 30) : out.team.members;
+  const training = source.training && typeof source.training === 'object' ? source.training : {};
+  out.training.level = number(training.level, out.training.level, 1, 9999);
+  out.training.sessions = number(training.sessions, out.training.sessions, 0, 999999);
+  out.training.progress = number(training.progress, out.training.progress, 0, 100);
+  out.training.focus = text(training.focus, out.training.focus, 120);
+  for (const [key, type, cap] of [['powers', 'power', 20], ['contacts', 'contact', 60], ['identityWitnesses', 'witness', 60], ['factions', 'faction', 40], ['evidence', 'evidence', 100], ['missions', 'mission', 40], ['timelineEvents', 'timeline', 120], ['continuityIssues', 'continuity', 60], ['anomalies', 'anomaly', 60], ['destinations', 'destination', 60], ['archive', 'archive', 100]]) {
     if (Array.isArray(source[key])) out[key] = source[key].map(item => normalizeItem(item, type)).filter(Boolean).slice(0, cap);
   }
   const world = source.world && typeof source.world === 'object' ? source.world : {};
@@ -226,6 +262,7 @@ function normalize(source = {}, base = defaultState()) {
     const id = text(action?.id, uid(), 80);
     const queuedAt = text(action?.queuedAt, '', 60);
     if (action?.type === 'advance_time') return { id, type: 'advance_time', amount: number(action?.amount, 1, 1, 9999), unit: ['minutes', 'hours', 'days'].includes(action?.unit) ? action.unit : 'minutes', totalMinutes: number(action?.totalMinutes, 1, 1, 999999), queuedAt };
+    if (action?.type === 'training_session') return { id, type: 'training_session', focus: text(action?.focus, 'General conditioning', 120), intensity: text(action?.intensity, 'Moderate', 80), duration: text(action?.duration, 'One session', 100), queuedAt };
     if (action?.type === 'spider_travel') return {
       id, type: 'spider_travel', queuedAt,
       originEarth: text(action?.originEarth, 'Earth-616', 80),
@@ -291,9 +328,23 @@ function routeValue(route, key) {
 function knownSpiderRoutes(state = getState()) {
   const currentEarth = text(state.operator.earth, 'Earth-616', 80).toLocaleLowerCase();
   const routes = new Map(SPIDER_WATCH_ROUTES.map(route => [route.earth.toLocaleLowerCase(), { ...route }]));
+  for (const destination of state.destinations) {
+    const key = destination.earth.toLocaleLowerCase();
+    if (!key) continue;
+    routes.set(key, {
+      earth: destination.earth,
+      name: destination.name,
+      location: destination.location,
+      risk: destination.risk,
+      riskValue: destination.riskValue,
+      detail: destination.detail,
+      source: destination.source,
+    });
+  }
   const discovered = [
     ...state.timelineEvents.map(event => event.earth),
     ...state.anomalies.flatMap(item => [item.originEarth, item.currentEarth]),
+    ...state.archive.filter(item => /earth|dimension|universe|จักรวาล|มิติ/i.test(`${item.category} ${item.title}`)).map(item => item.title),
   ].map(value => text(value, '', 80)).filter(value => /^earth[-–—\s]/i.test(value));
   for (const earth of discovered) {
     const key = earth.toLocaleLowerCase();
@@ -308,7 +359,7 @@ function knownSpiderRoutes(state = getState()) {
       detail: { en: text(anomaly?.detail, 'Previously recorded by Marvel Nexus.', 500), th: text(anomaly?.detail, 'เคยถูกบันทึกไว้ใน Marvel Nexus', 500) },
     });
   }
-  return [...routes.values()].filter(route => route.earth.toLocaleLowerCase() !== currentEarth).slice(0, 12);
+  return [...routes.values()].filter(route => route.earth.toLocaleLowerCase() !== currentEarth).slice(0, 30);
 }
 
 function playSpiderWatchSound(kind = 'tap') {
@@ -368,7 +419,7 @@ function spiderWatchMarkup() {
       </div>
     </section>
     <section id="mn-spider-notification" class="mn-sw-notification" hidden role="status" aria-live="polite">
-      <div class="mn-sw-notification-signal"><i></i><span>SPIDER-WATCH // TRANSIT LOCK</span><b>∆</b></div>
+      <div class="mn-sw-notification-signal"><i></i><span data-sw-notice-signal></span><b>∆</b></div>
       <div class="mn-sw-notification-main"><div><small data-sw-notice-label></small><strong data-sw-notice-earth></strong></div><span data-sw-notice-risk></span></div>
       <p data-sw-notice-location></p>
       <div class="mn-sw-notification-timer"><i></i></div>
@@ -402,6 +453,7 @@ function buildSpiderWatch() {
     if (!action) return;
     if (action === 'close') { closeSpiderWatch(); return; }
     if (action === 'routes') { spiderWatchMode = 'routes'; spiderWatchSelection = null; playSpiderWatchSound('navigate'); renderSpiderWatch(); return; }
+    if (action === 'custom-route') { selectCustomSpiderRoute(); return; }
     if (action === 'home') { spiderWatchMode = 'home'; spiderWatchSelection = null; playSpiderWatchSound('navigate'); renderSpiderWatch(); }
   });
   red.addEventListener('click', () => void armSpiderTravel());
@@ -436,6 +488,40 @@ function spiderPendingAction(state = getState()) {
   return [...state.pendingActions].reverse().find(action => action.type === 'spider_travel') || null;
 }
 
+function normalizeEarthDesignation(value) {
+  const cleaned = text(value, '', 80).replace(/[–—]/g, '-');
+  if (/^\d+$/.test(cleaned)) return `Earth-${cleaned}`;
+  const earth = cleaned.match(/^earth\s*[-:]?\s*(.+)$/i);
+  return earth ? `Earth-${earth[1].trim()}` : cleaned;
+}
+
+function selectCustomSpiderRoute() {
+  const earthInput = document.getElementById('mn-sw-custom-earth');
+  const locationInput = document.getElementById('mn-sw-custom-location');
+  const earth = normalizeEarthDesignation(earthInput?.value);
+  if (!earth) {
+    playSpiderWatchSound('error');
+    earthInput?.classList.add('is-invalid');
+    earthInput?.focus({ preventScroll: true });
+    return;
+  }
+  earthInput?.classList.remove('is-invalid');
+  const requestedLocation = text(locationInput?.value, '', 160);
+  const existing = knownSpiderRoutes(getState()).find(route => route.earth.toLocaleLowerCase() === earth.toLocaleLowerCase());
+  spiderWatchSelection = existing ? { ...existing, location: requestedLocation || existing.location, source: requestedLocation ? 'Custom input' : existing.source } : {
+    earth,
+    name: language() === 'th' ? 'จุดหมายกำหนดเอง' : 'Custom destination',
+    location: requestedLocation || (language() === 'th' ? 'ไม่ระบุจุดเดินทางถึง' : 'Arrival point unspecified'),
+    risk: language() === 'th' ? 'ไม่ทราบ' : 'Unknown',
+    riskValue: 25,
+    detail: language() === 'th' ? 'เส้นทางกำหนดเองโดยผู้ใช้ Spider Watch จะบันทึกเส้นทางนี้หลังเดินทาง' : 'User-defined route. Spider Watch will record it after traversal.',
+    source: 'Custom input',
+  };
+  spiderWatchMode = 'target';
+  playSpiderWatchSound('select');
+  renderSpiderWatch();
+}
+
 function renderSpiderWatch() {
   const display = document.getElementById('mn-sw-display');
   if (!display) return;
@@ -447,7 +533,7 @@ function renderSpiderWatch() {
   document.getElementById('mn-sw-confirm')?.classList.toggle('is-ready', spiderWatchMode === 'target' && Boolean(spiderWatchSelection));
   if (spiderWatchMode === 'routes') {
     const routes = knownSpiderRoutes(state);
-    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="home" aria-label="Back">←</button></header><h2>${escapeHtml(tr('destinations'))}</h2><div class="mn-sw-routes">${routes.map((route, index) => `<button type="button" data-sw-route="${index}"><span><strong>${escapeHtml(route.earth)}</strong><small>${escapeHtml(routeValue(route, 'name'))}</small></span><b>∆ ${escapeHtml(route.risk)}</b></button>`).join('')}</div></div>`;
+    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="home" aria-label="Back">←</button></header><h2>${escapeHtml(tr('destinations'))}</h2><div class="mn-sw-routes">${routes.map((route, index) => `<button type="button" data-sw-route="${index}"><span><strong>${escapeHtml(route.earth)}</strong><small>${escapeHtml(routeValue(route, 'name'))}</small></span><b>∆ ${escapeHtml(route.risk)}</b></button>`).join('')}</div><div class="mn-sw-custom"><strong>${escapeHtml(tr('customDestination'))}</strong><input id="mn-sw-custom-earth" maxlength="80" placeholder="${escapeHtml(tr('earthOrDimension'))}" autocomplete="off"><input id="mn-sw-custom-location" maxlength="160" placeholder="${escapeHtml(tr('arrivalPoint'))}" autocomplete="off"><button type="button" data-sw-action="custom-route">${escapeHtml(tr('scanRoute'))}</button><small>${escapeHtml(tr('dynamicRoutes'))}</small></div></div>`;
     return;
   }
   if (spiderWatchMode === 'target' && spiderWatchSelection) {
@@ -515,6 +601,15 @@ async function armSpiderTravel() {
   };
   state.pendingActions = state.pendingActions.filter(item => item.type !== 'spider_travel');
   state.pendingActions.push(action);
+  const destinationIndex = state.destinations.findIndex(item => item.earth.toLocaleLowerCase() === action.destinationEarth.toLocaleLowerCase());
+  const destinationRecord = normalizeItem({
+    ...(destinationIndex >= 0 ? state.destinations[destinationIndex] : {}),
+    id: destinationIndex >= 0 ? state.destinations[destinationIndex].id : `destination-${uid()}`,
+    earth: action.destinationEarth, name: action.destinationName, location: action.location,
+    risk: action.risk, riskValue: action.riskValue, detail: action.detail, source: route.source || 'Spider Watch',
+  }, 'destination');
+  if (destinationIndex >= 0) state.destinations[destinationIndex] = destinationRecord;
+  else state.destinations.push(destinationRecord);
   state.world.travelStatus = 'Spider Watch armed';
   state.world.destination = `${action.destinationEarth} · ${action.location}`;
   state.world.eta = 'Next main-chat message';
@@ -547,11 +642,11 @@ function upsertStateRecord(collection, record) {
   else collection.push(record);
 }
 
-async function finalizeSpiderTravel() {
+async function finalizeSpiderTravel(action = null) {
   if (spiderTravelFinalizing || !context().getCurrentChatId?.()) return;
   const state = getState();
-  const action = spiderPendingAction(state);
-  if (!action) return;
+  action ||= spiderPendingAction(state);
+  if (!action || state.timelineEvents.some(event => event.id === `${action.id}-arrival`)) return;
   spiderTravelFinalizing = true;
   try {
     state.pendingActions = state.pendingActions.filter(item => item.id !== action.id);
@@ -575,12 +670,12 @@ async function finalizeSpiderTravel() {
       status: 'Traversed', detail: action.detail, variants: [],
     });
     upsertStateRecord(state.archive, {
-      id: `earth-record-${action.destinationEarth.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      id: `earth-record-${action.destinationEarth.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || action.id}`,
       title: action.destinationEarth, category: 'Discovered Earth',
       detail: `${action.destinationName}. ${action.location}. ${action.detail}`,
     });
     pendingSpiderArrivalNotice = action;
-    spiderWatchMode = 'armed';
+    spiderWatchMode = 'arrived';
     await persistState(state, 'spider-watch-arrival');
     consumeSpiderArrivalNotice();
   } finally {
@@ -603,6 +698,7 @@ function dismissSpiderWatchNotification() {
 function showSpiderWatchNotification(action) {
   buildSpiderWatch();
   const notification = document.getElementById('mn-spider-notification');
+  notification.querySelector('[data-sw-notice-signal]').textContent = tr('transitLock');
   notification.querySelector('[data-sw-notice-label]').textContent = tr('arrival');
   notification.querySelector('[data-sw-notice-earth]').textContent = action.destinationEarth;
   notification.querySelector('[data-sw-notice-risk]').textContent = `${tr('risk')} // ${action.risk}`;
@@ -654,9 +750,10 @@ function aiState(state) {
     activePersonaName: currentPersonaName(),
     registration: state.registration,
     operator: state.operator, identity: state.identity, identityWitnesses: state.identityWitnesses, vitals: state.vitals,
+    activeAppearanceFrame: state.portraits.active, team: state.team, training: state.training,
     powers: state.powers.map(({ id, name, mastery }) => ({ id, name, mastery })),
     contacts: state.contacts.slice(0, 30), factions: state.factions.slice(0, 30), evidence: state.evidence.slice(-40), missions: state.missions,
-    world: state.world, timelineEvents: state.timelineEvents.slice(-30), continuityIssues: state.continuityIssues.slice(-20), anomalies: state.anomalies.slice(-20), archive: state.archive.slice(-30), pendingActions: state.pendingActions,
+    world: state.world, timelineEvents: state.timelineEvents.slice(-30), continuityIssues: state.continuityIssues.slice(-20), anomalies: state.anomalies.slice(-20), destinations: state.destinations.slice(-30), archive: state.archive.slice(-30), pendingActions: state.pendingActions,
   };
 }
 
@@ -674,16 +771,19 @@ function promptInstructions(state) {
     JSON.stringify(aiState(state)),
     'After the visible role-play reply, append exactly one machine block whenever this reply confirms any state change OR pendingActions is non-empty. This block is required for confirmed changes:',
     '[MARVEL_NEXUS_PATCH]{"ops":[["set","identity.exposure",35],["upsert","timelineEvents",{"id":"event-id","title":"...","date":"...","earth":"Earth-616"}]],"ackActions":["action-id"],"summary":"Short update"}[/MARVEL_NEXUS_PATCH]',
-    'Allowed scalar paths: operator.name, operator.alias, operator.role, operator.origin, operator.affiliation, operator.condition, operator.location, operator.earth, operator.continuity, operator.timeline, identity.secrecy, identity.exposure, identity.publicStatus, vitals.health, vitals.healthMax, vitals.energy, vitals.energyMax, vitals.suitIntegrity, vitals.fatigue, world.date, world.time, world.multiverse, world.locationPath, world.previousLocation, world.travelStatus, world.destination, world.eta, world.nearbyContacts.',
-    'Allowed collection paths with upsert or delete: powers, contacts, identityWitnesses, factions, evidence, missions, world.incidents, timelineEvents, continuityIssues, anomalies, archive. Preserve an existing id when updating it. For new items, provide a short stable id; if omitted, Marvel Nexus will derive one from the item identity.',
-    'Collection item shapes: contacts {id,name,meta,status,location,relationship,trust,suspicion,respect,fear,knowledge:[{label,state:unknown|suspected|confirmed,source,learnedAt}]}; identityWitnesses {id,name,kind:person|faction|public,level:suspected|confirmed,evidence}; factions {id,name,stance,reputation:-100..100,hostility,awareness,influence,detail}; evidence {id,title,kind:fact|theory|contradiction,detail,confidence,links,discoveredAt}; missions {id,title,issuer,description,status,threat,deadline,successConsequence,failureConsequence,linkedFaction,linkedLocation,linkedContacts,objectives:[{text,done,hidden,revealed}],reward}; timelineEvents {id,title,detail,date,time,earth,location,type,impact}; continuityIssues {id,title,detail,severity:low|medium|high|critical,status,related}; anomalies {id,title,type,originEarth,currentEarth,risk,status,detail,variants}. Percent fields use 0..100.',
+    'Allowed scalar paths: operator.name, operator.alias, operator.role, operator.origin, operator.affiliation, operator.condition, operator.location, operator.earth, operator.continuity, operator.timeline, identity.secrecy, identity.exposure, identity.publicStatus, portraits.active, team.name, team.status, team.objective, training.level, training.sessions, training.progress, training.focus, vitals.health, vitals.healthMax, vitals.energy, vitals.energyMax, vitals.suitIntegrity, vitals.fatigue, world.date, world.time, world.multiverse, world.locationPath, world.previousLocation, world.travelStatus, world.destination, world.eta, world.nearbyContacts.',
+    'Allowed collection paths with upsert or delete: powers, contacts, identityWitnesses, factions, evidence, missions, team.members, world.incidents, timelineEvents, continuityIssues, anomalies, destinations, archive. Preserve an existing id when updating it. For new items, provide a short stable id; if omitted, Marvel Nexus will derive one from the item identity.',
+    'Collection item shapes: contacts {id,name,meta,status,location,relationship,trust,suspicion,respect,fear,knowledge:[{label,state:unknown|suspected|confirmed,source,learnedAt}]}; team.members {id,name,role,status,earth,location,condition,detail}; destinations {id,earth,name,location,risk,riskValue:0..100,detail,source}; identityWitnesses {id,name,kind:person|faction|public,level:suspected|confirmed,evidence}; factions {id,name,stance,reputation:-100..100,hostility,awareness,influence,detail}; evidence {id,title,kind:fact|theory|contradiction,detail,confidence,links,discoveredAt}; missions {id,title,issuer,description,status,threat,deadline,successConsequence,failureConsequence,linkedFaction,linkedLocation,linkedContacts,objectives:[{text,done,hidden,revealed}],reward}; timelineEvents {id,title,detail,date,time,earth,location,type,impact}; continuityIssues {id,title,detail,severity:low|medium|high|critical,status,related}; anomalies {id,title,type,originEarth,currentEarth,risk,status,detail,variants}. Percent fields use 0..100.',
     'Allowed verbs are set, inc, upsert, delete. Record only outcomes confirmed by this completed reply; never record plans, questions, failed attempts, hypotheticals, or information hidden from the player.',
-    'Evaluate every system once from this reply: identity exposure and who knows it; status/vitals/abilities; each NPC relationship and compartmentalized knowledge; faction reputation/hostility/awareness/influence; discovered facts/theories/contradictions; mission deadlines, threat, consequences and revealed objectives; travel/location/nearby contacts; timeline events and continuity conflicts; incidents; discovered multiverse anomalies/variants/incursion risk; archive facts.',
+    'Evaluate every system once from this reply: identity exposure and who knows it; active civilian or hero appearance frame; status/vitals/abilities; training progress and completed sessions; team name/status/objective/membership; each NPC relationship and compartmentalized knowledge; faction reputation/hostility/awareness/influence; discovered facts/theories/contradictions; mission deadlines, threat, consequences and revealed objectives; travel/location/nearby contacts; timeline events and continuity conflicts; incidents; discovered multiverse destinations/anomalies/variants/incursion risk; archive facts.',
     'Knowledge isolation is mandatory. An NPC or faction may only act on information its contact.knowledge entries confirm or information witnessed in the current scene. Never leak the player identity, powers, inventory, mission, location, timeline, relationships, or other NPC secrets across knowledge boundaries.',
     'Only store evidence, timeline records, anomalies, variants, faction intelligence and archive records already discovered by the player. A hidden mission objective may be stored with hidden:true and revealed:false, but do not render or expose it in visible narration until revealed by the story.',
     'For every pending advance_time action, narratively process the requested passage of time, update world.date/world.time and any consequences supported by the story, then copy that action id into ackActions. Do not acknowledge an action you did not process.',
-    'Spider Watch travel is resolved locally before generation. Treat operator.earth, operator.location, world.locationPath, the newest dimensional-travel timeline event, anomaly route, and discovered-Earth archive record as canonical. Narrate from the new Earth and never revert the completed arrival unless the story confirms another journey.',
-    'Health and energy are controlled by story context only. Never ask for manual damage, energy, or recovery controls.',
+    'For every pending training_session action, resolve the training only if the visible reply actually depicts or confirms it. Then increment training.sessions, update training.focus and training.progress, and acknowledge the action. Completed meaningful training may modestly increase vitals.healthMax and/or vitals.energyMax; never decrease those maxima and never grant gains without confirmed training.',
+    'For a pending spider_travel action, the visible reply must narrate the transit and arrival at its exact destinationEarth/location, then copy its id into ackActions. Do not set the final arrival before narrating it. Marvel Nexus commits the chosen route locally only after this completed reply, so never redirect it or leave the operator on the origin Earth.',
+    'Whenever the reply confirms a newly discovered or materially updated Earth/dimension route, upsert destinations so Spider Watch offers it later. Preserve Earth-616 as the stable return route. Do not expose undiscovered locations merely because they exist in canon.',
+    'Set portraits.active to hero when the player is visibly using a configured hero/costume form, and civilian when visibly back in normal civilian clothing. Do not invent or replace image URLs.',
+    'Health and energy start at 100/100 for a new operator and are controlled by story context. Maximum values may increase only through confirmed training or an explicit permanent story upgrade. Never ask for manual damage, energy, recovery, or training gains.',
     'Keep the patch compact. Never show the patch, schema, full state, Markdown fence, or system explanation in visible text.',
     '</marvel_nexus_state>',
   ].join('\n');
@@ -698,10 +798,11 @@ function updatePrompt(state = getState()) {
 const ALLOWED_SCALARS = new Set([
   'operator.name', 'operator.alias', 'operator.role', 'operator.origin', 'operator.affiliation', 'operator.condition', 'operator.location', 'operator.earth', 'operator.continuity', 'operator.timeline',
   'identity.secrecy', 'identity.exposure', 'identity.publicStatus',
+  'portraits.active', 'team.name', 'team.status', 'team.objective', 'training.level', 'training.sessions', 'training.progress', 'training.focus',
   'vitals.health', 'vitals.healthMax', 'vitals.energy', 'vitals.energyMax', 'vitals.suitIntegrity', 'vitals.fatigue',
   'world.date', 'world.time', 'world.multiverse', 'world.locationPath', 'world.previousLocation', 'world.travelStatus', 'world.destination', 'world.eta', 'world.nearbyContacts',
 ]);
-const COLLECTIONS = { powers: 'power', contacts: 'contact', identityWitnesses: 'witness', factions: 'faction', evidence: 'evidence', missions: 'mission', 'world.incidents': 'incident', timelineEvents: 'timeline', continuityIssues: 'continuity', anomalies: 'anomaly', archive: 'archive' };
+const COLLECTIONS = { powers: 'power', contacts: 'contact', identityWitnesses: 'witness', factions: 'faction', evidence: 'evidence', missions: 'mission', 'team.members': 'teammate', 'world.incidents': 'incident', timelineEvents: 'timeline', continuityIssues: 'continuity', anomalies: 'anomaly', destinations: 'destination', archive: 'archive' };
 
 function setPath(target, path, value) {
   const parts = path.split('.');
@@ -725,10 +826,10 @@ function applyPatch(state, patch) {
     } else if ((verb === 'upsert' || verb === 'delete') && COLLECTIONS[path]) {
       const collection = getPath(next, path);
       if (!Array.isArray(collection)) continue;
-      const identity = text(value?.name || value?.title, '', 140).toLocaleLowerCase();
+      const identity = text(value?.name || value?.title || value?.earth, '', 140).toLocaleLowerCase();
       let id = text(value?.id ?? (typeof value === 'string' ? value : ''), '', 80);
       let index = id ? collection.findIndex(item => item.id === id) : -1;
-      if (index < 0 && identity) index = collection.findIndex(item => text(item?.name || item?.title, '', 140).toLocaleLowerCase() === identity);
+      if (index < 0 && identity) index = collection.findIndex(item => text(item?.name || item?.title || item?.earth, '', 140).toLocaleLowerCase() === identity);
       if (!id && index >= 0) id = collection[index].id;
       if (!id && verb === 'upsert' && identity) id = `${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}-${identity.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 45) || uid()}`;
       if (!id) continue;
@@ -775,6 +876,17 @@ async function processAssistantPatch(messageId, generationType = '') {
   else setSync('unchanged');
 }
 
+async function handleAssistantReply(messageId, generationType = '') {
+  const numericId = Number(messageId);
+  const message = Number.isInteger(numericId) ? context().chat?.[numericId] : null;
+  if (['first_message', 'quiet', 'impersonate'].includes(generationType) || !message || message.is_user || message.is_system) return;
+  const travel = spiderPendingAction(getState());
+  await processAssistantPatch(numericId, generationType);
+  // The selected route becomes canonical only after the completed assistant reply is available.
+  if (travel) await finalizeSpiderTravel(travel);
+  else consumeSpiderArrivalNotice();
+}
+
 function interfaceMarkup() {
   return `
   <section id="marvel-nexus-overlay" class="mn-overlay" aria-hidden="true">
@@ -788,11 +900,12 @@ function interfaceMarkup() {
         <div class="mn-status-top"><span id="mn-earth" class="mn-code"></span></div>
         <article class="mn-panel mn-identity">
           <div class="mn-panel-head"><h3 data-t="identity"></h3><button id="mn-edit-profile" class="mn-text-button" type="button" data-t="edit"></button></div>
-          <div class="mn-identity-grid" id="mn-identity-grid"></div>
+          <div class="mn-identity-layout"><div class="mn-portrait-console"><figure id="mn-operator-portrait"><span><i class="fa-solid fa-user-astronaut"></i></span></figure><div class="mn-portrait-modes"><button type="button" data-portrait-mode="civilian" data-t="civilian"></button><button type="button" data-portrait-mode="hero" data-t="hero"></button></div><button id="mn-portrait-settings" class="mn-text-button" type="button" data-t="configureImages"></button></div><div class="mn-identity-grid" id="mn-identity-grid"></div></div>
         </article>
         <article class="mn-panel mn-security-panel"><div class="mn-panel-head"><h3 data-t="secretIdentity"></h3><span id="mn-secrecy" class="mn-badge"></span></div><div id="mn-identity-security"></div><div id="mn-identity-witnesses" class="mn-chip-list"></div></article>
         <div class="mn-divider"><span data-t="vitals"></span></div>
         <article class="mn-vitals" id="mn-vitals"></article>
+        <div class="mn-status-systems"><article class="mn-panel mn-team-panel"><div class="mn-panel-head"><h3 data-t="teamSystem"></h3><button id="mn-edit-team" class="mn-text-button" type="button" data-t="editTeam"></button></div><div id="mn-team-summary"></div><div id="mn-team-members" class="mn-team-members"></div></article><article class="mn-panel mn-training-panel"><div class="mn-panel-head"><h3 data-t="trainingSystem"></h3><button id="mn-queue-training" class="mn-text-button" type="button" data-t="queueTraining"></button></div><div id="mn-training-summary"></div><p data-t="trainingHelp"></p></article></div>
         <article class="mn-panel"><div class="mn-panel-head"><h3 data-t="abilities"></h3><span id="mn-condition" class="mn-badge"></span></div><div id="mn-powers" class="mn-powers"></div><div id="mn-secondary" class="mn-secondary"></div></article>
       </section>
       <section id="mn-page-intel" class="mn-page" data-page="intel" hidden><div class="mn-page-title"><div><small data-t="intel"></small><h2 data-t="contacts"></h2><p data-t="relationships"></p></div></div><div class="mn-split"><article class="mn-panel"><div id="mn-contact-list" class="mn-list"></div></article><article class="mn-panel" id="mn-contact-detail"></article></div><div class="mn-divider"><span data-t="factions"></span></div><div id="mn-faction-list" class="mn-card-grid"></div><div class="mn-divider"><span data-t="evidenceBoard"></span></div><div id="mn-evidence-board" class="mn-evidence-board"></div></section>
@@ -804,6 +917,9 @@ function interfaceMarkup() {
       ${[['status','heart-pulse'],['intel','user-secret'],['missions','crosshairs'],['world','earth-americas'],['archive','database']].map(([key, icon], index) => `<button type="button" role="tab" data-tab="${key}" aria-selected="${index === 0}"><i class="fa-solid fa-${icon}"></i><span data-t="${key}"></span></button>`).join('')}
     </nav>
     <section id="mn-profile-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-profile-form"><div class="mn-panel-head"><h3 data-t="editIdentity"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid">${['alias','role','origin','affiliation'].map(key => `<label><span data-t="${key}"></span><input name="${key}" maxlength="160"></label>`).join('')}</div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="save"></button></div></form></section>
+    <section id="mn-portrait-modal" class="mn-modal" hidden><form class="mn-sheet mn-portrait-sheet" id="mn-portrait-form"><div class="mn-panel-head"><h3 data-t="appearanceFrame"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><p data-t="portraitHelp"></p><div class="mn-form-grid"><label><span data-t="civilianImage"></span><input name="civilian" maxlength="600000" inputmode="url"><small data-t="imageUpload"></small><input name="civilianFile" type="file" accept="image/*"></label><label><span data-t="heroImage"></span><input name="hero" maxlength="600000" inputmode="url"><small data-t="imageUpload"></small><input name="heroFile" type="file" accept="image/*"></label></div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="save"></button></div></form></section>
+    <section id="mn-team-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-team-form"><div class="mn-panel-head"><h3 data-t="teamSystem"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid"><label><span data-t="teamName"></span><input name="name" maxlength="140"></label><label><span data-t="teamStatus"></span><input name="status" maxlength="100"></label><label class="mn-form-wide"><span data-t="teamObjective"></span><textarea name="objective" maxlength="500"></textarea></label><label class="mn-form-wide"><span data-t="teamMembers"></span><textarea name="members" maxlength="4000"></textarea><small data-t="teamMemberHelp"></small></label></div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="save"></button></div></form></section>
+    <section id="mn-training-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-training-form"><div class="mn-panel-head"><h3 data-t="trainingSystem"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><p data-t="trainingHelp"></p><div class="mn-form-grid"><label><span data-t="trainingFocus"></span><select name="focus"><option value="Endurance">Endurance / ความอดทน</option><option value="Energy control">Energy Control / ควบคุมพลังงาน</option><option value="Combat conditioning">Combat / การต่อสู้</option><option value="Recovery">Recovery / การฟื้นตัว</option><option value="custom" data-t="customFocus"></option></select></label><label><span data-t="customFocus"></span><input name="customFocus" maxlength="120"></label><label><span data-t="intensity"></span><select name="intensity"><option value="Light">Light / เบา</option><option value="Moderate" selected>Moderate / ปานกลาง</option><option value="Intense">Intense / หนัก</option></select></label><label><span data-t="duration"></span><input name="duration" maxlength="100" placeholder="1 hour / 1 ชั่วโมง"></label></div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="queueTraining"></button></div></form></section>
     <section id="mn-universe-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-universe-form"><div class="mn-panel-head"><h3 data-t="universeSettings"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid">${['earth','continuity','timeline'].map(key => `<label><span data-t="${key}"></span><input name="${key}" maxlength="160"></label>`).join('')}</div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="apply"></button></div></form></section>
     <section id="mn-time-modal" class="mn-modal" hidden><form class="mn-sheet mn-time-sheet" id="mn-time-form"><div class="mn-panel-head"><h3 data-t="timeTitle"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><p data-t="timeHelp"></p><div class="mn-time-fields"><label><span data-t="amount"></span><input name="amount" type="number" inputmode="numeric" min="1" max="9999" value="30" required></label><label><span data-t="unit"></span><select name="unit"><option value="minutes" data-t="minutes"></option><option value="hours" data-t="hours"></option><option value="days" data-t="days"></option></select></label></div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="queue"></button></div></form></section>
   </section>`;
@@ -823,11 +939,18 @@ function buildInterface() {
   overlay.querySelector('#mn-close').addEventListener('click', closeInterface);
   overlay.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => showTab(button.dataset.tab)));
   overlay.querySelector('#mn-edit-profile').addEventListener('click', () => openProfile());
+  overlay.querySelector('#mn-portrait-settings').addEventListener('click', openPortraitSettings);
+  overlay.querySelectorAll('[data-portrait-mode]').forEach(button => button.addEventListener('click', () => void setActivePortrait(button.dataset.portraitMode)));
+  overlay.querySelector('#mn-edit-team').addEventListener('click', openTeamEditor);
+  overlay.querySelector('#mn-queue-training').addEventListener('click', () => openModal('mn-training-modal'));
   overlay.querySelector('#mn-universe-button').addEventListener('click', () => openUniverse());
   overlay.querySelector('#mn-advance-time').addEventListener('click', () => openModal('mn-time-modal'));
   overlay.querySelectorAll('[data-modal-close]').forEach(button => button.addEventListener('click', () => closeModal(button.closest('.mn-modal'))));
   overlay.querySelectorAll('.mn-modal').forEach(modal => modal.addEventListener('click', event => { if (event.target === modal) closeModal(modal); }));
   overlay.querySelector('#mn-profile-form').addEventListener('submit', saveProfile);
+  overlay.querySelector('#mn-portrait-form').addEventListener('submit', savePortraitSettings);
+  overlay.querySelector('#mn-team-form').addEventListener('submit', saveTeam);
+  overlay.querySelector('#mn-training-form').addEventListener('submit', queueTraining);
   overlay.querySelector('#mn-universe-form').addEventListener('submit', saveUniverse);
   overlay.querySelector('#mn-time-form').addEventListener('submit', queueTime);
   applyAppearance();
@@ -874,6 +997,105 @@ function openProfile() { const state = getState(); const form = document.getElem
 function openUniverse() { const state = getState(); const form = document.getElementById('mn-universe-form'); for (const key of ['earth','continuity','timeline']) form.elements[key].value = state.operator[key]; openModal('mn-universe-modal'); }
 async function saveProfile(event) { event.preventDefault(); const state = getState(); state.operator.name = currentPersonaName(); for (const key of ['alias','role','origin','affiliation']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
 async function saveUniverse(event) { event.preventDefault(); const state = getState(); for (const key of ['earth','continuity','timeline']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
+
+function openPortraitSettings() {
+  const state = getState();
+  const target = document.getElementById('mn-portrait-form');
+  target.elements.civilian.value = state.portraits.civilian;
+  target.elements.hero.value = state.portraits.hero;
+  target.elements.civilianFile.value = '';
+  target.elements.heroFile.value = '';
+  openModal('mn-portrait-modal');
+}
+
+function portraitFileData(file) {
+  if (!(file instanceof File) || !file.type.startsWith('image/')) return Promise.resolve('');
+  return new Promise((resolve, reject) => {
+    const source = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      try {
+        const maximum = 640;
+        const scale = Math.min(1, maximum / Math.max(image.naturalWidth || 1, image.naturalHeight || 1));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        canvas.getContext('2d', { alpha: false })?.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const encoded = canvas.toDataURL('image/webp', .84);
+        URL.revokeObjectURL(source);
+        resolve(encoded);
+      } catch (error) { URL.revokeObjectURL(source); reject(error); }
+    };
+    image.onerror = () => { URL.revokeObjectURL(source); reject(new Error('Image could not be read.')); };
+    image.src = source;
+  });
+}
+
+async function savePortraitSettings(event) {
+  event.preventDefault();
+  const target = event.currentTarget;
+  const state = getState();
+  const civilianFile = target.elements.civilianFile.files?.[0];
+  const heroFile = target.elements.heroFile.files?.[0];
+  try {
+    state.portraits.civilian = civilianFile ? await portraitFileData(civilianFile) : text(target.elements.civilian.value, '', 600000);
+    state.portraits.hero = heroFile ? await portraitFileData(heroFile) : text(target.elements.hero.value, '', 600000);
+    closeModal(target.closest('.mn-modal'));
+    await persistState(state, 'portrait-settings');
+  } catch (error) {
+    console.warn('[Marvel Nexus] Portrait image could not be saved.', error);
+    notify('error', language() === 'th' ? 'ไม่สามารถบันทึกรูปภาพนี้ได้' : 'This image could not be saved.');
+  }
+}
+
+async function setActivePortrait(mode) {
+  if (!['civilian', 'hero'].includes(mode)) return;
+  const state = getState();
+  state.portraits.active = mode;
+  playSpiderWatchSound('select');
+  await persistState(state, 'portrait-swap');
+}
+
+function openTeamEditor() {
+  const state = getState();
+  const target = document.getElementById('mn-team-form');
+  target.elements.name.value = state.team.name;
+  target.elements.status.value = state.team.status;
+  target.elements.objective.value = state.team.objective;
+  target.elements.members.value = state.team.members.map(member => [member.name, member.role, member.status].join(' | ')).join('\n');
+  openModal('mn-team-modal');
+}
+
+async function saveTeam(event) {
+  event.preventDefault();
+  const target = event.currentTarget;
+  const state = getState();
+  state.team.name = text(target.elements.name.value, 'Independent', 140);
+  state.team.status = text(target.elements.status.value, 'Solo', 100);
+  state.team.objective = text(target.elements.objective.value, '', 500);
+  const previous = new Map(state.team.members.map(member => [member.name.toLocaleLowerCase(), member]));
+  state.team.members = String(target.elements.members.value || '').split(/\r?\n/).map(line => {
+    const [name, role, status] = line.split('|').map(value => text(value, '', 160));
+    if (!name) return null;
+    const existing = previous.get(name.toLocaleLowerCase());
+    return normalizeItem({ ...existing, id: existing?.id || `teammate-${uid()}`, name, role: role || 'Member', status: status || 'Active' }, 'teammate');
+  }).filter(Boolean).slice(0, 30);
+  closeModal(target.closest('.mn-modal'));
+  await persistState(state, 'team-settings');
+}
+
+async function queueTraining(event) {
+  event.preventDefault();
+  if (!context().getCurrentChatId?.()) { notify('warning', tr('openChat')); return; }
+  const target = event.currentTarget;
+  const selected = target.elements.focus.value;
+  const focus = selected === 'custom' ? text(target.elements.customFocus.value, 'General conditioning', 120) : text(selected, 'General conditioning', 120);
+  const state = getState();
+  state.pendingActions.push({ id: `training-${uid()}`, type: 'training_session', focus, intensity: text(target.elements.intensity.value, 'Moderate', 80), duration: text(target.elements.duration.value, 'One session', 100), queuedAt: new Date().toISOString() });
+  closeModal(target.closest('.mn-modal'));
+  await persistState(state, 'queued-training');
+  notify('info', language() === 'th' ? 'จัดคิวการฝึกไว้สำหรับข้อความถัดไปแล้ว' : 'Training queued for the next main-chat message.');
+}
 async function queueTime(event) {
   event.preventDefault();
   if (!context().getCurrentChatId?.()) { notify('warning', tr('openChat')); return; }
@@ -1000,8 +1222,16 @@ function render(state = getState()) {
   localize(root);
   root.querySelector('#mn-earth').textContent = state.operator.earth;
   root.querySelector('#mn-condition').textContent = state.operator.condition;
+  const portrait = root.querySelector('#mn-operator-portrait');
+  const portraitSource = state.portraits[state.portraits.active];
+  portrait.innerHTML = `<span><i class="fa-solid fa-user-astronaut"></i><small>${escapeHtml(tr(state.portraits.active))}</small></span>${portraitSource ? `<img alt="${escapeHtml(state.operator.name)} · ${escapeHtml(tr(state.portraits.active))}" src="${escapeHtml(portraitSource)}">` : ''}`;
+  portrait.querySelector('img')?.addEventListener('error', event => event.currentTarget.remove(), { once: true });
+  root.querySelectorAll('[data-portrait-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.portraitMode === state.portraits.active)));
   root.querySelector('#mn-identity-grid').innerHTML = ['alias','role','origin','affiliation','location'].map(key => `<div><span>${escapeHtml(tr(key))}</span><strong>${escapeHtml(state.operator[key])}</strong></div>`).join('');
   root.querySelector('#mn-vitals').innerHTML = [['health','healthMax','#ef5865'],['energy','energyMax','#48a8e8']].map(([key,maxKey,tone]) => `<div class="mn-vital"><span class="mn-vital-icon" style="--tone:${tone}">${key === 'health' ? 'HP' : 'EN'}</span><div><label><b>${escapeHtml(tr(key))}</b><strong>${state.vitals[key]} / ${state.vitals[maxKey]}</strong></label><i><em style="width:${state.vitals[key] / state.vitals[maxKey] * 100}%;--tone:${tone}"></em></i></div></div>`).join('');
+  root.querySelector('#mn-team-summary').innerHTML = `<div class="mn-contact-facts">${[[tr('teamName'),state.team.name],[tr('teamStatus'),state.team.status],[tr('teamObjective'),state.team.objective || '—']].map(([label,value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('')}</div>`;
+  root.querySelector('#mn-team-members').innerHTML = state.team.members.length ? state.team.members.map(member => `<div><span>${escapeHtml(member.name.charAt(0).toUpperCase())}</span><div><strong>${escapeHtml(member.name)}</strong><small>${escapeHtml([member.role,member.status,member.condition].filter(Boolean).join(' · '))}</small></div></div>`).join('') : `<p class="mn-empty">${escapeHtml(tr('noTeamMembers'))}</p>`;
+  root.querySelector('#mn-training-summary').innerHTML = `<div class="mn-training-stats"><span><small>${escapeHtml(tr('trainingLevel'))}</small><strong>${state.training.level}</strong></span><span><small>${escapeHtml(tr('sessions'))}</small><strong>${state.training.sessions}</strong></span><span><small>${escapeHtml(tr('trainingFocus'))}</small><strong>${escapeHtml(state.training.focus)}</strong></span></div>${metric(tr('progress'),state.training.progress,'#50aae6')}`;
   root.querySelector('#mn-powers').innerHTML = state.powers.length ? state.powers.map(power => `<div class="mn-power"><div><strong>${escapeHtml(power.name)}</strong><span>${escapeHtml(power.description)}</span></div><b>${power.mastery}%</b><i><em style="width:${power.mastery}%"></em></i></div>`).join('') : `<p class="mn-empty">${escapeHtml(tr('abilities'))}: —</p>`;
   root.querySelector('#mn-secondary').innerHTML = metric(tr('integrity'), state.vitals.suitIntegrity) + metric(tr('fatigue'), state.vitals.fatigue, '#d59f53');
   renderIdentitySecurity(state); renderContacts(state); renderIntelSystems(state); renderMissions(state); renderWorld(state); renderArchive(state); setSync(getSettings().aiSync ? 'ready' : 'disabled');
@@ -1068,7 +1298,7 @@ function renderWorld(state) {
   const nearby = new Set(state.world.nearbyContacts);
   for (const contact of syncedContacts(state)) if (currentLocation && currentLocation !== 'unknown' && contactIdentity(contact.location) === currentLocation) nearby.add(contact.name);
   root.querySelector('#mn-nearby-contacts').innerHTML = nearby.size ? `<b>${escapeHtml(tr('nearby'))}</b>${[...nearby].map(name => `<span><strong>${escapeHtml(name)}</strong></span>`).join('')}` : '';
-  root.querySelector('#mn-pending-actions').innerHTML = state.pendingActions.length ? `<div class="mn-pending"><b>${escapeHtml(tr('pending'))}</b>${state.pendingActions.map(action => action.type === 'spider_travel' ? `<span>Spider Watch · ${escapeHtml(action.destinationEarth)}</span>` : `<span>${action.amount} ${escapeHtml(tr(action.unit))}</span>`).join('')}</div>` : '';
+  root.querySelector('#mn-pending-actions').innerHTML = state.pendingActions.length ? `<div class="mn-pending"><b>${escapeHtml(tr('pending'))}</b>${state.pendingActions.map(action => action.type === 'spider_travel' ? `<span>Spider Watch · ${escapeHtml(action.destinationEarth)}</span>` : action.type === 'training_session' ? `<span>${escapeHtml(tr('trainingSystem'))} · ${escapeHtml(action.focus)}</span>` : `<span>${action.amount} ${escapeHtml(tr(action.unit))}</span>`).join('')}</div>` : '';
   root.querySelector('#mn-incidents').innerHTML = state.world.incidents.length ? state.world.incidents.map(incident => `<div class="mn-incident"><span>${escapeHtml(incident.threat)}</span><div><strong>${escapeHtml(incident.title)}</strong><small>${escapeHtml(incident.detail)}</small></div><b>${escapeHtml(incident.eta)}</b></div>`).join('') : `<p class="mn-empty">—</p>`;
   const timelineLedger = root.querySelector('#mn-timeline-ledger');
   timelineLedger.classList.toggle('is-empty', state.timelineEvents.length === 0);
@@ -1140,7 +1370,7 @@ async function addSettingsDrawer() {
   bindCheckbox('marvel-nexus-show-launcher','showLauncher',syncLauncherVisibility);
   bindCheckbox('marvel-nexus-ai-sync','aiSync',updatePrompt);
   bindCheckbox('marvel-nexus-inject-state','injectState',updatePrompt);
-  bindSelect('marvel-nexus-language','language',() => { localize(); render(); });
+  bindSelect('marvel-nexus-language','language',() => { localize(); render(); globalThis.dispatchEvent(new CustomEvent('marvel-nexus:language-changed')); });
   bindSelect('marvel-nexus-motion','motion',applyAppearance);
   bindSelect('marvel-nexus-density','density',applyAppearance);
   bindCheckbox('marvel-nexus-watch-sounds','watchSounds');
@@ -1152,9 +1382,9 @@ async function addSettingsDrawer() {
 function bindChatEvents() {
   const { eventSource, eventTypes } = context();
   eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; pendingSpiderArrivalNotice=null; spiderWatchMode='home'; spiderWatchSelection=null; closeSpiderWatch(); clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
-  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { void finalizeSpiderTravel(); updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
-  eventSource.on(eventTypes.MESSAGE_RECEIVED, async (messageId,generationType) => { await processAssistantPatch(messageId,generationType); consumeSpiderArrivalNotice(); });
-  if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, async (messageId,generationType) => { await processAssistantPatch(messageId,generationType); consumeSpiderArrivalNotice(); });
+  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
+  eventSource.on(eventTypes.MESSAGE_RECEIVED, (messageId,generationType) => void handleAssistantReply(messageId,generationType));
+  if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, (messageId,generationType) => void handleAssistantReply(messageId,generationType));
   if (eventTypes.MESSAGE_EDITED) eventSource.on(eventTypes.MESSAGE_EDITED, messageId => processAssistantPatch(Number(messageId), 'edit'));
   if (eventTypes.MESSAGE_SWIPED) eventSource.on(eventTypes.MESSAGE_SWIPED, messageId => processAssistantPatch(Number(messageId), 'swipe'));
   if (eventTypes.GENERATION_STARTED) eventSource.on(eventTypes.GENERATION_STARTED, () => updatePrompt());
@@ -1171,10 +1401,10 @@ async function initialize() {
   if (initialized) return; initialized = true;
   try {
     getSettings(); buildInterface(); buildSpiderWatch();
-    const { initializeMarvelRegistration } = await import('./registration.js?v=2.2.0');
+    const { initializeMarvelRegistration } = await import('./registration.js?v=2.3.0');
     await initializeMarvelRegistration({
       context, getState, persistState, updatePrompt, currentPersonaName, notify, closeInterface, closeSpiderWatch,
-      motion: () => getSettings().motion,
+      motion: () => getSettings().motion, language,
     });
     await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
     globalThis.addEventListener('character-life:rpg-bridge-ready', refreshCharacterLifeContacts);
@@ -1187,7 +1417,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.2.0 loaded.');
+    console.info('[Marvel Nexus] Extension v2.3.0 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 

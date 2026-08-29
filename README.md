@@ -19,9 +19,17 @@ Marvel Nexus is a mobile-first SillyTavern extension that turns the active Marve
 - Wand-menu launcher and an Extensions settings drawer
 - `/spiderwatch` standalone dimensional-travel interface with a draggable vertical position
 - Earth-route selection, red-button confirmation, and white-button reset controls
+- Earth-616 is always available as the stable return route
+- Custom Earth/dimension and optional arrival-point input directly inside Spider Watch
+- AI-discovered destination registry updated from the normal role-play reply without an extra generation
 - Local Web Audio interaction sounds with on/off and volume controls
 - High-tech arrival alert that dismisses completely after 4.5 seconds
-- Confirmed Spider Watch arrivals update the Nexus operator, world, timeline, anomaly, and archive records
+- Confirmed Spider Watch arrivals update the Nexus operator, world, timeline, anomaly, and archive records only after the assistant reply completes
+- Registration fields with switchable preset and custom-input modes
+- Fully localized English/Thai registration and interface copy with bundled Oxanium and Chakra Petch fonts
+- Configurable civilian and hero/costume identity images with a Status-page frame switcher
+- Team network with editable membership plus AI-updated roles, status, locations, and objectives
+- Training sessions queued into the next normal reply; confirmed training can raise the 100-point starting HP and energy maxima
 - Responsive iPhone safe-area layout and desktop split views
 - English, Thai, and automatic language selection
 - Locally bundled Oxanium (English) and Chakra Petch (Thai) interface fonts
@@ -56,9 +64,17 @@ Time-advance requests are only queued. They are included with the next user mess
 
 ## Spider Watch
 
-Enter `/spiderwatch` in the main chat to open the watch. Select an available Earth, press the red hardware button to arm the route, and then send the next normal role-play message. Before that generation begins, Marvel Nexus commits the arrival as the canonical current Earth and location. The following assistant reply therefore receives the new dimension in its prompt, and the Nexus World, Timeline, Anomaly, and Archive views reflect the same destination.
+Enter `/spiderwatch` in the main chat to open the watch. Select a recorded Earth, enter any custom Earth/dimension and optional arrival point, then press the red hardware button to arm the route. Earth-616 remains a permanent return anchor. Routes discovered during normal role-play are added through the same hidden reply patch, so destination updates do not consume a second AI call.
 
-The arrival notice plays once when that next message is sent and is fully dismissed after 4.5 seconds. Watch sounds are generated locally with the browser Web Audio API; they can be disabled or adjusted in the extension settings. On iOS, the first sound requires a direct touch interaction, which opening or pressing the watch provides.
+Send the next normal role-play message after arming. The assistant reply narrates the selected transit first; only after that completed reply does Marvel Nexus commit the new Earth/location and display the arrival notice. The notice is fully dismissed after 4.5 seconds. Watch sounds are generated locally with the browser Web Audio API; they can be disabled or adjusted in the extension settings. On iOS, the first sound requires a direct touch interaction, which opening or pressing the watch provides.
+
+## Identity frames, teams, and training
+
+The Status page can store a civilian image and a hero/costume image for the current chat. Use the two frame buttons to swap manually; confirmed story context can also switch the active frame without changing either saved image.
+
+The Team Network stores the current team name, status, objective, and roster. Members can be entered manually as `Name | Role | Status`, while normal role-play replies can update confirmed membership and field status.
+
+New and newly registered operators start at **100 / 100 HP** and **100 / 100 energy**. Queue a training focus, intensity, and duration from the Status page, then describe or perform it in the next role-play turn. Only training completed in the assistant reply can advance training progress or increase maximum HP/energy.
 
 ## Character Life integration
 

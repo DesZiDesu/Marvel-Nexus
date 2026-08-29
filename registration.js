@@ -8,6 +8,45 @@ let closeTimer = 0;
 const clean = (value, max = 2000) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 
+const THAI_TEXT = Object.freeze({
+  'MARVEL NEXUS // ACCESS NODE': 'MARVEL NEXUS // จุดเชื่อมต่อ', 'ROLE-PLAY REGISTRATION': 'ลงทะเบียนโรลเพลย์', 'PERSONA LINKED:': 'เชื่อมต่อเพอร์โซนา:',
+  'Registration sections': 'หมวดการลงทะเบียน', Identity: 'ตัวตน', Abilities: 'ความสามารถ', Reality: 'จักรวาล', 'Role-play': 'โรลเพลย์', Confirm: 'ยืนยัน',
+  IDENTITY: 'ตัวตน', ABILITIES: 'ความสามารถ', REALITY: 'จักรวาล', 'ROLE-PLAY': 'โรลเพลย์', CONFIRM: 'ยืนยัน',
+  'Age *': 'อายุ *', 'Gender *': 'เพศ *', 'Race / Species *': 'เผ่าพันธุ์ *', Pronouns: 'สรรพนาม', 'Alias / Codename': 'สมญานาม / โค้ดเนม', 'Affiliation *': 'สังกัด *', 'Occupation *': 'อาชีพ *', 'Identity Status': 'สถานะตัวตน',
+  'Origin / Power Source *': 'ต้นกำเนิด / แหล่งพลัง *', 'Power Scale': 'ระดับพลัง', 'Current Condition': 'สภาพปัจจุบัน', 'ABILITY MATRIX': 'เมทริกซ์ความสามารถ', 'Add ability': 'เพิ่มความสามารถ', 'Weaknesses / Costs *': 'จุดอ่อน / ต้นทุน *', 'Equipment / Assets': 'อุปกรณ์ / ทรัพย์สิน',
+  'Universe Designation *': 'รหัสจักรวาล *', Continuity: 'ความต่อเนื่อง', 'Timeline / Era *': 'ไทม์ไลน์ / ยุค *', 'World / Realm *': 'โลก / ดินแดน *', 'Canon Divergence': 'จุดแตกต่างจากแคนอน', 'World State / Active Crisis *': 'สภาพโลก / วิกฤตปัจจุบัน *', 'Known Factions': 'ฝ่ายที่รู้จัก', 'Known Marvel Relationships': 'ความสัมพันธ์ใน Marvel ที่รู้จัก',
+  'Starting Location *': 'ตำแหน่งเริ่มต้น *', 'Starting Time': 'เวลาเริ่มต้น', 'Role-play Tone': 'โทนโรลเพลย์', 'Point of View': 'มุมมอง', 'Canon Handling': 'การจัดการแคนอน', 'Character Control': 'การควบคุมตัวละคร', Appearance: 'รูปลักษณ์', Personality: 'นิสัย', Backstory: 'ประวัติ', 'Opening Situation *': 'สถานการณ์เปิดเรื่อง *', 'Immediate Objective *': 'เป้าหมายทันที *', 'First User Action / Message': 'การกระทำ / ข้อความแรกของผู้ใช้',
+  'REGISTRATION LINK READY': 'ลิงก์ลงทะเบียนพร้อม', 'REQUIRED DATA MISSING': 'ข้อมูลที่จำเป็นไม่ครบ', 'READY TO INITIALIZE ROLE-PLAY': 'พร้อมเริ่มต้นโรลเพลย์', Back: 'ย้อนกลับ', Continue: 'ดำเนินการต่อ', 'Confirm registration': 'ยืนยันการลงทะเบียน', Initializing: 'กำลังเริ่มต้น',
+  Preset: 'ค่าที่เตรียมไว้', Custom: 'กำหนดเอง', Name: 'ชื่อ', Type: 'ประเภท', Mastery: 'ความชำนาญ', 'Function and Limits *': 'การทำงานและข้อจำกัด *', 'Remove ability': 'ลบความสามารถ',
+  Woman: 'หญิง', Man: 'ชาย', 'Non-binary': 'นอนไบนารี', Genderfluid: 'เจนเดอร์ฟลูอิด', Agender: 'ไม่ระบุเพศ', Human: 'มนุษย์', Mutant: 'มิวแทนต์', Inhuman: 'อินฮิวแมน', 'Enhanced human': 'มนุษย์เสริมพลัง', Asgardian: 'ชาวแอสการ์ด', Alien: 'เอเลี่ยน', Android: 'แอนดรอยด์',
+  'She/her': 'เธอ', 'He/him': 'เขา', 'They/them': 'พวกเขา', Independent: 'อิสระ', Avengers: 'อเวนเจอร์ส', 'X-Men': 'เอ็กซ์เมน', 'Fantastic Four': 'แฟนแทสติกโฟร์', Student: 'นักเรียน', Vigilante: 'ศาลเตี้ย', Hero: 'ฮีโร่', Agent: 'สายลับ', Scientist: 'นักวิทยาศาสตร์', Mercenary: 'ทหารรับจ้าง',
+  'Present day': 'ยุคปัจจุบัน', 'MCU era': 'ยุค MCU', 'Post-apocalyptic': 'หลังวันสิ้นโลก', 'Original era': 'ยุคต้นฉบับ', Earth: 'โลก', Multiverse: 'พหุจักรวาล', 'Alternate reality': 'จักรวาลคู่ขนาน', 'New York City': 'นครนิวยอร์ก', Brooklyn: 'บรูคลิน', Queens: 'ควีนส์', Manhattan: 'แมนฮัตตัน', Wakanda: 'วากานดา', Asgard: 'แอสการ์ด', 'Avengers Tower': 'อเวนเจอร์สทาวเวอร์',
+  'Secret identity': 'ตัวตนลับ', 'Known to allies': 'พันธมิตรรู้ตัวตน', 'Public identity': 'ตัวตนสาธารณะ', 'Identity compromised': 'ตัวตนถูกเปิดเผย', 'Street-level': 'ระดับท้องถนน', Enhanced: 'เสริมพลัง', 'Avengers-level': 'ระดับอเวนเจอร์ส', Cosmic: 'ระดับจักรวาล', 'Reality-altering': 'บิดเบือนความจริง', Stable: 'เสถียร', Injured: 'บาดเจ็บ', Exhausted: 'เหนื่อยล้า', 'Power unstable': 'พลังไม่เสถียร', Critical: 'วิกฤต', Power: 'พลัง', Skill: 'ทักษะ', Technology: 'เทคโนโลยี', Magic: 'เวทมนตร์', Untrained: 'ยังไม่ฝึก', Developing: 'กำลังพัฒนา', Proficient: 'ชำนาญ', Mastered: 'เชี่ยวชาญสูงสุด',
+  'Marvel Comics canon': 'แคนอน Marvel Comics', 'MCU-inspired': 'อิง MCU', 'Hybrid continuity': 'ความต่อเนื่องแบบผสม', 'Original alternate universe': 'จักรวาลคู่ขนานต้นฉบับ', 'Classic heroic': 'ฮีโร่คลาสสิก', 'Cinematic and tense': 'ภาพยนตร์และตึงเครียด', 'Street-level noir': 'นัวร์ระดับท้องถนน', 'Cosmic adventure': 'ผจญภัยจักรวาล', 'Dark multiverse': 'พหุจักรวาลด้านมืด', 'Second person': 'บุรุษที่สอง', 'Third person limited': 'บุรุษที่สามแบบจำกัด', 'First person': 'บุรุษที่หนึ่ง', 'Strict canon': 'ยึดแคนอนเคร่งครัด', 'Canon-consistent with divergence': 'สอดคล้องแคนอนแต่มีจุดแตกต่าง', 'Flexible canon': 'แคนอนยืดหยุ่น', 'Fully original': 'ต้นฉบับทั้งหมด', 'User controls registered character': 'ผู้ใช้ควบคุมตัวละครที่ลงทะเบียน', 'Shared control': 'ควบคุมร่วมกัน',
+  Persona: 'เพอร์โซนา', Age: 'อายุ', Gender: 'เพศ', 'Race / Species': 'เผ่าพันธุ์', Alias: 'สมญานาม', Affiliation: 'สังกัด', Occupation: 'อาชีพ', 'Identity status': 'สถานะตัวตน', 'Origin / Source': 'ต้นกำเนิด / แหล่งพลัง', 'Power scale': 'ระดับพลัง', Condition: 'สภาพ', 'Ability matrix': 'เมทริกซ์ความสามารถ', 'Weaknesses / Costs': 'จุดอ่อน / ต้นทุน', 'Equipment / Assets': 'อุปกรณ์ / ทรัพย์สิน', Universe: 'จักรวาล', 'Timeline / Era': 'ไทม์ไลน์ / ยุค', 'World / Realm': 'โลก / ดินแดน', 'Canon divergence': 'จุดแตกต่างจากแคนอน', 'World state': 'สภาพโลก', 'Known factions': 'ฝ่ายที่รู้จัก', 'Known relationships': 'ความสัมพันธ์ที่รู้จัก', 'Starting location': 'ตำแหน่งเริ่มต้น', 'Starting time': 'เวลาเริ่มต้น', Tone: 'โทน', 'Point of view': 'มุมมอง', 'Canon handling': 'การจัดการแคนอน', 'Character control': 'การควบคุมตัวละคร', 'Opening situation': 'สถานการณ์เปิดเรื่อง', 'Immediate objective': 'เป้าหมายทันที', 'First action / message': 'การกระทำ / ข้อความแรก',
+});
+
+function registrationLanguage() { return controller?.language?.() === 'th' ? 'th' : 'en'; }
+function regText(english) { return registrationLanguage() === 'th' ? THAI_TEXT[english] || english : english; }
+
+function localizeRegistration() {
+  const root = overlay();
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const trimmed = node.nodeValue.trim();
+    if (!trimmed && !node.__mnEnglish) continue;
+    node.__mnEnglish ||= trimmed;
+    const replacement = regText(node.__mnEnglish);
+    node.nodeValue = node.nodeValue.replace(trimmed || regText(node.__mnEnglish), replacement);
+  }
+  root.setAttribute('lang', registrationLanguage());
+}
+
+function choiceFieldMarkup(name, label, values, { required = false, max = 160 } = {}) {
+  return `<div class="mn-reg-choice" data-reg-choice="${name}" data-choice-mode="preset"><span>${label}</span><div class="mn-reg-choice-mode"><button type="button" data-choice-set="preset" aria-pressed="true">Preset</button><button type="button" data-choice-set="custom" aria-pressed="false">Custom</button></div><select data-choice-preset aria-label="${escapeHtml(label)}" ${required ? 'data-required' : ''}>${values.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('')}</select><input name="${name}" data-choice-custom aria-label="${escapeHtml(label)}" maxlength="${max}" autocomplete="off" ${required ? 'data-required' : ''} hidden></div>`;
+}
+
 function registrationMarkup() {
   return `
   <section id="mn-registration-overlay" class="mn-reg" hidden aria-hidden="true">
@@ -38,12 +77,12 @@ function registrationMarkup() {
           <div class="mn-reg-section-code"><span>01</span><h2>IDENTITY</h2></div>
           <div class="mn-reg-fields">
             <label><span>Age *</span><input name="age" type="number" inputmode="numeric" min="1" max="9999" data-required></label>
-            <label><span>Gender *</span><input name="gender" maxlength="80" autocomplete="off" data-required></label>
-            <label><span>Race / Species *</span><input name="race" maxlength="100" autocomplete="off" data-required></label>
-            <label><span>Pronouns</span><input name="pronouns" maxlength="80" autocomplete="off"></label>
+            ${choiceFieldMarkup('gender', 'Gender *', ['Woman','Man','Non-binary','Genderfluid','Agender'], { required: true, max: 80 })}
+            ${choiceFieldMarkup('race', 'Race / Species *', ['Human','Mutant','Inhuman','Enhanced human','Asgardian','Alien','Android'], { required: true, max: 100 })}
+            ${choiceFieldMarkup('pronouns', 'Pronouns', ['She/her','He/him','They/them'], { max: 80 })}
             <label><span>Alias / Codename</span><input name="alias" maxlength="120" autocomplete="off"></label>
-            <label><span>Affiliation *</span><input name="affiliation" maxlength="140" autocomplete="off" data-required></label>
-            <label><span>Occupation *</span><input name="occupation" maxlength="140" autocomplete="off" data-required></label>
+            ${choiceFieldMarkup('affiliation', 'Affiliation *', ['Independent','Avengers','X-Men','S.H.I.E.L.D.','Fantastic Four'], { required: true, max: 140 })}
+            ${choiceFieldMarkup('occupation', 'Occupation *', ['Student','Vigilante','Hero','Agent','Scientist','Mercenary'], { required: true, max: 140 })}
             <label><span>Identity Status</span><select name="identityStatus"><option>Secret identity</option><option>Known to allies</option><option>Public identity</option><option>Identity compromised</option></select></label>
           </div>
         </section>
@@ -66,10 +105,10 @@ function registrationMarkup() {
         <section class="mn-reg-page" data-reg-page="3" hidden>
           <div class="mn-reg-section-code"><span>03</span><h2>REALITY</h2></div>
           <div class="mn-reg-fields">
-            <label><span>Universe Designation *</span><input name="universe" maxlength="80" data-required></label>
+            ${choiceFieldMarkup('universe', 'Universe Designation *', ['Earth-616','Earth-65','Earth-1610','Earth-928','Earth-42'], { required: true, max: 80 })}
             <label><span>Continuity</span><select name="continuity"><option>Marvel Comics canon</option><option>MCU-inspired</option><option selected>Hybrid continuity</option><option>Original alternate universe</option></select></label>
-            <label><span>Timeline / Era *</span><input name="timeline" maxlength="180" data-required></label>
-            <label><span>World / Realm *</span><input name="world" maxlength="180" data-required></label>
+            ${choiceFieldMarkup('timeline', 'Timeline / Era *', ['Present day','MCU era','2099','Post-apocalyptic','Original era'], { required: true, max: 180 })}
+            ${choiceFieldMarkup('world', 'World / Realm *', ['Earth','New York City','Wakanda','Asgard','Multiverse','Alternate reality'], { required: true, max: 180 })}
             <label class="mn-reg-wide"><span>Canon Divergence</span><textarea name="canonDivergence"></textarea></label>
             <label class="mn-reg-wide"><span>World State / Active Crisis *</span><textarea name="worldState" data-required></textarea></label>
             <label><span>Known Factions</span><textarea name="knownFactions"></textarea></label>
@@ -80,7 +119,7 @@ function registrationMarkup() {
         <section class="mn-reg-page" data-reg-page="4" hidden>
           <div class="mn-reg-section-code"><span>04</span><h2>ROLE-PLAY</h2></div>
           <div class="mn-reg-fields">
-            <label><span>Starting Location *</span><input name="startingLocation" maxlength="220" data-required></label>
+            ${choiceFieldMarkup('startingLocation', 'Starting Location *', ['New York City','Brooklyn','Queens','Manhattan','Wakanda','Avengers Tower'], { required: true, max: 220 })}
             <label><span>Starting Time</span><input name="startingTime" maxlength="160"></label>
             <label><span>Role-play Tone</span><select name="tone"><option>Classic heroic</option><option selected>Cinematic and tense</option><option>Street-level noir</option><option>Cosmic adventure</option><option>Dark multiverse</option></select></label>
             <label><span>Point of View</span><select name="pointOfView"><option selected>Second person</option><option>Third person limited</option><option>First person</option></select></label>
@@ -142,6 +181,7 @@ function addAbility(ability = {}) {
   if (!list || list.children.length >= 20) return;
   list.insertAdjacentHTML('beforeend', abilityMarkup(ability, list.children.length));
   renumberAbilities();
+  localizeRegistration();
 }
 
 function renumberAbilities() {
@@ -151,7 +191,30 @@ function renumberAbilities() {
   });
 }
 
+function setChoiceMode(wrapper, mode, value = '') {
+  if (!(wrapper instanceof HTMLElement)) return;
+  const nextMode = mode === 'custom' ? 'custom' : 'preset';
+  const preset = wrapper.querySelector('[data-choice-preset]');
+  const custom = wrapper.querySelector('[data-choice-custom]');
+  wrapper.dataset.choiceMode = nextMode;
+  wrapper.querySelectorAll('[data-choice-set]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.choiceSet === nextMode)));
+  preset.hidden = nextMode !== 'preset';
+  custom.hidden = nextMode !== 'custom';
+  if (value) {
+    if (nextMode === 'preset') preset.value = value;
+    else custom.value = value;
+  }
+}
+
+function choiceValue(name) {
+  const wrapper = document.querySelector(`#mn-registration-overlay [data-reg-choice="${name}"]`);
+  if (!wrapper) return null;
+  return clean(wrapper.dataset.choiceMode === 'custom' ? wrapper.querySelector('[data-choice-custom]')?.value : wrapper.querySelector('[data-choice-preset]')?.value, 240);
+}
+
 function fieldValue(name, max = 2000) {
+  const choice = choiceValue(name);
+  if (choice !== null) return clean(choice, max);
   const control = form()?.elements?.namedItem(name);
   return clean(control?.value, max);
 }
@@ -168,6 +231,7 @@ function readRegistration() {
     pointOfView: fieldValue('pointOfView', 100), canonHandling: fieldValue('canonHandling', 120), characterControl: fieldValue('characterControl', 120),
     appearance: fieldValue('appearance', 1600), personality: fieldValue('personality', 1600), backstory: fieldValue('backstory', 2400),
     openingSituation: fieldValue('openingSituation', 2000), objective: fieldValue('objective', 1200), firstMessage: fieldValue('firstMessage', 1600),
+    inputModes: Object.fromEntries([...document.querySelectorAll('#mn-registration-overlay [data-reg-choice]')].map(wrapper => [wrapper.dataset.regChoice, wrapper.dataset.choiceMode === 'custom' ? 'custom' : 'preset'])),
     abilities: [],
   };
   document.querySelectorAll('#mn-reg-abilities .mn-reg-ability').forEach((item, index) => {
@@ -190,7 +254,15 @@ function fillRegistration(data = {}) {
   if (!target) return;
   target.reset();
   for (const [name, value] of Object.entries(data)) {
-    if (name === 'abilities' || name === 'completed' || name === 'completedAt') continue;
+    if (name === 'abilities' || name === 'completed' || name === 'completedAt' || name === 'inputModes') continue;
+    const wrapper = document.querySelector(`#mn-registration-overlay [data-reg-choice="${name}"]`);
+    if (wrapper) {
+      const preset = wrapper.querySelector('[data-choice-preset]');
+      const presetExists = [...preset.options].some(option => option.value === value);
+      const requestedMode = data.inputModes?.[name];
+      setChoiceMode(wrapper, requestedMode || (!value || presetExists ? 'preset' : 'custom'), value);
+      continue;
+    }
     const control = target.elements.namedItem(name);
     if (control && typeof value === 'string' && value) control.value = value;
   }
@@ -202,7 +274,7 @@ function fillRegistration(data = {}) {
 }
 
 function requiredControlsForStep(step) {
-  return [...document.querySelectorAll('#mn-registration-overlay [data-reg-page="' + step + '"] [data-required]')];
+  return [...document.querySelectorAll('#mn-registration-overlay [data-reg-page="' + step + '"] [data-required]')].filter(control => !control.hidden);
 }
 
 function validateStep(step, focus = true) {
@@ -220,6 +292,7 @@ function validateStep(step, focus = true) {
   if (!firstInvalid) return true;
   setStep(step);
   document.getElementById('mn-reg-status').textContent = 'REQUIRED DATA MISSING';
+  localizeRegistration();
   if (focus) {
     firstInvalid.focus({ preventScroll: true });
     firstInvalid.scrollIntoView({ block: 'center', behavior: controller.motion() === 'off' ? 'auto' : 'smooth' });
@@ -258,6 +331,7 @@ function setStep(step) {
     : 'Continue <i class="fa-solid fa-arrow-right"></i>';
   document.getElementById('mn-reg-status').textContent = activeStep === 5 ? 'READY TO INITIALIZE ROLE-PLAY' : 'REGISTRATION LINK READY';
   if (activeStep === 5) renderReview();
+  localizeRegistration();
   document.querySelector('#mn-registration-overlay .mn-reg-main')?.scrollTo({ top: 0, behavior: 'auto' });
 }
 
@@ -280,6 +354,7 @@ function openRegistration() {
   window.clearTimeout(closeTimer);
   previousFocused = document.activeElement;
   fillRegistration(controller.getState().registration || {});
+  localizeRegistration();
   setStep(1);
   syncViewport();
   root.hidden = false;
@@ -316,6 +391,11 @@ function applyRegistrationToState(data) {
   state.operator.timeline = data.timeline;
   state.identity.secrecy = data.identityStatus;
   state.identity.publicStatus = data.identityStatus;
+  state.vitals.health = 100;
+  state.vitals.healthMax = 100;
+  state.vitals.energy = 100;
+  state.vitals.energyMax = 100;
+  state.training = { level: 1, sessions: 0, progress: 0, focus: 'Untrained' };
   state.powers = data.abilities.map((ability, index) => ({
     id: ability.id || 'registered-ability-' + (index + 1),
     name: ability.name,
@@ -396,6 +476,7 @@ async function confirmRegistration() {
   if (nextButton) {
     nextButton.disabled = true;
     nextButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initializing';
+    localizeRegistration();
   }
   let messageSent = false;
   try {
@@ -436,6 +517,13 @@ function buildRegistration() {
   });
   root.querySelector('[data-reg-add-ability]').addEventListener('click', () => addAbility());
   root.addEventListener('click', event => {
+    const choice = event.target.closest('[data-choice-set]');
+    if (choice) {
+      const wrapper = choice.closest('[data-reg-choice]');
+      setChoiceMode(wrapper, choice.dataset.choiceSet);
+      wrapper.querySelector(wrapper.dataset.choiceMode === 'custom' ? '[data-choice-custom]' : '[data-choice-preset]')?.focus({ preventScroll: true });
+      return;
+    }
     const remove = event.target.closest('[data-reg-remove-ability]');
     if (!remove) return;
     remove.closest('.mn-reg-ability')?.remove();
@@ -449,6 +537,8 @@ function buildRegistration() {
   globalThis.visualViewport?.addEventListener('resize', syncViewport);
   globalThis.visualViewport?.addEventListener('scroll', syncViewport);
   window.addEventListener('resize', syncViewport);
+  globalThis.addEventListener('marvel-nexus:language-changed', localizeRegistration);
+  localizeRegistration();
 }
 
 async function registerCommand() {
@@ -481,3 +571,5 @@ export async function initializeMarvelRegistration(api) {
     if (event.key === 'Escape' && !overlay()?.hidden) closeRegistration();
   });
 }
+
+export { localizeRegistration };
