@@ -425,7 +425,7 @@ body.marvel-nexus-open { overflow: hidden !important; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(96vw, 560px);
+  width: min(96vw, 560px, calc(100dvh - 24px));
   aspect-ratio: 1;
   pointer-events: auto;
   user-select: none;

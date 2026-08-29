@@ -84,6 +84,16 @@ let pendingSpiderArrivalNotice = null;
 let spiderTravelFinalizing = false;
 let spiderWatchCommandRegistered = false;
 
+function setSpiderWatchOffset(value = spiderWatchOffset, { reset = false } = {}) {
+  const device = document.getElementById('mn-sw-device');
+  if (!device) return;
+  const viewportHeight = globalThis.visualViewport?.height || window.innerHeight;
+  const deviceHeight = device.offsetHeight;
+  const limit = Math.max(0, (viewportHeight - deviceHeight) / 2 - 12);
+  spiderWatchOffset = reset ? 0 : Math.max(-limit, Math.min(limit, Number(value) || 0));
+  device.style.setProperty('--mn-sw-offset', `${Math.round(spiderWatchOffset)}px`);
+}
+
 const SPIDER_WATCH_ROUTES = Object.freeze([
   { earth: 'Earth-65', name: { en: "Gwen's Universe", th: 'จักรวาลของเกวน' }, location: 'Chelsea, New York', risk: 'Low', riskValue: 12, detail: { en: 'Watercolor skyline, active Spider-Woman, stable portal signature.', th: 'เส้นขอบฟ้าสีน้ำ มี Spider-Woman ปฏิบัติการ และสัญญาณประตูมิติเสถียร' } },
   { earth: 'Earth-1610', name: { en: "Miles' World", th: 'จักรวาลของไมลส์' }, location: 'Brooklyn, New York', risk: 'Moderate', riskValue: 34, detail: { en: 'Modern Brooklyn, active Spider-Man, collider residue detected.', th: 'บรูคลินยุคใหม่ มี Spider-Man ปฏิบัติการ และตรวจพบร่องรอยคอลลิเดอร์' } },
@@ -363,9 +373,7 @@ function buildSpiderWatch() {
   });
   device.addEventListener('pointermove', event => {
     if (!spiderWatchDrag || spiderWatchDrag.pointerId !== event.pointerId) return;
-    const limit = Math.max(16, (window.innerHeight - device.offsetHeight) / 2 - 12);
-    spiderWatchOffset = Math.max(-limit, Math.min(limit, spiderWatchDrag.offset + event.clientY - spiderWatchDrag.startY));
-    device.style.setProperty('--mn-sw-offset', `${Math.round(spiderWatchOffset)}px`);
+    setSpiderWatchOffset(spiderWatchDrag.offset + event.clientY - spiderWatchDrag.startY);
   });
   const stopDrag = event => {
     if (!spiderWatchDrag || spiderWatchDrag.pointerId !== event.pointerId) return;
@@ -376,6 +384,9 @@ function buildSpiderWatch() {
   device.addEventListener('pointerup', stopDrag);
   device.addEventListener('pointercancel', stopDrag);
   shell.addEventListener('click', event => { if (event.target === shell) closeSpiderWatch(); });
+  const keepWatchVisible = () => setSpiderWatchOffset();
+  window.addEventListener('resize', keepWatchVisible);
+  globalThis.visualViewport?.addEventListener('resize', keepWatchVisible);
 }
 
 function spiderPendingAction(state = getState()) {
@@ -421,6 +432,7 @@ function openSpiderWatch() {
   const shell = document.getElementById('mn-spider-watch');
   shell.hidden = false;
   shell.setAttribute('aria-hidden', 'false');
+  setSpiderWatchOffset(0, { reset: true });
   renderSpiderWatch();
   requestAnimationFrame(() => shell.classList.add('is-open'));
   playSpiderWatchSound('open');
@@ -481,8 +493,7 @@ async function resetSpiderWatch() {
   }
   spiderWatchMode = 'home';
   spiderWatchSelection = null;
-  spiderWatchOffset = 0;
-  document.getElementById('mn-sw-device')?.style.setProperty('--mn-sw-offset', '0px');
+  setSpiderWatchOffset(0, { reset: true });
   playSpiderWatchSound('reset');
   renderSpiderWatch();
 }
@@ -1125,7 +1136,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.1.0 loaded.');
+    console.info('[Marvel Nexus] Extension v2.1.1 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 
