@@ -17,6 +17,8 @@ const DEFAULT_SETTINGS = Object.freeze({
   language: 'auto',
   motion: 'full',
   density: 'compact',
+  sceneTracker: true,
+  sceneTrackerScope: 'all',
   watchSounds: true,
   watchVolume: 65,
 });
@@ -39,7 +41,8 @@ const COPY = {
     editIdentity: 'Edit Identity', universeSettings: 'Universe Settings', earth: 'Earth designation', timeline: 'Timeline', cancel: 'Cancel', save: 'Save', apply: 'Apply',
     timeTitle: 'Queue time advancement', timeHelp: 'This request will be batched with your next main-chat message. The AI will resolve consequences and update the Nexus state in that same reply.', amount: 'Amount', unit: 'Unit', minutes: 'Minutes', hours: 'Hours', days: 'Days', queue: 'Queue for next message', pending: 'Pending for next message', queued: 'Time request queued for your next main-chat message.',
     waiting: 'Waiting for chat', ready: 'Nexus synchronized', checking: 'Checking role-play reply', updated: 'Nexus state updated', unchanged: 'No confirmed state changes', disabled: 'AI synchronization is off', openChat: 'Open a chat to use Marvel Nexus.',
-    settingsIntro: 'A persistent Marvel role-play interface linked to the active chat.', enabled: 'Enable Marvel Nexus', showLauncher: 'Show the launcher in the wand menu', aiSync: 'Update from normal role-play replies', injectState: 'Include the current Nexus state in prompts', language: 'Language / ภาษา', motion: 'Interface motion', motionFull: 'Full', motionReduced: 'Reduced', motionOff: 'Off', density: 'Mobile density', compact: 'Compact', comfortable: 'Comfortable', watchSounds: 'Spider Watch sound effects', watchVolume: 'Spider Watch volume', syncExplanation: 'Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.', openNexus: 'Open Marvel Nexus', resetChat: "Reset this chat's Nexus state", resetConfirm: "Reset Marvel Nexus data for this chat? This cannot be undone.", resetDone: 'The current chat state was reset.',
+    settingsIntro: 'A persistent Marvel role-play interface linked to the active chat.', enabled: 'Enable Marvel Nexus', showLauncher: 'Show the launcher in the wand menu', aiSync: 'Update from normal role-play replies', injectState: 'Include the current Nexus state in prompts', language: 'Language / ภาษา', motion: 'Interface motion', motionFull: 'Full', motionReduced: 'Reduced', motionOff: 'Off', density: 'Mobile density', compact: 'Compact', comfortable: 'Comfortable', sceneTracker: 'Scene tracker above chat messages', sceneTrackerScope: 'Scene tracker messages', sceneTrackerAll: 'Every message', sceneTrackerAssistant: 'AI replies only', watchSounds: 'Spider Watch sound effects', watchVolume: 'Spider Watch volume', syncExplanation: 'Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.', openNexus: 'Open Marvel Nexus', resetChat: "Reset this chat's Nexus state", resetConfirm: "Reset Marvel Nexus data for this chat? This cannot be undone.", resetDone: 'The current chat state was reset.',
+    scene: 'Scene', dateTime: 'Date & Time', year: 'Year', universe: 'Universe', planet: 'Planet', country: 'Country', position: 'Position', weather: 'Weather', temperature: 'Temperature', season: 'Season', dayMonthYear: 'Day–Month–Year', currentScene: 'Current scene', unconfirmed: 'Unconfirmed',
     spiderWatch: 'Spider Watch', dimensionGate: 'Dimension Gate', currentLocation: 'Current location', chooseEarth: 'Choose Earth', destinations: 'Destinations', risk: 'Risk', confirmTravel: 'Press the red button to confirm', gateArmed: 'Gate armed', nextMessageTravel: 'The route will resolve after the next AI reply.', arrival: 'Arrival', newDestination: 'New destination', stable: 'Stable', routeUnavailable: 'Choose an Earth first.',
     customDestination: 'Custom destination', earthOrDimension: 'Earth or dimension', arrivalPoint: 'Arrival point (optional)', scanRoute: 'Scan route', dynamicRoutes: 'Nexus and AI-discovered routes update after normal replies.', transitLock: 'SPIDER-WATCH // TRANSIT LOCK',
     appearanceFrame: 'Identity Frame', civilian: 'Civilian', hero: 'Hero / Costume', configureImages: 'Configure images', civilianImage: 'Civilian image URL', heroImage: 'Hero / costume image URL', imageUpload: 'Or choose an image file', portraitHelp: 'Images are stored for this chat. The active frame can switch manually or from confirmed story context.',
@@ -63,7 +66,8 @@ const COPY = {
     editIdentity: 'แก้ไขข้อมูลประจำตัว', universeSettings: 'ตั้งค่าจักรวาล', earth: 'รหัส Earth', timeline: 'ไทม์ไลน์', cancel: 'ยกเลิก', save: 'บันทึก', apply: 'นำไปใช้',
     timeTitle: 'จัดคิวเลื่อนเวลา', timeHelp: 'คำขอนี้จะถูกรวมกับข้อความถัดไปในแชตหลัก AI จะประมวลผลผลกระทบและอัปเดต Nexus ในคำตอบเดียวกัน', amount: 'จำนวน', unit: 'หน่วย', minutes: 'นาที', hours: 'ชั่วโมง', days: 'วัน', queue: 'จัดคิวสำหรับข้อความถัดไป', pending: 'รอข้อความถัดไป', queued: 'จัดคิวคำขอเลื่อนเวลาไว้สำหรับข้อความถัดไปแล้ว',
     waiting: 'กำลังรอแชต', ready: 'Nexus เชื่อมต่อแล้ว', checking: 'กำลังตรวจคำตอบโรลเพลย์', updated: 'อัปเดตสถานะ Nexus แล้ว', unchanged: 'ไม่มีข้อมูลที่ยืนยันให้เปลี่ยนแปลง', disabled: 'ปิดการซิงก์กับ AI อยู่', openChat: 'เปิดแชตก่อนใช้งาน Marvel Nexus',
-    settingsIntro: 'อินเทอร์เฟซโรลเพลย์ Marvel แบบถาวรที่เชื่อมกับแชตปัจจุบัน', enabled: 'เปิดใช้งาน Marvel Nexus', showLauncher: 'แสดงปุ่มเปิดในเมนูคทา', aiSync: 'อัปเดตจากคำตอบโรลเพลย์ปกติ', injectState: 'ใส่สถานะ Nexus ปัจจุบันในพรอมต์', language: 'ภาษา / Language', motion: 'การเคลื่อนไหวของ UI', motionFull: 'เต็มรูปแบบ', motionReduced: 'ลดลง', motionOff: 'ปิด', density: 'ความหนาแน่นบนมือถือ', compact: 'กระชับ', comfortable: 'สบายตา', watchSounds: 'เอฟเฟกต์เสียง Spider Watch', watchVolume: 'ระดับเสียง Spider Watch', syncExplanation: 'Marvel Nexus ใช้คำตอบปกติของ AI และไม่เรียกสร้างคำตอบครั้งที่สอง การเปลี่ยนแปลงที่ยืนยันแล้วจะกลับมาเป็นแพตช์ที่ซ่อนอยู่ ผ่านการตรวจสอบ และบันทึกเฉพาะแชตปัจจุบัน', openNexus: 'เปิด Marvel Nexus', resetChat: 'รีเซ็ตสถานะ Nexus ของแชตนี้', resetConfirm: 'รีเซ็ตข้อมูล Marvel Nexus ของแชตนี้หรือไม่ การดำเนินการนี้ย้อนกลับไม่ได้', resetDone: 'รีเซ็ตสถานะของแชตปัจจุบันแล้ว',
+    settingsIntro: 'อินเทอร์เฟซโรลเพลย์ Marvel แบบถาวรที่เชื่อมกับแชตปัจจุบัน', enabled: 'เปิดใช้งาน Marvel Nexus', showLauncher: 'แสดงปุ่มเปิดในเมนูคทา', aiSync: 'อัปเดตจากคำตอบโรลเพลย์ปกติ', injectState: 'ใส่สถานะ Nexus ปัจจุบันในพรอมต์', language: 'ภาษา / Language', motion: 'การเคลื่อนไหวของ UI', motionFull: 'เต็มรูปแบบ', motionReduced: 'ลดลง', motionOff: 'ปิด', density: 'ความหนาแน่นบนมือถือ', compact: 'กระชับ', comfortable: 'สบายตา', sceneTracker: 'แสดงตัวติดตามฉากเหนือข้อความแชต', sceneTrackerScope: 'ข้อความที่แสดงตัวติดตามฉาก', sceneTrackerAll: 'ทุกข้อความ', sceneTrackerAssistant: 'เฉพาะคำตอบ AI', watchSounds: 'เอฟเฟกต์เสียง Spider Watch', watchVolume: 'ระดับเสียง Spider Watch', syncExplanation: 'Marvel Nexus ใช้คำตอบปกติของ AI และไม่เรียกสร้างคำตอบครั้งที่สอง การเปลี่ยนแปลงที่ยืนยันแล้วจะกลับมาเป็นแพตช์ที่ซ่อนอยู่ ผ่านการตรวจสอบ และบันทึกเฉพาะแชตปัจจุบัน', openNexus: 'เปิด Marvel Nexus', resetChat: 'รีเซ็ตสถานะ Nexus ของแชตนี้', resetConfirm: 'รีเซ็ตข้อมูล Marvel Nexus ของแชตนี้หรือไม่ การดำเนินการนี้ย้อนกลับไม่ได้', resetDone: 'รีเซ็ตสถานะของแชตปัจจุบันแล้ว',
+    scene: 'ฉาก', dateTime: 'วันที่และเวลา', year: 'ปี', universe: 'จักรวาล', planet: 'ดาวเคราะห์', country: 'ประเทศ', position: 'ตำแหน่ง', weather: 'สภาพอากาศ', temperature: 'อุณหภูมิ', season: 'ฤดูกาล', dayMonthYear: 'วัน–เดือน–ปี', currentScene: 'ฉากปัจจุบัน', unconfirmed: 'ยังไม่ยืนยัน',
     spiderWatch: 'Spider Watch', dimensionGate: 'ประตูมิติ', currentLocation: 'ตำแหน่งปัจจุบัน', chooseEarth: 'เลือกจักรวาล', destinations: 'จักรวาลปลายทาง', risk: 'ความเสี่ยง', confirmTravel: 'กดปุ่มสีแดงเพื่อยืนยัน', gateArmed: 'เปิดระบบประตูแล้ว', nextMessageTravel: 'เส้นทางจะเสร็จสมบูรณ์หลัง AI ตอบข้อความถัดไป', arrival: 'เดินทางถึงแล้ว', newDestination: 'เลือกจุดหมายใหม่', stable: 'เสถียร', routeUnavailable: 'กรุณาเลือกจักรวาลก่อน',
     customDestination: 'จุดหมายกำหนดเอง', earthOrDimension: 'Earth หรือมิติ', arrivalPoint: 'จุดเดินทางถึง (ไม่บังคับ)', scanRoute: 'สแกนเส้นทาง', dynamicRoutes: 'เส้นทางจาก Nexus และที่ AI ค้นพบจะอัปเดตหลังคำตอบปกติ', transitLock: 'SPIDER-WATCH // ล็อกเส้นทางข้ามมิติ',
     appearanceFrame: 'กรอบข้อมูลตัวตน', civilian: 'พลเรือน', hero: 'ฮีโร่ / ชุดคอสตูม', configureImages: 'ตั้งค่ารูปภาพ', civilianImage: 'URL รูปชุดพลเรือน', heroImage: 'URL รูปฮีโร่ / ชุดคอสตูม', imageUpload: 'หรือเลือกไฟล์รูปภาพ', portraitHelp: 'รูปจะบันทึกไว้กับแชตนี้ สามารถสลับกรอบเองหรือให้เปลี่ยนตามเหตุการณ์ที่ยืนยันในเนื้อเรื่อง',
@@ -168,7 +172,7 @@ function normalizeRegistration(source = {}) {
 function defaultState() {
   const personaName = currentPersonaName();
   return {
-    version: 4,
+    version: 5,
     personaName,
     registration: defaultRegistration(),
     operator: { name: personaName, alias: 'Unassigned', role: 'Independent Operative', origin: 'Unknown', affiliation: 'Unaffiliated', condition: 'Stable', location: 'Unknown', earth: 'Earth-616', continuity: 'Hybrid', timeline: 'Open Chronicle' },
@@ -178,7 +182,11 @@ function defaultState() {
     team: { name: 'Independent', status: 'Solo', objective: '', members: [] },
     training: { level: 1, sessions: 0, progress: 0, focus: 'Untrained' },
     powers: [], contacts: [], identityWitnesses: [], factions: [], evidence: [], missions: [],
-    world: { date: 'Unconfirmed', time: 'Unconfirmed', multiverse: 'Restricted', locationPath: ['Unknown'], previousLocation: '', travelStatus: 'Stationary', destination: '', eta: '', nearbyContacts: [], incidents: [] },
+    world: {
+      date: 'Unconfirmed', time: 'Unconfirmed', year: 'Unconfirmed', dayMonthYear: 'Unconfirmed',
+      planet: 'Earth', country: 'Unconfirmed', position: 'Unconfirmed', weather: 'Unconfirmed', temperature: 'Unconfirmed', season: 'Unconfirmed',
+      multiverse: 'Restricted', locationPath: ['Unknown'], previousLocation: '', travelStatus: 'Stationary', destination: '', eta: '', nearbyContacts: [], incidents: [],
+    },
     timelineEvents: [], continuityIssues: [], anomalies: [], destinations: [],
     archive: [], pendingActions: [], updatedAt: '', updateSource: 'default',
   };
@@ -250,6 +258,14 @@ function normalize(source = {}, base = defaultState()) {
   const world = source.world && typeof source.world === 'object' ? source.world : {};
   out.world.date = text(world.date, out.world.date, 80);
   out.world.time = text(world.time, out.world.time, 80);
+  out.world.year = text(world.year, out.world.year, 40);
+  out.world.dayMonthYear = text(world.dayMonthYear, out.world.dayMonthYear, 80);
+  out.world.planet = text(world.planet, out.world.planet, 100);
+  out.world.country = text(world.country, out.world.country, 120);
+  out.world.position = text(world.position, out.world.position, 180);
+  out.world.weather = text(world.weather, out.world.weather, 120);
+  out.world.temperature = text(world.temperature, out.world.temperature, 80);
+  out.world.season = text(world.season, out.world.season, 100);
   out.world.multiverse = text(world.multiverse, out.world.multiverse, 80);
   out.world.locationPath = Array.isArray(world.locationPath) ? world.locationPath.map(value => text(value, '', 100)).filter(Boolean).slice(0, 8) : out.world.locationPath;
   out.world.previousLocation = text(world.previousLocation, out.world.previousLocation, 160);
@@ -284,6 +300,8 @@ function normalize(source = {}, base = defaultState()) {
 function getSettings() {
   const store = context().extensionSettings;
   store[SETTINGS_KEY] = { ...DEFAULT_SETTINGS, ...(store[SETTINGS_KEY] || {}) };
+  store[SETTINGS_KEY].sceneTracker = store[SETTINGS_KEY].sceneTracker !== false;
+  store[SETTINGS_KEY].sceneTrackerScope = ['all', 'assistant'].includes(store[SETTINGS_KEY].sceneTrackerScope) ? store[SETTINGS_KEY].sceneTrackerScope : DEFAULT_SETTINGS.sceneTrackerScope;
   store[SETTINGS_KEY].watchSounds = store[SETTINGS_KEY].watchSounds !== false;
   store[SETTINGS_KEY].watchVolume = number(store[SETTINGS_KEY].watchVolume, DEFAULT_SETTINGS.watchVolume, 0, 100);
   return store[SETTINGS_KEY];
@@ -317,6 +335,125 @@ async function persistState(candidate, source = 'manual') {
 function notify(type, message) {
   if (typeof toastr !== 'undefined' && typeof toastr[type] === 'function') toastr[type](message, 'Marvel Nexus');
   else console[type === 'error' ? 'error' : 'info'](`[Marvel Nexus] ${message}`);
+}
+
+const SCENE_SNAPSHOT_KEY = 'marvel_nexus_scene';
+
+function sceneSnapshot(state = getState()) {
+  const path = Array.isArray(state.world.locationPath) ? state.world.locationPath.filter(Boolean) : [];
+  const location = text(state.operator.location, '', 160);
+  return {
+    date: text(state.world.date, 'Unconfirmed', 80),
+    time: text(state.world.time, 'Unconfirmed', 80),
+    year: text(state.world.year, 'Unconfirmed', 40),
+    dayMonthYear: text(state.world.dayMonthYear, 'Unconfirmed', 80),
+    universe: text(state.operator.earth, 'Earth-616', 80),
+    planet: text(state.world.planet, 'Earth', 100),
+    country: text(state.world.country, 'Unconfirmed', 120),
+    location: location && !/^(?:unknown|unconfirmed)$/i.test(location) ? location : text(path.at(-1), 'Unconfirmed', 160),
+    position: text(state.world.position, 'Unconfirmed', 180),
+    weather: text(state.world.weather, 'Unconfirmed', 120),
+    temperature: text(state.world.temperature, 'Unconfirmed', 80),
+    season: text(state.world.season, 'Unconfirmed', 100),
+  };
+}
+
+function normalizeSceneSnapshot(source = {}, fallback = sceneSnapshot()) {
+  const out = {};
+  for (const [key, value] of Object.entries(fallback)) out[key] = text(source?.[key], value, key === 'position' || key === 'location' ? 180 : 120);
+  const dateSource = [out.dayMonthYear, out.date].find(value => !/^(?:unknown|unconfirmed)$/i.test(value)) || '';
+  if (/^(?:unknown|unconfirmed)$/i.test(out.year)) out.year = dateSource.match(/(?:^|\D)((?:19|20|21)\d{2})(?:\D|$)/)?.[1] || out.year;
+  return out;
+}
+
+function sceneDisplay(value, lang) {
+  const clean = text(value, '', 180);
+  return !clean || /^(?:unknown|unconfirmed)$/i.test(clean) ? COPY[lang].unconfirmed : clean;
+}
+
+function sceneTrackerMarkup(snapshot, lang, messageId) {
+  const copy = COPY[lang] || COPY.en;
+  const value = key => escapeHtml(sceneDisplay(snapshot[key], lang));
+  const dateTime = [sceneDisplay(snapshot.date, lang), sceneDisplay(snapshot.time, lang)].filter((entry, index, values) => entry !== copy.unconfirmed || values.every(item => item === copy.unconfirmed) && index === 0).join(' · ');
+  const cells = [
+    [copy.dateTime, dateTime],
+    [copy.year, sceneDisplay(snapshot.year, lang)],
+    [copy.universe, sceneDisplay(snapshot.universe, lang)],
+    [copy.planet, sceneDisplay(snapshot.planet, lang)],
+    [copy.country, sceneDisplay(snapshot.country, lang)],
+    [copy.position, sceneDisplay(snapshot.position, lang)],
+    [copy.temperature, sceneDisplay(snapshot.temperature, lang)],
+    [copy.season, sceneDisplay(snapshot.season, lang)],
+    [copy.dayMonthYear, sceneDisplay(snapshot.dayMonthYear, lang)],
+  ];
+  return `
+    <aside class="mn-scene-tracker" data-mn-scene-tracker data-message-id="${messageId}" lang="${lang}" aria-label="${escapeHtml(copy.currentScene)}">
+      <div class="mn-scene-header">
+        <strong><span>MARVEL NEXUS</span> // ${escapeHtml(copy.scene)}</strong>
+        <b>${value('universe')}</b>
+      </div>
+      <div class="mn-scene-focus">
+        <div class="mn-scene-weather">
+          <span>${escapeHtml(copy.weather)}</span>
+          <i class="fa-solid fa-cloud-rain" aria-hidden="true"></i>
+          <strong>${value('weather')}</strong>
+          <b>${value('temperature')}</b>
+        </div>
+        <div class="mn-scene-location">
+          <span>${escapeHtml(copy.currentScene)}</span>
+          <strong>${value('location')}</strong>
+          <b>${value('position')}</b>
+        </div>
+      </div>
+      <div class="mn-scene-grid">
+        ${cells.map(([label, item], index) => `<div class="mn-scene-cell${[0,2,8].includes(index) ? ' is-accent' : ''}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(item)}</strong></div>`).join('')}
+      </div>
+    </aside>`;
+}
+
+function messageElement(messageId) {
+  if (!Number.isInteger(messageId)) return null;
+  return [...document.querySelectorAll('#chat .mes, .mes[mesid]')].find(element => Number(element.getAttribute('mesid') ?? element.dataset.mesid) === messageId) || null;
+}
+
+function shouldShowSceneTracker(message) {
+  const settings = getSettings();
+  if (!settings.enabled || !settings.sceneTracker || !message || message.is_system) return false;
+  return settings.sceneTrackerScope === 'all' || !message.is_user;
+}
+
+function renderSceneTrackerForMessage(messageId, { state = getState(), forceSnapshot = false } = {}) {
+  const message = context().chat?.[messageId];
+  const root = messageElement(messageId);
+  const existing = root?.querySelector('[data-mn-scene-tracker]');
+  if (!root || !shouldShowSceneTracker(message)) {
+    existing?.remove();
+    return;
+  }
+  if (!message.extra || typeof message.extra !== 'object') message.extra = {};
+  if (forceSnapshot || !message.extra[SCENE_SNAPSHOT_KEY] || typeof message.extra[SCENE_SNAPSHOT_KEY] !== 'object') {
+    message.extra[SCENE_SNAPSHOT_KEY] = sceneSnapshot(state);
+  }
+  const snapshot = normalizeSceneSnapshot(message.extra[SCENE_SNAPSHOT_KEY], sceneSnapshot(state));
+  const holder = document.createElement('div');
+  holder.innerHTML = sceneTrackerMarkup(snapshot, language(), messageId).trim();
+  const tracker = holder.firstElementChild;
+  const block = root.querySelector('.mes_block') || root;
+  const messageText = block.querySelector('.mes_text');
+  if (existing) existing.replaceWith(tracker);
+  else if (messageText) block.insertBefore(tracker, messageText);
+  else block.prepend(tracker);
+}
+
+function refreshSceneTrackers() {
+  document.querySelectorAll('[data-mn-scene-tracker]').forEach(element => element.remove());
+  const chat = context().chat;
+  if (!Array.isArray(chat) || !getSettings().sceneTracker) return;
+  chat.forEach((_message, messageId) => renderSceneTrackerForMessage(messageId));
+}
+
+function scheduleSceneTrackerRefresh() {
+  requestAnimationFrame(() => requestAnimationFrame(refreshSceneTrackers));
 }
 
 function routeValue(route, key) {
@@ -771,11 +908,12 @@ function promptInstructions(state) {
     JSON.stringify(aiState(state)),
     'After the visible role-play reply, append exactly one machine block whenever this reply confirms any state change OR pendingActions is non-empty. This block is required for confirmed changes:',
     '[MARVEL_NEXUS_PATCH]{"ops":[["set","identity.exposure",35],["upsert","timelineEvents",{"id":"event-id","title":"...","date":"...","earth":"Earth-616"}]],"ackActions":["action-id"],"summary":"Short update"}[/MARVEL_NEXUS_PATCH]',
-    'Allowed scalar paths: operator.name, operator.alias, operator.role, operator.origin, operator.affiliation, operator.condition, operator.location, operator.earth, operator.continuity, operator.timeline, identity.secrecy, identity.exposure, identity.publicStatus, portraits.active, team.name, team.status, team.objective, training.level, training.sessions, training.progress, training.focus, vitals.health, vitals.healthMax, vitals.energy, vitals.energyMax, vitals.suitIntegrity, vitals.fatigue, world.date, world.time, world.multiverse, world.locationPath, world.previousLocation, world.travelStatus, world.destination, world.eta, world.nearbyContacts.',
+    'Allowed scalar paths: operator.name, operator.alias, operator.role, operator.origin, operator.affiliation, operator.condition, operator.location, operator.earth, operator.continuity, operator.timeline, identity.secrecy, identity.exposure, identity.publicStatus, portraits.active, team.name, team.status, team.objective, training.level, training.sessions, training.progress, training.focus, vitals.health, vitals.healthMax, vitals.energy, vitals.energyMax, vitals.suitIntegrity, vitals.fatigue, world.date, world.time, world.year, world.dayMonthYear, world.planet, world.country, world.position, world.weather, world.temperature, world.season, world.multiverse, world.locationPath, world.previousLocation, world.travelStatus, world.destination, world.eta, world.nearbyContacts.',
     'Allowed collection paths with upsert or delete: powers, contacts, identityWitnesses, factions, evidence, missions, team.members, world.incidents, timelineEvents, continuityIssues, anomalies, destinations, archive. Preserve an existing id when updating it. For new items, provide a short stable id; if omitted, Marvel Nexus will derive one from the item identity.',
     'Collection item shapes: contacts {id,name,meta,status,location,relationship,trust,suspicion,respect,fear,knowledge:[{label,state:unknown|suspected|confirmed,source,learnedAt}]}; team.members {id,name,role,status,earth,location,condition,detail}; destinations {id,earth,name,location,risk,riskValue:0..100,detail,source}; identityWitnesses {id,name,kind:person|faction|public,level:suspected|confirmed,evidence}; factions {id,name,stance,reputation:-100..100,hostility,awareness,influence,detail}; evidence {id,title,kind:fact|theory|contradiction,detail,confidence,links,discoveredAt}; missions {id,title,issuer,description,status,threat,deadline,successConsequence,failureConsequence,linkedFaction,linkedLocation,linkedContacts,objectives:[{text,done,hidden,revealed}],reward}; timelineEvents {id,title,detail,date,time,earth,location,type,impact}; continuityIssues {id,title,detail,severity:low|medium|high|critical,status,related}; anomalies {id,title,type,originEarth,currentEarth,risk,status,detail,variants}. Percent fields use 0..100.',
     'Allowed verbs are set, inc, upsert, delete. Record only outcomes confirmed by this completed reply; never record plans, questions, failed attempts, hypotheticals, or information hidden from the player.',
     'Evaluate every system once from this reply: identity exposure and who knows it; active civilian or hero appearance frame; status/vitals/abilities; training progress and completed sessions; team name/status/objective/membership; each NPC relationship and compartmentalized knowledge; faction reputation/hostility/awareness/influence; discovered facts/theories/contradictions; mission deadlines, threat, consequences and revealed objectives; travel/location/nearby contacts; timeline events and continuity conflicts; incidents; discovered multiverse destinations/anomalies/variants/incursion risk; archive facts.',
+    'For the square scene tracker, keep world.date, world.time, world.year, world.dayMonthYear, world.planet, world.country, world.position, world.weather, world.temperature, world.season, operator.earth, operator.location, and world.locationPath synchronized with the completed visible scene. Use concrete in-story values when confirmed; preserve the previous value instead of guessing. Format dayMonthYear as day-month-year when the calendar supports it.',
     'Knowledge isolation is mandatory. An NPC or faction may only act on information its contact.knowledge entries confirm or information witnessed in the current scene. Never leak the player identity, powers, inventory, mission, location, timeline, relationships, or other NPC secrets across knowledge boundaries.',
     'Only store evidence, timeline records, anomalies, variants, faction intelligence and archive records already discovered by the player. A hidden mission objective may be stored with hidden:true and revealed:false, but do not render or expose it in visible narration until revealed by the story.',
     'For every pending advance_time action, narratively process the requested passage of time, update world.date/world.time and any consequences supported by the story, then copy that action id into ackActions. Do not acknowledge an action you did not process.',
@@ -800,7 +938,7 @@ const ALLOWED_SCALARS = new Set([
   'identity.secrecy', 'identity.exposure', 'identity.publicStatus',
   'portraits.active', 'team.name', 'team.status', 'team.objective', 'training.level', 'training.sessions', 'training.progress', 'training.focus',
   'vitals.health', 'vitals.healthMax', 'vitals.energy', 'vitals.energyMax', 'vitals.suitIntegrity', 'vitals.fatigue',
-  'world.date', 'world.time', 'world.multiverse', 'world.locationPath', 'world.previousLocation', 'world.travelStatus', 'world.destination', 'world.eta', 'world.nearbyContacts',
+  'world.date', 'world.time', 'world.year', 'world.dayMonthYear', 'world.planet', 'world.country', 'world.position', 'world.weather', 'world.temperature', 'world.season', 'world.multiverse', 'world.locationPath', 'world.previousLocation', 'world.travelStatus', 'world.destination', 'world.eta', 'world.nearbyContacts',
 ]);
 const COLLECTIONS = { powers: 'power', contacts: 'contact', identityWitnesses: 'witness', factions: 'faction', evidence: 'evidence', missions: 'mission', 'team.members': 'teammate', 'world.incidents': 'incident', timelineEvents: 'timeline', continuityIssues: 'continuity', anomalies: 'anomaly', destinations: 'destination', archive: 'archive' };
 
@@ -879,12 +1017,17 @@ async function processAssistantPatch(messageId, generationType = '') {
 async function handleAssistantReply(messageId, generationType = '') {
   const numericId = Number(messageId);
   const message = Number.isInteger(numericId) ? context().chat?.[numericId] : null;
-  if (['first_message', 'quiet', 'impersonate'].includes(generationType) || !message || message.is_user || message.is_system) return;
+  if (!message || message.is_user || message.is_system || ['quiet', 'impersonate'].includes(generationType)) return;
+  if (generationType === 'first_message') {
+    renderSceneTrackerForMessage(numericId, { state: getState(), forceSnapshot: true });
+    return;
+  }
   const travel = spiderPendingAction(getState());
   await processAssistantPatch(numericId, generationType);
   // The selected route becomes canonical only after the completed assistant reply is available.
   if (travel) await finalizeSpiderTravel(travel);
   else consumeSpiderArrivalNotice();
+  renderSceneTrackerForMessage(numericId, { state: getState(), forceSnapshot: true });
 }
 
 function interfaceMarkup() {
@@ -1370,9 +1513,11 @@ async function addSettingsDrawer() {
   bindCheckbox('marvel-nexus-show-launcher','showLauncher',syncLauncherVisibility);
   bindCheckbox('marvel-nexus-ai-sync','aiSync',updatePrompt);
   bindCheckbox('marvel-nexus-inject-state','injectState',updatePrompt);
-  bindSelect('marvel-nexus-language','language',() => { localize(); render(); globalThis.dispatchEvent(new CustomEvent('marvel-nexus:language-changed')); });
+  bindSelect('marvel-nexus-language','language',() => { localize(); render(); refreshSceneTrackers(); globalThis.dispatchEvent(new CustomEvent('marvel-nexus:language-changed')); });
   bindSelect('marvel-nexus-motion','motion',applyAppearance);
   bindSelect('marvel-nexus-density','density',applyAppearance);
+  bindCheckbox('marvel-nexus-scene-tracker','sceneTracker',refreshSceneTrackers);
+  bindSelect('marvel-nexus-scene-scope','sceneTrackerScope',refreshSceneTrackers);
   bindCheckbox('marvel-nexus-watch-sounds','watchSounds');
   bindRange('marvel-nexus-watch-volume','watchVolume','marvel-nexus-watch-volume-value');
   document.getElementById('marvel-nexus-open-settings')?.addEventListener('click',openInterface);
@@ -1381,12 +1526,13 @@ async function addSettingsDrawer() {
 
 function bindChatEvents() {
   const { eventSource, eventTypes } = context();
-  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; pendingSpiderArrivalNotice=null; spiderWatchMode='home'; spiderWatchSelection=null; closeSpiderWatch(); clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
-  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
+  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; pendingSpiderArrivalNotice=null; spiderWatchMode='home'; spiderWatchSelection=null; closeSpiderWatch(); clearContactPortraitCache(); updatePrompt(); render(); scheduleSceneTrackerRefresh(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
+  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, messageId => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); requestAnimationFrame(() => renderSceneTrackerForMessage(Number(messageId), { forceSnapshot: true })); });
+  if (eventTypes.USER_MESSAGE_RENDERED) eventSource.on(eventTypes.USER_MESSAGE_RENDERED, messageId => renderSceneTrackerForMessage(Number(messageId)));
   eventSource.on(eventTypes.MESSAGE_RECEIVED, (messageId,generationType) => void handleAssistantReply(messageId,generationType));
   if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, (messageId,generationType) => void handleAssistantReply(messageId,generationType));
-  if (eventTypes.MESSAGE_EDITED) eventSource.on(eventTypes.MESSAGE_EDITED, messageId => processAssistantPatch(Number(messageId), 'edit'));
-  if (eventTypes.MESSAGE_SWIPED) eventSource.on(eventTypes.MESSAGE_SWIPED, messageId => processAssistantPatch(Number(messageId), 'swipe'));
+  if (eventTypes.MESSAGE_EDITED) eventSource.on(eventTypes.MESSAGE_EDITED, async messageId => { await processAssistantPatch(Number(messageId), 'edit'); renderSceneTrackerForMessage(Number(messageId), { state: getState(), forceSnapshot: true }); });
+  if (eventTypes.MESSAGE_SWIPED) eventSource.on(eventTypes.MESSAGE_SWIPED, async messageId => { await processAssistantPatch(Number(messageId), 'swipe'); renderSceneTrackerForMessage(Number(messageId), { state: getState(), forceSnapshot: true }); });
   if (eventTypes.GENERATION_STARTED) eventSource.on(eventTypes.GENERATION_STARTED, () => updatePrompt());
 }
 
@@ -1401,12 +1547,12 @@ async function initialize() {
   if (initialized) return; initialized = true;
   try {
     getSettings(); buildInterface(); buildSpiderWatch();
-    const { initializeMarvelRegistration } = await import('./registration.js?v=2.3.0');
+    const { initializeMarvelRegistration } = await import('./registration.js?v=2.4.0');
     await initializeMarvelRegistration({
       context, getState, persistState, updatePrompt, currentPersonaName, notify, closeInterface, closeSpiderWatch,
       motion: () => getSettings().motion, language,
     });
-    await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
+    await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render(); scheduleSceneTrackerRefresh();
     globalThis.addEventListener('character-life:rpg-bridge-ready', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:rpg-compatibility-updated', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:portrait-replaced', refreshCharacterLifeContacts);
@@ -1417,7 +1563,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.3.0 loaded.');
+    console.info('[Marvel Nexus] Extension v2.4.0 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 

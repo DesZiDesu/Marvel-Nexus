@@ -751,10 +751,203 @@ body.marvel-nexus-open, body.marvel-registration-open { overflow: hidden !import
 .marvel-nexus-settings .mn-settings-range output { color:var(--mn-text); font-family:"Marvel Nexus Tech",sans-serif; }
 .marvel-nexus-settings .mn-settings-range input { width:100%; accent-color:var(--mn-violet); }
 
+/* Square per-message scene tracker */
+.mn-scene-tracker,
+.mn-scene-tracker * { box-sizing:border-box; }
+.mn-scene-tracker {
+  --mn-scene-void:#060a10;
+  --mn-scene-panel:#0d1520;
+  --mn-scene-panel-2:#111d2a;
+  --mn-scene-line:rgba(105,203,235,.28);
+  --mn-scene-cyan:#55ddff;
+  --mn-scene-text:#eff9ff;
+  --mn-scene-muted:#86a0b3;
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  grid-template-rows:12% 29% 59%;
+  width:min(100%,540px);
+  aspect-ratio:1 / 1;
+  min-width:0;
+  margin:8px auto 14px;
+  overflow:hidden;
+  border:1px solid rgba(85,221,255,.48);
+  border-radius:0;
+  clip-path:none;
+  color:var(--mn-scene-text);
+  background:
+    linear-gradient(135deg,rgba(85,221,255,.08),transparent 28%),
+    repeating-linear-gradient(90deg,transparent 0 39px,rgba(255,255,255,.015) 40px),
+    var(--mn-scene-void);
+  box-shadow:inset 0 0 36px rgba(33,149,196,.08),0 12px 34px rgba(0,0,0,.22);
+  container-type:inline-size;
+  font-family:"Marvel Nexus Tech","Marvel Nexus Thai",ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.mn-scene-tracker::before {
+  content:"";
+  position:absolute;
+  z-index:4;
+  inset:6px;
+  pointer-events:none;
+  border:1px solid rgba(105,203,235,.12);
+  border-radius:0;
+  clip-path:none;
+}
+.mn-scene-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-width:0;
+  padding:0 5.5%;
+  border-bottom:1px solid var(--mn-scene-line);
+  background:linear-gradient(90deg,rgba(85,221,255,.13),rgba(13,21,32,.94) 42%,rgba(13,21,32,.98));
+}
+.mn-scene-header strong {
+  min-width:0;
+  overflow:hidden;
+  font-size:clamp(9px,3.1cqw,16px);
+  font-weight:500;
+  letter-spacing:.11em;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.mn-scene-header strong span { color:var(--mn-scene-cyan); }
+.mn-scene-header > b {
+  flex:0 0 auto;
+  max-width:34%;
+  overflow:hidden;
+  padding:4px 7px;
+  border:0;
+  border-left:2px solid var(--mn-scene-cyan);
+  border-radius:0;
+  color:var(--mn-scene-cyan);
+  background:rgba(85,221,255,.09);
+  font-size:clamp(9px,2.5cqw,13px);
+  font-weight:500;
+  letter-spacing:.06em;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.mn-scene-focus {
+  display:grid;
+  grid-template-columns:.9fr 1.45fr;
+  min-width:0;
+  border-bottom:1px solid var(--mn-scene-line);
+  background:linear-gradient(112deg,rgba(17,29,42,.98),rgba(7,11,18,.98));
+}
+.mn-scene-weather,
+.mn-scene-location {
+  display:flex;
+  min-width:0;
+  flex-direction:column;
+  justify-content:center;
+  padding:6% 8%;
+}
+.mn-scene-weather {
+  align-items:flex-start;
+  border-right:1px solid var(--mn-scene-line);
+  text-align:left;
+  background:linear-gradient(135deg,rgba(85,221,255,.08),transparent 78%);
+}
+.mn-scene-weather > span,
+.mn-scene-location > span,
+.mn-scene-cell > span {
+  color:var(--mn-scene-muted);
+  font-size:clamp(8px,2.25cqw,11px);
+  font-weight:500;
+  letter-spacing:.09em;
+  line-height:1.05;
+  text-transform:uppercase;
+}
+.mn-scene-weather > i {
+  margin-top:5px;
+  color:var(--mn-scene-cyan);
+  font-size:clamp(16px,6cqw,31px);
+  line-height:1;
+  text-shadow:0 0 18px rgba(85,221,255,.44);
+}
+.mn-scene-weather > strong {
+  max-width:100%;
+  margin-top:4px;
+  overflow:hidden;
+  font-size:clamp(11px,3.3cqw,18px);
+  font-weight:500;
+  line-height:1.02;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.mn-scene-weather > b,
+.mn-scene-location > b {
+  max-width:100%;
+  margin-top:5px;
+  overflow:hidden;
+  color:#bdeeff;
+  font-size:clamp(9px,2.45cqw,13px);
+  font-weight:400;
+  line-height:1.05;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.mn-scene-location > strong {
+  display:-webkit-box;
+  max-width:100%;
+  margin-top:6px;
+  overflow:hidden;
+  font-size:clamp(14px,5.3cqw,28px);
+  font-weight:500;
+  letter-spacing:-.015em;
+  line-height:1.02;
+  overflow-wrap:anywhere;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+.mn-scene-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(3,minmax(0,1fr));
+  min-width:0;
+  gap:1px;
+  padding:2.4%;
+  background:rgba(105,203,235,.16);
+}
+.mn-scene-cell {
+  display:flex;
+  min-width:0;
+  overflow:hidden;
+  flex-direction:column;
+  justify-content:center;
+  padding:7% 9%;
+  border:0;
+  border-radius:0;
+  background:linear-gradient(145deg,rgba(16,25,38,.99),rgba(9,14,22,.99));
+}
+.mn-scene-cell.is-accent { background:linear-gradient(145deg,rgba(85,221,255,.10),rgba(9,14,22,.99) 72%); }
+.mn-scene-cell > strong {
+  display:-webkit-box;
+  min-width:0;
+  margin-top:6px;
+  overflow:hidden;
+  color:var(--mn-scene-text);
+  font-size:clamp(9px,2.8cqw,15px);
+  font-weight:500;
+  line-height:1.08;
+  overflow-wrap:anywhere;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+.mn-scene-cell.is-accent > strong { color:var(--mn-scene-cyan); }
+.mn-scene-tracker:lang(th) { font-family:"Marvel Nexus Thai","Marvel Nexus Tech","Noto Sans Thai",sans-serif; }
+
 @media (max-width:430px) {
   .mn-sw-device { width:100vw; }
   .mn-sw-display { padding:9.5% 7% 24% 8%; }
   .mn-sw-notification { top:calc(8px + env(safe-area-inset-top)); width:96vw; padding-inline:13px; }
+  .mn-scene-tracker { width:100%; margin:6px 0 12px; box-shadow:none; }
+  .mn-scene-header { padding-inline:5%; }
+  .mn-scene-weather,.mn-scene-location { padding:5% 7%; }
+  .mn-scene-grid { padding:2%; }
+  .mn-scene-cell { padding:5% 7%; }
 }
 
 @media (prefers-reduced-motion:reduce) {

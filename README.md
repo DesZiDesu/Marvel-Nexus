@@ -14,6 +14,9 @@ Marvel Nexus is a mobile-first SillyTavern extension that turns the active Marve
 - Investigation Board for discovered facts, theories, contradictions, confidence, and record links
 - Mission deadlines, threat levels, linked people/places/factions, consequences, and hidden objectives
 - Travel state, destination, ETA, nearby contacts, and location history
+- Strict 1:1 square scene tracker above chat messages with no rounded or clipped corners
+- AI-synchronized date/time, year, universe, planet, country, location, position, weather, temperature, season, and day-month-year
+- Configurable tracker visibility for every message or assistant replies only, localized in English and Thai
 - Timeline ledger with Earth-aware events and continuity-conflict alerts
 - Multiverse anomaly, variant, and incursion-risk monitoring
 - Wand-menu launcher and an Extensions settings drawer
@@ -61,6 +64,12 @@ Confirmation stores the role-play baseline in the current chat, closes the fulls
 The extension injects a compact snapshot of the current state into the normal role-play prompt. When the story confirms a change, the assistant appends one invisible `MARVEL_NEXUS_PATCH` HTML comment to that same reply. The extension removes the marker, validates its fields, merges the accepted values, and saves them to the current chat.
 
 Time-advance requests are only queued. They are included with the next user message and remain pending until a valid assistant patch acknowledges them.
+
+## Scene tracker
+
+The scene tracker is a responsive 1:1 square placed above chat-message text. Weather and temperature occupy the left side, while the current location is shown beside them and the remaining scene fields stay in a fixed 3-by-3 matrix. The layout never switches into a tall vertical stack and uses square corners without cutouts.
+
+Turn the tracker on or off in **Extensions > Marvel Nexus** and choose whether it appears above every message or only assistant replies. Its labels follow the extension language setting: Auto, English, or Thai. Confirmed scene changes are updated through the same normal assistant reply and validated patch as the rest of Marvel Nexus.
 
 ## Spider Watch
 
