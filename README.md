@@ -5,6 +5,9 @@ Marvel Nexus is a mobile-first SillyTavern extension that turns the active Marve
 ## Features
 
 - Fullscreen Status, Intel, Missions, World, and Archive tabs
+- `/marvel-registration` fullscreen, square-corner role-play registration console
+- Persona-linked registration with identity, ability, reality, timeline, world, and opening-scene context
+- One-button confirmation that saves the profile, closes the UI, sends the completed registration as the user, and starts the first normal role-play reply
 - Secret-identity exposure, secrecy status, and identity-witness tracking
 - Per-contact knowledge boundaries with Unknown, Suspected, and Confirmed states
 - Faction reputation, hostility, awareness, influence, and stance intelligence
@@ -39,6 +42,12 @@ https://github.com/DesZiDesu/Marvel-Nexus
 
 After installation, open the wand menu and select **Marvel Nexus**.
 
+## Role-play registration
+
+Enter `/marvel-registration` in the main chat. Marvel Nexus uses the active SillyTavern user persona as the character name, so the form does not ask for a duplicate name. Complete the five directly selectable sections and press **Confirm registration**.
+
+Confirmation stores the role-play baseline in the current chat, closes the fullscreen interface, posts all entered context as one user message, and starts one normal assistant generation. It does not make a separate helper-generation request.
+
 ## AI synchronization
 
 The extension injects a compact snapshot of the current state into the normal role-play prompt. When the story confirms a change, the assistant appends one invisible `MARVEL_NEXUS_PATCH` HTML comment to that same reply. The extension removes the marker, validates its fields, merges the accepted values, and saves them to the current chat.
@@ -63,6 +72,7 @@ The integration is optional. Initials remain as the avatar fallback when Charact
 
 - `manifest.json` — SillyTavern extension manifest
 - `index.js` — UI, persistence, AI synchronization, translations, and interactions
+- `registration.js` — fullscreen registration flow and first-message launch
 - `style.css` — fullscreen responsive interface and settings styles
 - `settings.html` — extension settings drawer
 - `assets/holographic.gif` — transparent animated Nexus header asset

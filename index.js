@@ -119,11 +119,45 @@ function currentPersonaName() {
   catch { return 'User'; }
 }
 
+function defaultRegistration() {
+  return {
+    completed: false, completedAt: '',
+    age: '', gender: '', race: '', pronouns: '', alias: '', affiliation: '', occupation: '', identityStatus: 'Secret identity',
+    origin: '', powerScale: 'Enhanced', condition: 'Stable', abilities: [], weaknesses: '', equipment: '',
+    universe: 'Earth-616', continuity: 'Hybrid continuity', timeline: '', world: '', canonDivergence: '', worldState: '', knownFactions: '', relationships: '',
+    startingLocation: '', startingTime: '', tone: 'Cinematic and tense', pointOfView: 'Second person', canonHandling: 'Canon-consistent with divergence', characterControl: 'User controls registered character',
+    appearance: '', personality: '', backstory: '', openingSituation: '', objective: '', firstMessage: '',
+  };
+}
+
+function normalizeRegistration(source = {}) {
+  const out = defaultRegistration();
+  const fields = {
+    age: 20, gender: 80, race: 100, pronouns: 80, alias: 120, affiliation: 140, occupation: 140, identityStatus: 100,
+    origin: 1200, powerScale: 80, condition: 80, weaknesses: 1200, equipment: 1200,
+    universe: 80, continuity: 120, timeline: 180, world: 180, canonDivergence: 1600, worldState: 1600, knownFactions: 1200, relationships: 1600,
+    startingLocation: 220, startingTime: 160, tone: 100, pointOfView: 100, canonHandling: 120, characterControl: 120,
+    appearance: 1600, personality: 1600, backstory: 2400, openingSituation: 2000, objective: 1200, firstMessage: 1600,
+  };
+  for (const [key, max] of Object.entries(fields)) out[key] = text(source?.[key], out[key], max);
+  out.completed = source?.completed === true;
+  out.completedAt = text(source?.completedAt, '', 60);
+  out.abilities = Array.isArray(source?.abilities) ? source.abilities.map((ability, index) => ({
+    id: text(ability?.id, `registered-ability-${index + 1}`, 80),
+    name: text(ability?.name, '', 120),
+    type: text(ability?.type, 'Power', 80),
+    mastery: text(ability?.mastery, 'Developing', 80),
+    detail: text(ability?.detail, '', 1400),
+  })).filter(ability => ability.name || ability.detail).slice(0, 20) : [];
+  return out;
+}
+
 function defaultState() {
   const personaName = currentPersonaName();
   return {
-    version: 2,
+    version: 3,
     personaName,
+    registration: defaultRegistration(),
     operator: { name: personaName, alias: 'Unassigned', role: 'Independent Operative', origin: 'Unknown', affiliation: 'Unaffiliated', condition: 'Stable', location: 'Unknown', earth: 'Earth-616', continuity: 'Hybrid', timeline: 'Open Chronicle' },
     identity: { secrecy: 'Protected', exposure: 0, publicStatus: 'Unknown' },
     vitals: { health: 1000, healthMax: 1000, energy: 800, energyMax: 800, suitIntegrity: 100, fatigue: 0 },
@@ -162,6 +196,7 @@ function normalize(source = {}, base = defaultState()) {
   if (!savedOperatorName || /^(?:unregistered operator|user|player)$/i.test(savedOperatorName) || savedOperatorName === previousPersonaName) {
     out.operator.name = personaName;
   }
+  out.registration = normalizeRegistration(source.registration);
   const identity = source.identity && typeof source.identity === 'object' ? source.identity : {};
   out.identity.secrecy = text(identity.secrecy, out.identity.secrecy, 80);
   out.identity.exposure = number(identity.exposure, out.identity.exposure, 0, 100);
@@ -617,6 +652,7 @@ async function registerSpiderWatchSlashCommand() {
 function aiState(state) {
   return {
     activePersonaName: currentPersonaName(),
+    registration: state.registration,
     operator: state.operator, identity: state.identity, identityWitnesses: state.identityWitnesses, vitals: state.vitals,
     powers: state.powers.map(({ id, name, mastery }) => ({ id, name, mastery })),
     contacts: state.contacts.slice(0, 30), factions: state.factions.slice(0, 30), evidence: state.evidence.slice(-40), missions: state.missions,
@@ -633,6 +669,7 @@ function promptInstructions(state) {
   return [
     '<marvel_nexus_state>',
     `The active SillyTavern user persona is ${JSON.stringify(personaName)}. This exact person is the player/operator. Use that name in narration and machine updates; never replace it with User, Player, Operator, or a placeholder.`,
+    'The registration record is the player-defined role-play baseline. Treat its identity, abilities and limits, reality anchor, relationships, characterization, opening situation, objective, tone, point of view, canon handling, and character-control rule as canonical unless the player explicitly changes them.',
     'This is the canonical Marvel role-play interface state. Preserve it unless the current normal role-play reply confirms a change.',
     JSON.stringify(aiState(state)),
     'After the visible role-play reply, append exactly one machine block whenever this reply confirms any state change OR pendingActions is non-empty. This block is required for confirmed changes:',
@@ -766,7 +803,7 @@ function interfaceMarkup() {
     <nav class="mn-tabs" role="tablist">
       ${[['status','heart-pulse'],['intel','user-secret'],['missions','crosshairs'],['world','earth-americas'],['archive','database']].map(([key, icon], index) => `<button type="button" role="tab" data-tab="${key}" aria-selected="${index === 0}"><i class="fa-solid fa-${icon}"></i><span data-t="${key}"></span></button>`).join('')}
     </nav>
-    <section id="mn-profile-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-profile-form"><div class="mn-panel-head"><h3 data-t="editIdentity"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid">${['name','alias','role','origin','affiliation'].map(key => `<label><span data-t="${key}"></span><input name="${key}" maxlength="160"></label>`).join('')}</div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="save"></button></div></form></section>
+    <section id="mn-profile-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-profile-form"><div class="mn-panel-head"><h3 data-t="editIdentity"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid">${['alias','role','origin','affiliation'].map(key => `<label><span data-t="${key}"></span><input name="${key}" maxlength="160"></label>`).join('')}</div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="save"></button></div></form></section>
     <section id="mn-universe-modal" class="mn-modal" hidden><form class="mn-sheet" id="mn-universe-form"><div class="mn-panel-head"><h3 data-t="universeSettings"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><div class="mn-form-grid">${['earth','continuity','timeline'].map(key => `<label><span data-t="${key}"></span><input name="${key}" maxlength="160"></label>`).join('')}</div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="apply"></button></div></form></section>
     <section id="mn-time-modal" class="mn-modal" hidden><form class="mn-sheet mn-time-sheet" id="mn-time-form"><div class="mn-panel-head"><h3 data-t="timeTitle"></h3><button class="mn-icon-button" type="button" data-modal-close><i class="fa-solid fa-xmark"></i></button></div><p data-t="timeHelp"></p><div class="mn-time-fields"><label><span data-t="amount"></span><input name="amount" type="number" inputmode="numeric" min="1" max="9999" value="30" required></label><label><span data-t="unit"></span><select name="unit"><option value="minutes" data-t="minutes"></option><option value="hours" data-t="hours"></option><option value="days" data-t="days"></option></select></label></div><div class="mn-modal-actions"><button class="mn-text-button" type="button" data-modal-close data-t="cancel"></button><button class="mn-primary-button" type="submit" data-t="queue"></button></div></form></section>
   </section>`;
@@ -833,9 +870,9 @@ function showTab(key) {
   });
   activeTabIndex = nextIndex;
 }
-function openProfile() { const state = getState(); const form = document.getElementById('mn-profile-form'); for (const key of ['name','alias','role','origin','affiliation']) form.elements[key].value = state.operator[key]; openModal('mn-profile-modal'); }
+function openProfile() { const state = getState(); const form = document.getElementById('mn-profile-form'); for (const key of ['alias','role','origin','affiliation']) form.elements[key].value = state.operator[key]; openModal('mn-profile-modal'); }
 function openUniverse() { const state = getState(); const form = document.getElementById('mn-universe-form'); for (const key of ['earth','continuity','timeline']) form.elements[key].value = state.operator[key]; openModal('mn-universe-modal'); }
-async function saveProfile(event) { event.preventDefault(); const state = getState(); for (const key of ['name','alias','role','origin','affiliation']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
+async function saveProfile(event) { event.preventDefault(); const state = getState(); state.operator.name = currentPersonaName(); for (const key of ['alias','role','origin','affiliation']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
 async function saveUniverse(event) { event.preventDefault(); const state = getState(); for (const key of ['earth','continuity','timeline']) state.operator[key] = text(event.currentTarget.elements[key].value, state.operator[key], 160); closeModal(event.currentTarget.closest('.mn-modal')); await persistState(state, 'manual'); }
 async function queueTime(event) {
   event.preventDefault();
@@ -1133,7 +1170,13 @@ function refreshCharacterLifeContacts() {
 async function initialize() {
   if (initialized) return; initialized = true;
   try {
-    getSettings(); buildInterface(); buildSpiderWatch(); await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
+    getSettings(); buildInterface(); buildSpiderWatch();
+    const { initializeMarvelRegistration } = await import('./registration.js?v=2.2.0');
+    await initializeMarvelRegistration({
+      context, getState, persistState, updatePrompt, currentPersonaName, notify, closeInterface, closeSpiderWatch,
+      motion: () => getSettings().motion,
+    });
+    await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
     globalThis.addEventListener('character-life:rpg-bridge-ready', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:rpg-compatibility-updated', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:portrait-replaced', refreshCharacterLifeContacts);
@@ -1144,7 +1187,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.1.2 loaded.');
+    console.info('[Marvel Nexus] Extension v2.2.0 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 
