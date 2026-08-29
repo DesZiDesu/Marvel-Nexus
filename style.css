@@ -408,3 +408,171 @@ body.marvel-nexus-open { overflow: hidden !important; }
 @keyframes mn-scan { 0%,70%,100% { transform: translateX(-55%); opacity: 0; } 82% { opacity: 1; } 90% { transform: translateX(55%); opacity: 0; } }
 @keyframes mn-pulse { 50% { opacity: .35; transform: scale(.75); } }
 @keyframes mn-icon-pulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.15); } }
+
+/* Spider Watch */
+.mn-sw[hidden], .mn-sw-notification[hidden] { display: none !important; }
+.mn-sw {
+  position: fixed;
+  inset: 0;
+  z-index: 33000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.mn-sw.is-open { opacity: 1; }
+.mn-sw-device {
+  --mn-sw-offset: 0px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(96vw, 560px);
+  aspect-ratio: 1;
+  pointer-events: auto;
+  user-select: none;
+  touch-action: none;
+  transform: translate(-50%, calc(-50% + var(--mn-sw-offset))) scale(.94);
+  transition: transform .32s cubic-bezier(.2,.8,.2,1), filter .25s ease;
+  filter: drop-shadow(0 20px 42px rgba(0,0,0,.42));
+  isolation: isolate;
+}
+.mn-sw.is-open .mn-sw-device { transform: translate(-50%, calc(-50% + var(--mn-sw-offset))) scale(1); }
+.mn-sw-device.is-dragging { transition: filter .25s ease; filter: drop-shadow(0 28px 52px rgba(0,0,0,.56)) brightness(1.04); }
+.mn-sw-device > img { position: absolute; z-index: 3; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.mn-sw-display {
+  position: absolute;
+  z-index: 1;
+  left: 23.8%;
+  top: 10.8%;
+  width: 66.5%;
+  height: 67%;
+  overflow: hidden;
+  padding: 10% 8% 24%;
+  color: #06182c;
+  background:
+    radial-gradient(circle at 77% 15%, rgba(255,242,181,.76), transparent 27%),
+    linear-gradient(151deg,#ffc23e 0%,#ff9308 52%,#e35d00 100%);
+  box-shadow: inset 0 0 42px rgba(91,28,0,.24);
+  font: 400 clamp(11px,2.25cqw,14px) "Marvel Nexus Thai", "Marvel Nexus Tech", sans-serif;
+  container-type: inline-size;
+  touch-action: pan-y;
+}
+.mn-sw-display::before, .mn-sw-display::after { content:""; position:absolute; z-index:0; inset:0; pointer-events:none; }
+.mn-sw-display::before {
+  opacity: .28;
+  background-image:
+    linear-gradient(rgba(7,37,64,.24) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(7,37,64,.18) 1px,transparent 1px),
+    repeating-linear-gradient(135deg,transparent 0 34px,rgba(255,255,255,.13) 35px 36px);
+  background-size: 22px 22px,22px 22px,auto;
+}
+.mn-sw-display::after { height:15%; inset:-18% 0 auto; opacity:.4; background:linear-gradient(transparent,rgba(255,255,255,.78),transparent); animation:mn-sw-screen-scan 4.2s linear infinite; }
+.mn-sw-scroll {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 2px;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  touch-action: pan-y;
+}
+.mn-sw-scroll::-webkit-scrollbar { display:none; }
+.mn-sw-scroll header { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:31px; border-bottom:1px solid rgba(6,24,44,.58); font:500 clamp(11px,3.1cqw,14px) "Marvel Nexus Tech","Marvel Nexus Thai",sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.mn-sw-scroll header strong::before { content:""; display:inline-block; width:7px; height:7px; margin-right:7px; background:#08233e; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); animation:mn-sw-node 1.8s ease-in-out infinite; }
+.mn-sw-scroll header button { min-width:38px; min-height:34px; border:0; padding:0; color:#06182c; background:transparent; font:500 18px "Marvel Nexus Tech",sans-serif; }
+.mn-sw-scroll h2 { margin:0; color:#06182c; font:500 clamp(16px,5.2cqw,24px) "Marvel Nexus Tech","Marvel Nexus Thai",sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.mn-sw-scroll p { margin:0; color:rgba(6,24,44,.84); line-height:1.35; }
+.mn-sw-location { position:relative; display:grid; gap:2px; padding:8px 10px 8px 13px; border-left:3px solid #08233e; background:linear-gradient(90deg,rgba(255,235,163,.55),rgba(7,37,64,.08)); clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%); }
+.mn-sw-location::after { content:""; position:absolute; right:6px; top:6px; width:18px; height:5px; border-top:1px solid #08233e; border-right:1px solid #08233e; }
+.mn-sw-location strong { color:#06182c; font:500 clamp(14px,4.5cqw,19px) "Marvel Nexus Thai","Marvel Nexus Tech",sans-serif; }
+.mn-sw-location small, .mn-sw-hint { color:rgba(6,24,44,.8); line-height:1.25; }
+.mn-sw-action, .mn-sw-routes button {
+  min-height:42px;
+  border:0;
+  border-radius:0;
+  padding:7px 10px;
+  color:#ffe6a0;
+  background:linear-gradient(90deg,rgba(6,24,44,.98),rgba(9,52,84,.9));
+  clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+  box-shadow:inset 3px 0 #ffb323,inset -1px 0 rgba(255,210,92,.62);
+  font:500 clamp(11px,3.1cqw,14px) "Marvel Nexus Tech","Marvel Nexus Thai",sans-serif;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.mn-sw-action:active, .mn-sw-routes button:active { filter:brightness(1.35); }
+.mn-sw-routes { display:grid; gap:5px; }
+.mn-sw-routes button { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 8px; text-align:left; }
+.mn-sw-routes button span { display:grid; min-width:0; }
+.mn-sw-routes button strong, .mn-sw-routes button small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mn-sw-routes button b { align-self:end; color:rgba(255,230,160,.78); font-weight:500; white-space:nowrap; }
+.mn-sw-risk { align-self:flex-start; padding:4px 8px; color:#ffe6a0; background:#08233e; clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px)); font:500 clamp(11px,2.8cqw,13px) "Marvel Nexus Tech","Marvel Nexus Thai",sans-serif; letter-spacing:.07em; text-transform:uppercase; }
+.mn-sw-destination { color:#06182c; font:500 clamp(18px,6cqw,28px) "Marvel Nexus Tech",sans-serif; letter-spacing:.07em; }
+.mn-sw-gate { align-self:center; width:42px; aspect-ratio:1; border:2px solid #08233e; border-radius:50%; box-shadow:0 0 0 5px rgba(8,35,62,.17),inset 0 0 0 5px rgba(8,35,62,.15); animation:mn-sw-gate 3.2s linear infinite; }
+.mn-sw-gate i { display:block; width:45%; height:45%; margin:27%; border:2px solid #08233e; transform:rotate(45deg); }
+.mn-sw-error { position:absolute; z-index:5; inset:36px 0 auto; padding:8px 10px; color:#ffe6a0; background:#781d18; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); font-weight:500; text-align:center; }
+.mn-sw-hardware { position:absolute; z-index:5; border:0; border-radius:50%; padding:0; background:transparent; touch-action:manipulation; }
+.mn-sw-red { left:69.2%; top:74.1%; width:18.9%; aspect-ratio:1; }
+.mn-sw-white { left:54.2%; top:83.2%; width:9.5%; aspect-ratio:1; }
+.mn-sw-red.is-ready { box-shadow:0 0 0 3px rgba(255,224,120,.9),0 0 30px 10px rgba(255,43,20,.76); animation:mn-sw-ready 1.2s ease-in-out infinite; }
+.mn-sw-hardware:active { transform:scale(.84); }
+
+.mn-sw-notification {
+  position:fixed;
+  z-index:34000;
+  top:calc(14px + env(safe-area-inset-top));
+  left:50%;
+  width:min(92vw,520px);
+  padding:13px 16px 11px;
+  pointer-events:auto;
+  color:#eff8ff;
+  background:
+    linear-gradient(120deg,rgba(5,19,34,.98),rgba(10,43,68,.98) 70%,rgba(78,31,11,.98));
+  clip-path:polygon(16px 0,calc(100% - 34px) 0,100% 28px,100% calc(100% - 12px),calc(100% - 12px) 100%,20px 100%,0 calc(100% - 20px),0 16px);
+  box-shadow:0 18px 42px rgba(0,0,0,.48),inset 3px 0 #ff9826,inset -1px 0 rgba(255,178,76,.55);
+  font-family:"Marvel Nexus Tech","Marvel Nexus Thai",sans-serif;
+  opacity:0;
+  transform:translate(-50%,-18px) scale(.96);
+  transition:opacity .24s ease,transform .32s cubic-bezier(.2,.8,.2,1);
+}
+.mn-sw-notification::before { content:""; position:absolute; inset:5px; pointer-events:none; border-top:1px solid rgba(119,206,255,.4); border-bottom:1px solid rgba(255,160,44,.38); clip-path:inherit; }
+.mn-sw-notification.is-open { opacity:1; transform:translate(-50%,0) scale(1); }
+.mn-sw-notification.is-closing { opacity:0; transform:translate(-50%,-12px) scale(.98); }
+.mn-sw-notification-signal { position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; padding-bottom:7px; border-bottom:1px solid rgba(112,197,244,.3); color:#7dd6ff; font-size:10px; letter-spacing:.12em; }
+.mn-sw-notification-signal i { width:8px; height:8px; background:#ff9826; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); animation:mn-sw-node 1s ease-in-out infinite; }
+.mn-sw-notification-signal b { color:#ffad38; font-weight:500; }
+.mn-sw-notification-main { position:relative; display:flex; align-items:end; justify-content:space-between; gap:12px; padding-top:8px; }
+.mn-sw-notification-main div { display:grid; min-width:0; }
+.mn-sw-notification-main small { color:#ffad38; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+.mn-sw-notification-main strong { overflow:hidden; color:#fff5d7; font-size:clamp(19px,5vw,28px); font-weight:500; letter-spacing:.07em; text-overflow:ellipsis; white-space:nowrap; }
+.mn-sw-notification-main > span { flex:0 0 auto; padding:4px 7px; color:#ffcf72; background:rgba(255,145,31,.12); clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px)); font-size:10px; letter-spacing:.06em; text-transform:uppercase; }
+.mn-sw-notification p { position:relative; margin:4px 0 8px; overflow:hidden; color:#bcd4e4; font:400 13px "Marvel Nexus Thai","Marvel Nexus Tech",sans-serif; text-overflow:ellipsis; white-space:nowrap; }
+.mn-sw-notification-timer { position:relative; height:2px; overflow:hidden; background:rgba(125,214,255,.15); }
+.mn-sw-notification-timer i { display:block; width:100%; height:100%; transform-origin:left; background:linear-gradient(90deg,#7dd6ff,#ffad38); animation:mn-sw-notification-time 4.5s linear forwards; }
+
+.marvel-nexus-settings .mn-settings-range > span { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.marvel-nexus-settings .mn-settings-range output { color:var(--mn-text); font-family:"Marvel Nexus Tech",sans-serif; }
+.marvel-nexus-settings .mn-settings-range input { width:100%; accent-color:var(--mn-violet); }
+
+@media (max-width:430px) {
+  .mn-sw-device { width:100vw; }
+  .mn-sw-display { padding:9.5% 7% 24% 8%; }
+  .mn-sw-notification { top:calc(8px + env(safe-area-inset-top)); width:96vw; padding-inline:13px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .mn-sw-display::after,.mn-sw-scroll header strong::before,.mn-sw-gate,.mn-sw-red.is-ready,.mn-sw-notification-signal i,.mn-sw-notification-timer i { animation:none !important; }
+  .mn-sw,.mn-sw-device,.mn-sw-notification { transition-duration:.01ms !important; }
+}
+
+@keyframes mn-sw-screen-scan { from { transform:translateY(0); } to { transform:translateY(790%); } }
+@keyframes mn-sw-node { 0%,100% { opacity:.35; transform:scale(.75); } 50% { opacity:1; transform:scale(1); } }
+@keyframes mn-sw-gate { to { transform:rotate(360deg); } }
+@keyframes mn-sw-ready { 50% { filter:brightness(1.22); } }
+@keyframes mn-sw-notification-time { from { transform:scaleX(1); } to { transform:scaleX(0); } }

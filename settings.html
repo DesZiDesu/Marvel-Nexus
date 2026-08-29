@@ -22,6 +22,10 @@
         <input id="marvel-nexus-inject-state" type="checkbox">
         <span data-mn-i18n="injectState">Include the current Nexus state in prompts</span>
       </label>
+      <label class="checkbox_label" for="marvel-nexus-watch-sounds">
+        <input id="marvel-nexus-watch-sounds" type="checkbox">
+        <span data-mn-i18n="watchSounds">Spider Watch sound effects</span>
+      </label>
 
       <div class="mn-settings-grid">
         <label for="marvel-nexus-language">
@@ -46,6 +50,10 @@
             <option value="compact" data-mn-i18n="compact">Compact</option>
             <option value="comfortable" data-mn-i18n="comfortable">Comfortable</option>
           </select>
+        </label>
+        <label class="mn-settings-range" for="marvel-nexus-watch-volume">
+          <span><span data-mn-i18n="watchVolume">Spider Watch volume</span><output id="marvel-nexus-watch-volume-value">65%</output></span>
+          <input id="marvel-nexus-watch-volume" type="range" min="0" max="100" step="5" value="65">
         </label>
       </div>
 

@@ -17,6 +17,8 @@ const DEFAULT_SETTINGS = Object.freeze({
   language: 'auto',
   motion: 'full',
   density: 'compact',
+  watchSounds: true,
+  watchVolume: 65,
 });
 
 const COPY = {
@@ -37,7 +39,8 @@ const COPY = {
     editIdentity: 'Edit Identity', universeSettings: 'Universe Settings', earth: 'Earth designation', timeline: 'Timeline', cancel: 'Cancel', save: 'Save', apply: 'Apply',
     timeTitle: 'Queue time advancement', timeHelp: 'This request will be batched with your next main-chat message. The AI will resolve consequences and update the Nexus state in that same reply.', amount: 'Amount', unit: 'Unit', minutes: 'Minutes', hours: 'Hours', days: 'Days', queue: 'Queue for next message', pending: 'Pending for next message', queued: 'Time request queued for your next main-chat message.',
     waiting: 'Waiting for chat', ready: 'Nexus synchronized', checking: 'Checking role-play reply', updated: 'Nexus state updated', unchanged: 'No confirmed state changes', disabled: 'AI synchronization is off', openChat: 'Open a chat to use Marvel Nexus.',
-    settingsIntro: 'A persistent Marvel role-play interface linked to the active chat.', enabled: 'Enable Marvel Nexus', showLauncher: 'Show the launcher in the wand menu', aiSync: 'Update from normal role-play replies', injectState: 'Include the current Nexus state in prompts', language: 'Language / ภาษา', motion: 'Interface motion', motionFull: 'Full', motionReduced: 'Reduced', motionOff: 'Off', density: 'Mobile density', compact: 'Compact', comfortable: 'Comfortable', syncExplanation: 'Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.', openNexus: 'Open Marvel Nexus', resetChat: "Reset this chat's Nexus state", resetConfirm: "Reset Marvel Nexus data for this chat? This cannot be undone.", resetDone: 'The current chat state was reset.',
+    settingsIntro: 'A persistent Marvel role-play interface linked to the active chat.', enabled: 'Enable Marvel Nexus', showLauncher: 'Show the launcher in the wand menu', aiSync: 'Update from normal role-play replies', injectState: 'Include the current Nexus state in prompts', language: 'Language / ภาษา', motion: 'Interface motion', motionFull: 'Full', motionReduced: 'Reduced', motionOff: 'Off', density: 'Mobile density', compact: 'Compact', comfortable: 'Comfortable', watchSounds: 'Spider Watch sound effects', watchVolume: 'Spider Watch volume', syncExplanation: 'Marvel Nexus uses the normal AI reply. It does not make a second generation request. Confirmed changes are returned as a hidden, validated patch and saved only to the current chat.', openNexus: 'Open Marvel Nexus', resetChat: "Reset this chat's Nexus state", resetConfirm: "Reset Marvel Nexus data for this chat? This cannot be undone.", resetDone: 'The current chat state was reset.',
+    spiderWatch: 'Spider Watch', dimensionGate: 'Dimension Gate', currentLocation: 'Current location', chooseEarth: 'Choose Earth', destinations: 'Destinations', risk: 'Risk', confirmTravel: 'Press the red button to confirm', gateArmed: 'Gate armed', nextMessageTravel: 'Send your next main-chat message to travel.', arrival: 'Arrival', newDestination: 'New destination', stable: 'Stable', routeUnavailable: 'Choose an Earth first.',
   },
   th: {
     title: 'Marvel Nexus', subtitle: 'อินเทอร์เฟซปฏิบัติการพหุจักรวาล', close: 'ปิด',
@@ -56,7 +59,8 @@ const COPY = {
     editIdentity: 'แก้ไขข้อมูลประจำตัว', universeSettings: 'ตั้งค่าจักรวาล', earth: 'รหัส Earth', timeline: 'ไทม์ไลน์', cancel: 'ยกเลิก', save: 'บันทึก', apply: 'นำไปใช้',
     timeTitle: 'จัดคิวเลื่อนเวลา', timeHelp: 'คำขอนี้จะถูกรวมกับข้อความถัดไปในแชตหลัก AI จะประมวลผลผลกระทบและอัปเดต Nexus ในคำตอบเดียวกัน', amount: 'จำนวน', unit: 'หน่วย', minutes: 'นาที', hours: 'ชั่วโมง', days: 'วัน', queue: 'จัดคิวสำหรับข้อความถัดไป', pending: 'รอข้อความถัดไป', queued: 'จัดคิวคำขอเลื่อนเวลาไว้สำหรับข้อความถัดไปแล้ว',
     waiting: 'กำลังรอแชต', ready: 'Nexus เชื่อมต่อแล้ว', checking: 'กำลังตรวจคำตอบโรลเพลย์', updated: 'อัปเดตสถานะ Nexus แล้ว', unchanged: 'ไม่มีข้อมูลที่ยืนยันให้เปลี่ยนแปลง', disabled: 'ปิดการซิงก์กับ AI อยู่', openChat: 'เปิดแชตก่อนใช้งาน Marvel Nexus',
-    settingsIntro: 'อินเทอร์เฟซโรลเพลย์ Marvel แบบถาวรที่เชื่อมกับแชตปัจจุบัน', enabled: 'เปิดใช้งาน Marvel Nexus', showLauncher: 'แสดงปุ่มเปิดในเมนูคทา', aiSync: 'อัปเดตจากคำตอบโรลเพลย์ปกติ', injectState: 'ใส่สถานะ Nexus ปัจจุบันในพรอมต์', language: 'ภาษา / Language', motion: 'การเคลื่อนไหวของ UI', motionFull: 'เต็มรูปแบบ', motionReduced: 'ลดลง', motionOff: 'ปิด', density: 'ความหนาแน่นบนมือถือ', compact: 'กระชับ', comfortable: 'สบายตา', syncExplanation: 'Marvel Nexus ใช้คำตอบปกติของ AI และไม่เรียกสร้างคำตอบครั้งที่สอง การเปลี่ยนแปลงที่ยืนยันแล้วจะกลับมาเป็นแพตช์ที่ซ่อนอยู่ ผ่านการตรวจสอบ และบันทึกเฉพาะแชตปัจจุบัน', openNexus: 'เปิด Marvel Nexus', resetChat: 'รีเซ็ตสถานะ Nexus ของแชตนี้', resetConfirm: 'รีเซ็ตข้อมูล Marvel Nexus ของแชตนี้หรือไม่ การดำเนินการนี้ย้อนกลับไม่ได้', resetDone: 'รีเซ็ตสถานะของแชตปัจจุบันแล้ว',
+    settingsIntro: 'อินเทอร์เฟซโรลเพลย์ Marvel แบบถาวรที่เชื่อมกับแชตปัจจุบัน', enabled: 'เปิดใช้งาน Marvel Nexus', showLauncher: 'แสดงปุ่มเปิดในเมนูคทา', aiSync: 'อัปเดตจากคำตอบโรลเพลย์ปกติ', injectState: 'ใส่สถานะ Nexus ปัจจุบันในพรอมต์', language: 'ภาษา / Language', motion: 'การเคลื่อนไหวของ UI', motionFull: 'เต็มรูปแบบ', motionReduced: 'ลดลง', motionOff: 'ปิด', density: 'ความหนาแน่นบนมือถือ', compact: 'กระชับ', comfortable: 'สบายตา', watchSounds: 'เอฟเฟกต์เสียง Spider Watch', watchVolume: 'ระดับเสียง Spider Watch', syncExplanation: 'Marvel Nexus ใช้คำตอบปกติของ AI และไม่เรียกสร้างคำตอบครั้งที่สอง การเปลี่ยนแปลงที่ยืนยันแล้วจะกลับมาเป็นแพตช์ที่ซ่อนอยู่ ผ่านการตรวจสอบ และบันทึกเฉพาะแชตปัจจุบัน', openNexus: 'เปิด Marvel Nexus', resetChat: 'รีเซ็ตสถานะ Nexus ของแชตนี้', resetConfirm: 'รีเซ็ตข้อมูล Marvel Nexus ของแชตนี้หรือไม่ การดำเนินการนี้ย้อนกลับไม่ได้', resetDone: 'รีเซ็ตสถานะของแชตปัจจุบันแล้ว',
+    spiderWatch: 'Spider Watch', dimensionGate: 'ประตูมิติ', currentLocation: 'ตำแหน่งปัจจุบัน', chooseEarth: 'เลือกจักรวาล', destinations: 'จักรวาลปลายทาง', risk: 'ความเสี่ยง', confirmTravel: 'กดปุ่มสีแดงเพื่อยืนยัน', gateArmed: 'เปิดระบบประตูแล้ว', nextMessageTravel: 'ส่งข้อความถัดไปในแชตหลักเพื่อเดินทาง', arrival: 'เดินทางถึงแล้ว', newDestination: 'เลือกจุดหมายใหม่', stable: 'เสถียร', routeUnavailable: 'กรุณาเลือกจักรวาลก่อน',
   },
 };
 
@@ -70,6 +74,22 @@ let activeTabIndex = 0;
 let contactRenderToken = 0;
 const contactPortraitCache = new Map();
 const modalCloseTimers = new WeakMap();
+let spiderWatchMode = 'home';
+let spiderWatchSelection = null;
+let spiderWatchDrag = null;
+let spiderWatchOffset = 0;
+let spiderWatchAudioContext = null;
+let spiderWatchNotificationTimer = 0;
+let pendingSpiderArrivalNotice = null;
+let spiderTravelFinalizing = false;
+let spiderWatchCommandRegistered = false;
+
+const SPIDER_WATCH_ROUTES = Object.freeze([
+  { earth: 'Earth-65', name: { en: "Gwen's Universe", th: 'จักรวาลของเกวน' }, location: 'Chelsea, New York', risk: 'Low', riskValue: 12, detail: { en: 'Watercolor skyline, active Spider-Woman, stable portal signature.', th: 'เส้นขอบฟ้าสีน้ำ มี Spider-Woman ปฏิบัติการ และสัญญาณประตูมิติเสถียร' } },
+  { earth: 'Earth-1610', name: { en: "Miles' World", th: 'จักรวาลของไมลส์' }, location: 'Brooklyn, New York', risk: 'Moderate', riskValue: 34, detail: { en: 'Modern Brooklyn, active Spider-Man, collider residue detected.', th: 'บรูคลินยุคใหม่ มี Spider-Man ปฏิบัติการ และตรวจพบร่องรอยคอลลิเดอร์' } },
+  { earth: 'Earth-928', name: { en: 'Nueva York 2099', th: 'นูเอวา ยอร์ก ปี 2099' }, location: 'Nueva York', risk: 'High', riskValue: 67, detail: { en: 'Corporate megacity, Alchemax authority, advanced surveillance.', th: 'มหานครภายใต้อำนาจ Alchemax พร้อมระบบเฝ้าระวังขั้นสูง' } },
+  { earth: 'Earth-42', name: { en: 'Prowler World', th: 'จักรวาลพราวเลอร์' }, location: 'Brooklyn, New York', risk: 'Critical', riskValue: 91, detail: { en: 'No active Spider-Man, elevated criminal control, unstable entry.', th: 'ไม่มี Spider-Man ประจำการ อาชญากรรมควบคุมพื้นที่ และทางเข้าไม่เสถียร' } },
+]);
 
 const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 const text = (value, fallback = '', max = 240) => typeof value === 'string' ? value.trim().slice(0, max) : fallback;
@@ -150,7 +170,23 @@ function normalize(source = {}, base = defaultState()) {
   out.world.eta = text(world.eta, out.world.eta, 80);
   out.world.nearbyContacts = Array.isArray(world.nearbyContacts) ? world.nearbyContacts.map(value => text(value, '', 120)).filter(Boolean).slice(0, 20) : out.world.nearbyContacts;
   out.world.incidents = Array.isArray(world.incidents) ? world.incidents.map(item => normalizeItem(item, 'incident')).filter(Boolean).slice(0, 30) : out.world.incidents;
-  out.pendingActions = Array.isArray(source.pendingActions) ? source.pendingActions.map(action => ({ id: text(action?.id, uid(), 80), type: action?.type === 'advance_time' ? 'advance_time' : '', amount: number(action?.amount, 1, 1, 9999), unit: ['minutes', 'hours', 'days'].includes(action?.unit) ? action.unit : 'minutes', totalMinutes: number(action?.totalMinutes, 1, 1, 999999), queuedAt: text(action?.queuedAt, '', 60) })).filter(action => action.type).slice(-10) : [];
+  out.pendingActions = Array.isArray(source.pendingActions) ? source.pendingActions.map(action => {
+    const id = text(action?.id, uid(), 80);
+    const queuedAt = text(action?.queuedAt, '', 60);
+    if (action?.type === 'advance_time') return { id, type: 'advance_time', amount: number(action?.amount, 1, 1, 9999), unit: ['minutes', 'hours', 'days'].includes(action?.unit) ? action.unit : 'minutes', totalMinutes: number(action?.totalMinutes, 1, 1, 999999), queuedAt };
+    if (action?.type === 'spider_travel') return {
+      id, type: 'spider_travel', queuedAt,
+      originEarth: text(action?.originEarth, 'Earth-616', 80),
+      originLocation: text(action?.originLocation, 'Unknown', 160),
+      destinationEarth: text(action?.destinationEarth, '', 80),
+      destinationName: text(action?.destinationName, '', 140),
+      location: text(action?.location, 'Unknown', 160),
+      risk: text(action?.risk, 'Unknown', 40),
+      riskValue: number(action?.riskValue, 0, 0, 100),
+      detail: text(action?.detail, '', 500),
+    };
+    return null;
+  }).filter(action => action?.type && (action.type !== 'spider_travel' || action.destinationEarth)).slice(-10) : [];
   out.updatedAt = text(source.updatedAt, out.updatedAt, 60);
   out.updateSource = text(source.updateSource, out.updateSource, 40);
   return out;
@@ -159,6 +195,8 @@ function normalize(source = {}, base = defaultState()) {
 function getSettings() {
   const store = context().extensionSettings;
   store[SETTINGS_KEY] = { ...DEFAULT_SETTINGS, ...(store[SETTINGS_KEY] || {}) };
+  store[SETTINGS_KEY].watchSounds = store[SETTINGS_KEY].watchSounds !== false;
+  store[SETTINGS_KEY].watchVolume = number(store[SETTINGS_KEY].watchVolume, DEFAULT_SETTINGS.watchVolume, 0, 100);
   return store[SETTINGS_KEY];
 }
 
@@ -192,6 +230,371 @@ function notify(type, message) {
   else console[type === 'error' ? 'error' : 'info'](`[Marvel Nexus] ${message}`);
 }
 
+function routeValue(route, key) {
+  const value = route?.[key];
+  if (value && typeof value === 'object') return text(value[language()] || value.en, '', 500);
+  return text(value, '', 500);
+}
+
+function knownSpiderRoutes(state = getState()) {
+  const currentEarth = text(state.operator.earth, 'Earth-616', 80).toLocaleLowerCase();
+  const routes = new Map(SPIDER_WATCH_ROUTES.map(route => [route.earth.toLocaleLowerCase(), { ...route }]));
+  const discovered = [
+    ...state.timelineEvents.map(event => event.earth),
+    ...state.anomalies.flatMap(item => [item.originEarth, item.currentEarth]),
+  ].map(value => text(value, '', 80)).filter(value => /^earth[-–—\s]/i.test(value));
+  for (const earth of discovered) {
+    const key = earth.toLocaleLowerCase();
+    if (routes.has(key)) continue;
+    const anomaly = state.anomalies.find(item => [item.originEarth, item.currentEarth].some(value => text(value).toLocaleLowerCase() === key));
+    routes.set(key, {
+      earth,
+      name: { en: 'Discovered dimension', th: 'จักรวาลที่ค้นพบแล้ว' },
+      location: anomaly?.detail ? 'Arrival point unknown' : 'Unknown',
+      risk: anomaly?.risk >= 75 ? 'Critical' : anomaly?.risk >= 50 ? 'High' : anomaly?.risk >= 25 ? 'Moderate' : 'Unknown',
+      riskValue: number(anomaly?.risk, 25, 0, 100),
+      detail: { en: text(anomaly?.detail, 'Previously recorded by Marvel Nexus.', 500), th: text(anomaly?.detail, 'เคยถูกบันทึกไว้ใน Marvel Nexus', 500) },
+    });
+  }
+  return [...routes.values()].filter(route => route.earth.toLocaleLowerCase() !== currentEarth).slice(0, 12);
+}
+
+function playSpiderWatchSound(kind = 'tap') {
+  const settings = getSettings();
+  if (!settings.watchSounds || settings.watchVolume <= 0) return;
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  try {
+    spiderWatchAudioContext ||= new AudioContextClass();
+    const audioContext = spiderWatchAudioContext;
+    const patterns = {
+      open: [[260, 620, .16, 0, 'sawtooth'], [520, 880, .12, .08, 'sine']],
+      close: [[520, 210, .14, 0, 'sine']],
+      tap: [[520, 560, .045, 0, 'square']],
+      navigate: [[410, 610, .06, 0, 'triangle'], [610, 740, .045, .055, 'sine']],
+      select: [[540, 760, .07, 0, 'triangle'], [760, 920, .07, .06, 'sine']],
+      confirm: [[180, 360, .12, 0, 'sawtooth'], [360, 720, .16, .1, 'triangle'], [720, 1040, .14, .22, 'sine']],
+      reset: [[680, 320, .12, 0, 'triangle'], [320, 440, .08, .12, 'sine']],
+      drag: [[300, 330, .055, 0, 'triangle']],
+      error: [[190, 150, .12, 0, 'square'], [160, 120, .12, .13, 'square']],
+      arrival: [[330, 660, .14, 0, 'sine'], [660, 990, .18, .12, 'triangle'], [990, 1320, .22, .28, 'sine']],
+    };
+    const pattern = patterns[kind] || patterns.tap;
+    const schedule = () => {
+      const base = audioContext.currentTime + .01;
+      const level = (settings.watchVolume / 100) * .085;
+      for (const [from, to, duration, offset, waveform] of pattern) {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const start = base + offset;
+        oscillator.type = waveform;
+        oscillator.frequency.setValueAtTime(from, start);
+        oscillator.frequency.exponentialRampToValueAtTime(Math.max(40, to), start + duration);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(level, start + Math.min(.018, duration / 3));
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        oscillator.connect(gain).connect(audioContext.destination);
+        oscillator.start(start);
+        oscillator.stop(start + duration + .02);
+      }
+    };
+    if (audioContext.state === 'suspended') void audioContext.resume().then(schedule).catch(() => undefined);
+    else schedule();
+  } catch (error) {
+    console.debug('[Marvel Nexus] Spider Watch audio unavailable.', error);
+  }
+}
+
+function spiderWatchMarkup() {
+  return `
+    <section id="mn-spider-watch" class="mn-sw" hidden aria-hidden="true">
+      <div class="mn-sw-device" id="mn-sw-device">
+        <div class="mn-sw-display" id="mn-sw-display" aria-live="polite"></div>
+        <img src="scripts/extensions/third-party/Marvel-Nexus/assets/spider-watch-frame.webp" alt="Spider Watch">
+        <button type="button" id="mn-sw-reset" class="mn-sw-hardware mn-sw-white" aria-label="Reset Spider Watch"></button>
+        <button type="button" id="mn-sw-confirm" class="mn-sw-hardware mn-sw-red" aria-label="Confirm dimensional travel"></button>
+      </div>
+    </section>
+    <section id="mn-spider-notification" class="mn-sw-notification" hidden role="status" aria-live="polite">
+      <div class="mn-sw-notification-signal"><i></i><span>SPIDER-WATCH // TRANSIT LOCK</span><b>∆</b></div>
+      <div class="mn-sw-notification-main"><div><small data-sw-notice-label></small><strong data-sw-notice-earth></strong></div><span data-sw-notice-risk></span></div>
+      <p data-sw-notice-location></p>
+      <div class="mn-sw-notification-timer"><i></i></div>
+    </section>`;
+}
+
+function buildSpiderWatch() {
+  if (document.getElementById('mn-spider-watch')) return;
+  document.body.insertAdjacentHTML('beforeend', spiderWatchMarkup());
+  const shell = document.getElementById('mn-spider-watch');
+  const device = document.getElementById('mn-sw-device');
+  const display = document.getElementById('mn-sw-display');
+  const red = document.getElementById('mn-sw-confirm');
+  const white = document.getElementById('mn-sw-reset');
+  document.getElementById('mn-spider-notification')?.addEventListener('click', () => {
+    playSpiderWatchSound('close');
+    dismissSpiderWatchNotification();
+  });
+  display.addEventListener('click', event => {
+    const routeButton = event.target.closest('[data-sw-route]');
+    if (routeButton) {
+      const route = knownSpiderRoutes()[Number(routeButton.dataset.swRoute)];
+      if (!route) return;
+      spiderWatchSelection = route;
+      spiderWatchMode = 'target';
+      playSpiderWatchSound('select');
+      renderSpiderWatch();
+      return;
+    }
+    const action = event.target.closest('[data-sw-action]')?.dataset.swAction;
+    if (!action) return;
+    if (action === 'close') { closeSpiderWatch(); return; }
+    if (action === 'routes') { spiderWatchMode = 'routes'; spiderWatchSelection = null; playSpiderWatchSound('navigate'); renderSpiderWatch(); return; }
+    if (action === 'home') { spiderWatchMode = 'home'; spiderWatchSelection = null; playSpiderWatchSound('navigate'); renderSpiderWatch(); }
+  });
+  red.addEventListener('click', () => void armSpiderTravel());
+  white.addEventListener('click', () => void resetSpiderWatch());
+  device.addEventListener('pointerdown', event => {
+    if (event.target.closest('.mn-sw-display, .mn-sw-hardware')) return;
+    spiderWatchDrag = { pointerId: event.pointerId, startY: event.clientY, offset: spiderWatchOffset };
+    device.classList.add('is-dragging');
+    playSpiderWatchSound('drag');
+    try { device.setPointerCapture(event.pointerId); } catch {}
+  });
+  device.addEventListener('pointermove', event => {
+    if (!spiderWatchDrag || spiderWatchDrag.pointerId !== event.pointerId) return;
+    const limit = Math.max(16, (window.innerHeight - device.offsetHeight) / 2 - 12);
+    spiderWatchOffset = Math.max(-limit, Math.min(limit, spiderWatchDrag.offset + event.clientY - spiderWatchDrag.startY));
+    device.style.setProperty('--mn-sw-offset', `${Math.round(spiderWatchOffset)}px`);
+  });
+  const stopDrag = event => {
+    if (!spiderWatchDrag || spiderWatchDrag.pointerId !== event.pointerId) return;
+    spiderWatchDrag = null;
+    device.classList.remove('is-dragging');
+    playSpiderWatchSound('drag');
+  };
+  device.addEventListener('pointerup', stopDrag);
+  device.addEventListener('pointercancel', stopDrag);
+  shell.addEventListener('click', event => { if (event.target === shell) closeSpiderWatch(); });
+}
+
+function spiderPendingAction(state = getState()) {
+  return [...state.pendingActions].reverse().find(action => action.type === 'spider_travel') || null;
+}
+
+function renderSpiderWatch() {
+  const display = document.getElementById('mn-sw-display');
+  if (!display) return;
+  const state = getState();
+  const currentEarth = text(state.operator.earth, 'Earth-616', 80);
+  const currentLocation = text(state.operator.location, state.world.locationPath.at(-1) || 'Unknown', 160);
+  const pending = spiderPendingAction(state);
+  if (pending && spiderWatchMode !== 'arrived') spiderWatchMode = 'armed';
+  document.getElementById('mn-sw-confirm')?.classList.toggle('is-ready', spiderWatchMode === 'target' && Boolean(spiderWatchSelection));
+  if (spiderWatchMode === 'routes') {
+    const routes = knownSpiderRoutes(state);
+    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="home" aria-label="Back">←</button></header><h2>${escapeHtml(tr('destinations'))}</h2><div class="mn-sw-routes">${routes.map((route, index) => `<button type="button" data-sw-route="${index}"><span><strong>${escapeHtml(route.earth)}</strong><small>${escapeHtml(routeValue(route, 'name'))}</small></span><b>∆ ${escapeHtml(route.risk)}</b></button>`).join('')}</div></div>`;
+    return;
+  }
+  if (spiderWatchMode === 'target' && spiderWatchSelection) {
+    const route = spiderWatchSelection;
+    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="routes" aria-label="Back">←</button></header><h2>${escapeHtml(route.earth)}</h2><span class="mn-sw-risk">${escapeHtml(tr('risk'))} · ${escapeHtml(route.risk)}</span><p>${escapeHtml(routeValue(route, 'detail'))}</p><small class="mn-sw-hint">${escapeHtml(tr('confirmTravel'))}</small></div>`;
+    return;
+  }
+  if (spiderWatchMode === 'armed' && pending) {
+    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="close" aria-label="Close">×</button></header><div class="mn-sw-gate" aria-hidden="true"><i></i></div><h2>${escapeHtml(tr('gateArmed'))}</h2><strong class="mn-sw-destination">${escapeHtml(pending.destinationEarth)}</strong><p>${escapeHtml(tr('nextMessageTravel'))}</p></div>`;
+    return;
+  }
+  if (spiderWatchMode === 'arrived' && pendingSpiderArrivalNotice) {
+    const route = pendingSpiderArrivalNotice;
+    display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(route.destinationEarth)}</strong><button type="button" data-sw-action="close" aria-label="Close">×</button></header><h2>${escapeHtml(tr('arrival'))}</h2><div class="mn-sw-location"><strong>${escapeHtml(route.location)}</strong><small>${escapeHtml(route.destinationName)}</small></div><p>${escapeHtml(route.detail)}</p><button type="button" class="mn-sw-action" data-sw-action="home">${escapeHtml(tr('newDestination'))}</button></div>`;
+    return;
+  }
+  spiderWatchMode = 'home';
+  display.innerHTML = `<div class="mn-sw-scroll"><header><strong>◆ ${escapeHtml(currentEarth)}</strong><button type="button" data-sw-action="close" aria-label="Close">×</button></header><h2>${escapeHtml(tr('dimensionGate'))}</h2><div class="mn-sw-location"><strong>${escapeHtml(currentLocation)}</strong><small>${escapeHtml(tr('currentLocation'))} · ${escapeHtml(state.world.travelStatus)}</small></div><button type="button" class="mn-sw-action" data-sw-action="routes">${escapeHtml(tr('chooseEarth'))}</button></div>`;
+}
+
+function openSpiderWatch() {
+  if (!getSettings().enabled) return;
+  if (!context().getCurrentChatId?.()) { notify('warning', tr('openChat')); return; }
+  buildSpiderWatch();
+  const shell = document.getElementById('mn-spider-watch');
+  shell.hidden = false;
+  shell.setAttribute('aria-hidden', 'false');
+  renderSpiderWatch();
+  requestAnimationFrame(() => shell.classList.add('is-open'));
+  playSpiderWatchSound('open');
+}
+
+function closeSpiderWatch() {
+  const shell = document.getElementById('mn-spider-watch');
+  if (!shell || shell.hidden) return;
+  shell.classList.remove('is-open');
+  shell.setAttribute('aria-hidden', 'true');
+  playSpiderWatchSound('close');
+  window.setTimeout(() => { if (!shell.classList.contains('is-open')) shell.hidden = true; }, getSettings().motion === 'off' ? 0 : 240);
+}
+
+async function armSpiderTravel() {
+  const route = spiderWatchSelection;
+  if (!route || spiderWatchMode !== 'target') {
+    playSpiderWatchSound('error');
+    const display = document.getElementById('mn-sw-display');
+    if (display) display.insertAdjacentHTML('afterbegin', `<div class="mn-sw-error" role="alert">${escapeHtml(tr('routeUnavailable'))}</div>`);
+    window.setTimeout(() => display?.querySelector('.mn-sw-error')?.remove(), 1400);
+    return;
+  }
+  const state = getState();
+  const action = {
+    id: `spider-travel-${uid()}`,
+    type: 'spider_travel',
+    originEarth: text(state.operator.earth, 'Earth-616', 80),
+    originLocation: text(state.operator.location, state.world.locationPath.at(-1) || 'Unknown', 160),
+    destinationEarth: route.earth,
+    destinationName: routeValue(route, 'name'),
+    location: route.location,
+    risk: route.risk,
+    riskValue: route.riskValue,
+    detail: routeValue(route, 'detail'),
+    queuedAt: new Date().toISOString(),
+  };
+  state.pendingActions = state.pendingActions.filter(item => item.type !== 'spider_travel');
+  state.pendingActions.push(action);
+  state.world.travelStatus = 'Spider Watch armed';
+  state.world.destination = `${action.destinationEarth} · ${action.location}`;
+  state.world.eta = 'Next main-chat message';
+  spiderWatchMode = 'armed';
+  playSpiderWatchSound('confirm');
+  await persistState(state, 'spider-watch-armed');
+  renderSpiderWatch();
+}
+
+async function resetSpiderWatch() {
+  const state = getState();
+  const hadPending = state.pendingActions.some(action => action.type === 'spider_travel');
+  state.pendingActions = state.pendingActions.filter(action => action.type !== 'spider_travel');
+  if (hadPending) {
+    state.world.travelStatus = 'Stationary';
+    state.world.destination = '';
+    state.world.eta = '';
+    await persistState(state, 'spider-watch-reset');
+  }
+  spiderWatchMode = 'home';
+  spiderWatchSelection = null;
+  spiderWatchOffset = 0;
+  document.getElementById('mn-sw-device')?.style.setProperty('--mn-sw-offset', '0px');
+  playSpiderWatchSound('reset');
+  renderSpiderWatch();
+}
+
+function upsertStateRecord(collection, record) {
+  const index = collection.findIndex(item => item.id === record.id);
+  if (index >= 0) collection[index] = record;
+  else collection.push(record);
+}
+
+async function finalizeSpiderTravel() {
+  if (spiderTravelFinalizing || !context().getCurrentChatId?.()) return;
+  const state = getState();
+  const action = spiderPendingAction(state);
+  if (!action) return;
+  spiderTravelFinalizing = true;
+  try {
+    state.pendingActions = state.pendingActions.filter(item => item.id !== action.id);
+    state.operator.earth = action.destinationEarth;
+    state.operator.location = action.location;
+    state.world.previousLocation = [action.originEarth, action.originLocation].filter(Boolean).join(' · ');
+    state.world.locationPath = [action.destinationEarth, action.location].filter(Boolean);
+    state.world.travelStatus = 'Arrived via Spider Watch';
+    state.world.destination = '';
+    state.world.eta = '';
+    state.world.multiverse = 'Active traversal';
+    const eventId = `${action.id}-arrival`;
+    upsertStateRecord(state.timelineEvents, {
+      id: eventId, title: `${tr('arrival')}: ${action.destinationEarth}`, detail: action.detail,
+      date: state.world.date, time: state.world.time, earth: action.destinationEarth, location: action.location,
+      type: 'Dimensional Travel', impact: `Spider Watch transit from ${action.originEarth} confirmed.`,
+    });
+    upsertStateRecord(state.anomalies, {
+      id: `${action.id}-route`, title: `Spider Watch route: ${action.destinationEarth}`, type: 'Dimensional Transit',
+      originEarth: action.originEarth, currentEarth: action.destinationEarth, risk: action.riskValue,
+      status: 'Traversed', detail: action.detail, variants: [],
+    });
+    upsertStateRecord(state.archive, {
+      id: `earth-record-${action.destinationEarth.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      title: action.destinationEarth, category: 'Discovered Earth',
+      detail: `${action.destinationName}. ${action.location}. ${action.detail}`,
+    });
+    pendingSpiderArrivalNotice = action;
+    spiderWatchMode = 'armed';
+    await persistState(state, 'spider-watch-arrival');
+    consumeSpiderArrivalNotice();
+  } finally {
+    spiderTravelFinalizing = false;
+  }
+}
+
+function dismissSpiderWatchNotification() {
+  const notification = document.getElementById('mn-spider-notification');
+  if (!notification || notification.hidden) return;
+  window.clearTimeout(spiderWatchNotificationTimer);
+  notification.classList.remove('is-open');
+  notification.classList.add('is-closing');
+  window.setTimeout(() => {
+    notification.hidden = true;
+    notification.classList.remove('is-closing');
+  }, getSettings().motion === 'off' ? 0 : 260);
+}
+
+function showSpiderWatchNotification(action) {
+  buildSpiderWatch();
+  const notification = document.getElementById('mn-spider-notification');
+  notification.querySelector('[data-sw-notice-label]').textContent = tr('arrival');
+  notification.querySelector('[data-sw-notice-earth]').textContent = action.destinationEarth;
+  notification.querySelector('[data-sw-notice-risk]').textContent = `${tr('risk')} // ${action.risk}`;
+  notification.querySelector('[data-sw-notice-location]').textContent = `${action.location} · ${action.destinationName}`;
+  window.clearTimeout(spiderWatchNotificationTimer);
+  notification.hidden = false;
+  notification.classList.remove('is-open', 'is-closing');
+  void notification.offsetWidth;
+  requestAnimationFrame(() => notification.classList.add('is-open'));
+  playSpiderWatchSound('arrival');
+  // Start the 260 ms exit animation early so the notice is fully gone at 4.5 seconds.
+  const exitLead = getSettings().motion === 'off' ? 0 : 260;
+  spiderWatchNotificationTimer = window.setTimeout(() => dismissSpiderWatchNotification(), 4500 - exitLead);
+}
+
+function consumeSpiderArrivalNotice() {
+  if (!pendingSpiderArrivalNotice) return;
+  const action = pendingSpiderArrivalNotice;
+  spiderWatchMode = 'arrived';
+  renderSpiderWatch();
+  showSpiderWatchNotification(action);
+  pendingSpiderArrivalNotice = null;
+}
+
+async function registerSpiderWatchSlashCommand() {
+  if (spiderWatchCommandRegistered) return;
+  try {
+    const [{ SlashCommandParser }, { SlashCommand }] = await Promise.all([
+      import('../../../slash-commands/SlashCommandParser.js'),
+      import('../../../slash-commands/SlashCommand.js'),
+    ]);
+    const existing = SlashCommandParser.commands?.find?.(command => command?.name === 'spiderwatch')
+      || SlashCommandParser.commands?.get?.('spiderwatch');
+    if (!existing) {
+      SlashCommandParser.addCommandObject(SlashCommand.fromProps({
+        name: 'spiderwatch',
+        callback: async () => { openSpiderWatch(); return ''; },
+        helpString: 'Open the Marvel Nexus Spider Watch dimensional travel interface.',
+      }));
+    }
+    spiderWatchCommandRegistered = true;
+  } catch (error) {
+    console.warn('[Marvel Nexus] Could not register /spiderwatch.', error);
+  }
+}
+
 function aiState(state) {
   return {
     activePersonaName: currentPersonaName(),
@@ -223,6 +626,7 @@ function promptInstructions(state) {
     'Knowledge isolation is mandatory. An NPC or faction may only act on information its contact.knowledge entries confirm or information witnessed in the current scene. Never leak the player identity, powers, inventory, mission, location, timeline, relationships, or other NPC secrets across knowledge boundaries.',
     'Only store evidence, timeline records, anomalies, variants, faction intelligence and archive records already discovered by the player. A hidden mission objective may be stored with hidden:true and revealed:false, but do not render or expose it in visible narration until revealed by the story.',
     'For every pending advance_time action, narratively process the requested passage of time, update world.date/world.time and any consequences supported by the story, then copy that action id into ackActions. Do not acknowledge an action you did not process.',
+    'Spider Watch travel is resolved locally before generation. Treat operator.earth, operator.location, world.locationPath, the newest dimensional-travel timeline event, anomaly route, and discovered-Earth archive record as canonical. Narrate from the new Earth and never revert the completed arrival unless the story confirms another journey.',
     'Health and energy are controlled by story context only. Never ask for manual damage, energy, or recovery controls.',
     'Keep the patch compact. Never show the patch, schema, full state, Markdown fence, or system explanation in visible text.',
     '</marvel_nexus_state>',
@@ -608,7 +1012,7 @@ function renderWorld(state) {
   const nearby = new Set(state.world.nearbyContacts);
   for (const contact of syncedContacts(state)) if (currentLocation && currentLocation !== 'unknown' && contactIdentity(contact.location) === currentLocation) nearby.add(contact.name);
   root.querySelector('#mn-nearby-contacts').innerHTML = nearby.size ? `<b>${escapeHtml(tr('nearby'))}</b>${[...nearby].map(name => `<span><strong>${escapeHtml(name)}</strong></span>`).join('')}` : '';
-  root.querySelector('#mn-pending-actions').innerHTML = state.pendingActions.length ? `<div class="mn-pending"><b>${escapeHtml(tr('pending'))}</b>${state.pendingActions.map(action => `<span>${action.amount} ${escapeHtml(tr(action.unit))}</span>`).join('')}</div>` : '';
+  root.querySelector('#mn-pending-actions').innerHTML = state.pendingActions.length ? `<div class="mn-pending"><b>${escapeHtml(tr('pending'))}</b>${state.pendingActions.map(action => action.type === 'spider_travel' ? `<span>Spider Watch · ${escapeHtml(action.destinationEarth)}</span>` : `<span>${action.amount} ${escapeHtml(tr(action.unit))}</span>`).join('')}</div>` : '';
   root.querySelector('#mn-incidents').innerHTML = state.world.incidents.length ? state.world.incidents.map(incident => `<div class="mn-incident"><span>${escapeHtml(incident.threat)}</span><div><strong>${escapeHtml(incident.title)}</strong><small>${escapeHtml(incident.detail)}</small></div><b>${escapeHtml(incident.eta)}</b></div>`).join('') : `<p class="mn-empty">—</p>`;
   const timelineLedger = root.querySelector('#mn-timeline-ledger');
   timelineLedger.classList.toggle('is-empty', state.timelineEvents.length === 0);
@@ -670,6 +1074,7 @@ function observeWandMenu() { if (createWandLauncher() || menuObserver) return; m
 
 function bindCheckbox(id, key, callback) { const input = document.getElementById(id); if (!(input instanceof HTMLInputElement)) return; input.checked = Boolean(getSettings()[key]); input.addEventListener('change', () => { getSettings()[key] = input.checked; context().saveSettingsDebounced(); callback?.(); }); }
 function bindSelect(id, key, callback) { const input = document.getElementById(id); if (!(input instanceof HTMLSelectElement)) return; input.value = getSettings()[key]; input.addEventListener('change', () => { getSettings()[key] = input.value; context().saveSettingsDebounced(); callback?.(); }); }
+function bindRange(id, key, outputId) { const input = document.getElementById(id); const output = document.getElementById(outputId); if (!(input instanceof HTMLInputElement)) return; const sync = () => { const value = number(input.value, DEFAULT_SETTINGS[key], 0, 100); getSettings()[key] = value; if (output) output.textContent = `${value}%`; }; input.value = String(getSettings()[key]); sync(); input.addEventListener('input', sync); input.addEventListener('change', () => { sync(); context().saveSettingsDebounced(); playSpiderWatchSound('tap'); }); }
 async function addSettingsDrawer() {
   if (document.getElementById('marvel-nexus-settings')) return;
   const container = document.getElementById('extensions_settings2'); if (!container) throw new Error('Extensions settings container not found.');
@@ -682,16 +1087,18 @@ async function addSettingsDrawer() {
   bindSelect('marvel-nexus-language','language',() => { localize(); render(); });
   bindSelect('marvel-nexus-motion','motion',applyAppearance);
   bindSelect('marvel-nexus-density','density',applyAppearance);
+  bindCheckbox('marvel-nexus-watch-sounds','watchSounds');
+  bindRange('marvel-nexus-watch-volume','watchVolume','marvel-nexus-watch-volume-value');
   document.getElementById('marvel-nexus-open-settings')?.addEventListener('click',openInterface);
   document.getElementById('marvel-nexus-reset-chat')?.addEventListener('click',async () => { if (!context().getCurrentChatId?.()) return notify('warning',tr('openChat')); if (!window.confirm(tr('resetConfirm'))) return; await persistState(defaultState(),'reset'); notify('success',tr('resetDone')); });
 }
 
 function bindChatEvents() {
   const { eventSource, eventTypes } = context();
-  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
-  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
-  eventSource.on(eventTypes.MESSAGE_RECEIVED, (messageId,generationType) => processAssistantPatch(messageId,generationType));
-  if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, (messageId,generationType) => processAssistantPatch(messageId,generationType));
+  eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; pendingSpiderArrivalNotice=null; spiderWatchMode='home'; spiderWatchSelection=null; closeSpiderWatch(); clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
+  if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { void finalizeSpiderTravel(); updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
+  eventSource.on(eventTypes.MESSAGE_RECEIVED, async (messageId,generationType) => { await processAssistantPatch(messageId,generationType); consumeSpiderArrivalNotice(); });
+  if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, async (messageId,generationType) => { await processAssistantPatch(messageId,generationType); consumeSpiderArrivalNotice(); });
   if (eventTypes.MESSAGE_EDITED) eventSource.on(eventTypes.MESSAGE_EDITED, messageId => processAssistantPatch(Number(messageId), 'edit'));
   if (eventTypes.MESSAGE_SWIPED) eventSource.on(eventTypes.MESSAGE_SWIPED, messageId => processAssistantPatch(Number(messageId), 'swipe'));
   if (eventTypes.GENERATION_STARTED) eventSource.on(eventTypes.GENERATION_STARTED, () => updatePrompt());
@@ -707,7 +1114,7 @@ function refreshCharacterLifeContacts() {
 async function initialize() {
   if (initialized) return; initialized = true;
   try {
-    getSettings(); buildInterface(); await addSettingsDrawer(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
+    getSettings(); buildInterface(); buildSpiderWatch(); await addSettingsDrawer(); await registerSpiderWatchSlashCommand(); observeWandMenu(); bindChatEvents(); updatePrompt(); render();
     globalThis.addEventListener('character-life:rpg-bridge-ready', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:rpg-compatibility-updated', refreshCharacterLifeContacts);
     globalThis.addEventListener('character-life:portrait-replaced', refreshCharacterLifeContacts);
@@ -718,7 +1125,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.0.3 loaded.');
+    console.info('[Marvel Nexus] Extension v2.1.0 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 
