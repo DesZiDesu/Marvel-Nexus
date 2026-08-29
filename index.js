@@ -570,11 +570,26 @@ function renderContacts(state) {
   root.querySelectorAll('[data-contact]').forEach(button => button.addEventListener('click', () => { selectedContact = button.dataset.contact; renderContacts(state); }));
   const contact = contacts.find(item => item.id === selectedContact);
   root.querySelector('#mn-contact-detail').innerHTML = contact ? `<div class="mn-panel-head"><div><h3>${escapeHtml(contact.name)}</h3><small>${escapeHtml(contact.meta)}</small></div><span class="mn-badge">${escapeHtml(contact.status)}</span></div>${contact.__characterLife ? `<div class="mn-source-strip"><span>${escapeHtml(tr('source'))}: ${escapeHtml(tr('characterLife'))}</span><button type="button" class="mn-text-button" data-open-dossier>${escapeHtml(tr('dossier'))}</button></div><div class="mn-contact-facts">${[[tr('relationship'),contact.relationship || '—'],[tr('location'),contact.location || '—'],[tr('lifeStatus'),contact.__characterLife.lifeStatus || '—'],[tr('activeForm'),contact.__characterLife.activeForm || '—']].map(([label,value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`).join('')}</div>` : `<div class="mn-source-strip"><span>${escapeHtml(tr('source'))}: Marvel Nexus</span></div>`}<div class="mn-metric-grid">${metric(tr('trust'),contact.trust)}${metric(tr('suspicion'),contact.suspicion,'#d59f53')}${metric(tr('respect'),contact.respect,'#48a8e8')}${metric(tr('fear'),contact.fear,'#9a7de0')}</div><div class="mn-knowledge"><h4>${escapeHtml(tr('knowledge'))}</h4>${contact.knowledge.length ? contact.knowledge.map(item => `<div><span>${escapeHtml(item.label)}${item.source ? `<small>${escapeHtml(item.source)}</small>` : ''}</span><b>${escapeHtml(tr(item.state))}</b></div>`).join('') : '<p class="mn-empty">—</p>'}</div>` : `<p class="mn-empty">${escapeHtml(tr('contacts'))}: —</p>`;
-  root.querySelector('[data-open-dossier]')?.addEventListener('click', () => {
+  root.querySelector('[data-open-dossier]')?.addEventListener('click', async () => {
     const bridge = characterLifeBridge();
-    if (!bridge?.openNpcLibrary) return;
-    closeInterface();
-    requestAnimationFrame(() => bridge.openNpcLibrary(contact.__characterLife));
+    const opener = bridge?.openNpcDossier || bridge?.openNpcLibrary;
+    if (typeof opener !== 'function') {
+      notify('warning', 'Character Life dossier is unavailable.');
+      return;
+    }
+    try {
+      const result = await Promise.resolve(opener(contact.__characterLife));
+      const opened = result === true || result?.opened === true
+        || document.getElementById('character-life-overlay')?.classList.contains('is-open');
+      if (!opened) {
+        notify('warning', result?.reason === 'npc-not-found' ? 'Character Life could not find this NPC.' : 'Character Life dossier could not open.');
+        return;
+      }
+      closeInterface();
+    } catch (error) {
+      console.warn('[Marvel Nexus] Character Life dossier could not open.', error);
+      notify('warning', 'Character Life dossier could not open.');
+    }
   });
   void hydrateContactPortraits(contacts);
 }
@@ -703,7 +718,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.0.2 loaded.');
+    console.info('[Marvel Nexus] Extension v2.0.3 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 
