@@ -4,7 +4,10 @@ const EXTENSION_FOLDER = 'third-party/Marvel-Nexus';
 const SETTINGS_KEY = 'marvel_nexus';
 const METADATA_KEY = 'marvel_nexus_state';
 const PROMPT_KEY = 'marvel_nexus_roleplay_state';
-const PATCH_PATTERN = /<!--\s*MARVEL_NEXUS_PATCH\s*([\s\S]*?)\s*MARVEL_NEXUS_PATCH\s*-->/gi;
+const PATCH_PATTERNS = [
+  /\[MARVEL_NEXUS_PATCH\]([\s\S]*?)\[\/MARVEL_NEXUS_PATCH\]/gi,
+  /<!--\s*MARVEL_NEXUS_PATCH\s*([\s\S]*?)\s*MARVEL_NEXUS_PATCH\s*-->/gi,
+];
 
 const DEFAULT_SETTINGS = Object.freeze({
   enabled: true,
@@ -74,10 +77,17 @@ const number = (value, fallback = 0, min = 0, max = 999999) => Number.isFinite(N
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const context = () => SillyTavern.getContext();
 
+function currentPersonaName() {
+  try { return text(context()?.name1, 'User', 100) || 'User'; }
+  catch { return 'User'; }
+}
+
 function defaultState() {
+  const personaName = currentPersonaName();
   return {
     version: 2,
-    operator: { name: 'Unregistered Operator', alias: 'Unassigned', role: 'Independent Operative', origin: 'Unknown', affiliation: 'Unaffiliated', condition: 'Stable', location: 'Unknown', earth: 'Earth-616', continuity: 'Hybrid', timeline: 'Open Chronicle' },
+    personaName,
+    operator: { name: personaName, alias: 'Unassigned', role: 'Independent Operative', origin: 'Unknown', affiliation: 'Unaffiliated', condition: 'Stable', location: 'Unknown', earth: 'Earth-616', continuity: 'Hybrid', timeline: 'Open Chronicle' },
     identity: { secrecy: 'Protected', exposure: 0, publicStatus: 'Unknown' },
     vitals: { health: 1000, healthMax: 1000, energy: 800, energyMax: 800, suitIntegrity: 100, fatigue: 0 },
     powers: [], contacts: [], identityWitnesses: [], factions: [], evidence: [], missions: [],
@@ -106,8 +116,15 @@ function normalizeItem(item, type) {
 
 function normalize(source = {}, base = defaultState()) {
   const out = structuredClone(base);
+  const personaName = currentPersonaName();
+  const previousPersonaName = text(source.personaName, out.personaName || personaName, 100);
+  out.personaName = personaName;
   const operator = source.operator && typeof source.operator === 'object' ? source.operator : {};
   for (const key of Object.keys(out.operator)) out.operator[key] = text(operator[key], out.operator[key], key === 'name' ? 100 : 160);
+  const savedOperatorName = text(operator.name, '', 100);
+  if (!savedOperatorName || /^(?:unregistered operator|user|player)$/i.test(savedOperatorName) || savedOperatorName === previousPersonaName) {
+    out.operator.name = personaName;
+  }
   const identity = source.identity && typeof source.identity === 'object' ? source.identity : {};
   out.identity.secrecy = text(identity.secrecy, out.identity.secrecy, 80);
   out.identity.exposure = number(identity.exposure, out.identity.exposure, 0, 100);
@@ -177,6 +194,7 @@ function notify(type, message) {
 
 function aiState(state) {
   return {
+    activePersonaName: currentPersonaName(),
     operator: state.operator, identity: state.identity, identityWitnesses: state.identityWitnesses, vitals: state.vitals,
     powers: state.powers.map(({ id, name, mastery }) => ({ id, name, mastery })),
     contacts: state.contacts.slice(0, 30), factions: state.factions.slice(0, 30), evidence: state.evidence.slice(-40), missions: state.missions,
@@ -189,14 +207,16 @@ function hasUserReply() {
 }
 
 function promptInstructions(state) {
+  const personaName = currentPersonaName();
   return [
     '<marvel_nexus_state>',
+    `The active SillyTavern user persona is ${JSON.stringify(personaName)}. This exact person is the player/operator. Use that name in narration and machine updates; never replace it with User, Player, Operator, or a placeholder.`,
     'This is the canonical Marvel role-play interface state. Preserve it unless the current normal role-play reply confirms a change.',
     JSON.stringify(aiState(state)),
-    'After the visible role-play reply, append one invisible HTML comment when confirmed state changes OR pendingActions is non-empty:',
-    '<!--MARVEL_NEXUS_PATCH {"ops":[["set","identity.exposure",35],["upsert","timelineEvents",{"id":"event-id","title":"...","date":"...","earth":"Earth-616"}]],"ackActions":["action-id"],"summary":"Short update"} MARVEL_NEXUS_PATCH-->',
+    'After the visible role-play reply, append exactly one machine block whenever this reply confirms any state change OR pendingActions is non-empty. This block is required for confirmed changes:',
+    '[MARVEL_NEXUS_PATCH]{"ops":[["set","identity.exposure",35],["upsert","timelineEvents",{"id":"event-id","title":"...","date":"...","earth":"Earth-616"}]],"ackActions":["action-id"],"summary":"Short update"}[/MARVEL_NEXUS_PATCH]',
     'Allowed scalar paths: operator.name, operator.alias, operator.role, operator.origin, operator.affiliation, operator.condition, operator.location, operator.earth, operator.continuity, operator.timeline, identity.secrecy, identity.exposure, identity.publicStatus, vitals.health, vitals.healthMax, vitals.energy, vitals.energyMax, vitals.suitIntegrity, vitals.fatigue, world.date, world.time, world.multiverse, world.locationPath, world.previousLocation, world.travelStatus, world.destination, world.eta, world.nearbyContacts.',
-    'Allowed collection paths with upsert or delete: powers, contacts, identityWitnesses, factions, evidence, missions, world.incidents, timelineEvents, continuityIssues, anomalies, archive. Preserve an existing id when updating it.',
+    'Allowed collection paths with upsert or delete: powers, contacts, identityWitnesses, factions, evidence, missions, world.incidents, timelineEvents, continuityIssues, anomalies, archive. Preserve an existing id when updating it. For new items, provide a short stable id; if omitted, Marvel Nexus will derive one from the item identity.',
     'Collection item shapes: contacts {id,name,meta,status,location,relationship,trust,suspicion,respect,fear,knowledge:[{label,state:unknown|suspected|confirmed,source,learnedAt}]}; identityWitnesses {id,name,kind:person|faction|public,level:suspected|confirmed,evidence}; factions {id,name,stance,reputation:-100..100,hostility,awareness,influence,detail}; evidence {id,title,kind:fact|theory|contradiction,detail,confidence,links,discoveredAt}; missions {id,title,issuer,description,status,threat,deadline,successConsequence,failureConsequence,linkedFaction,linkedLocation,linkedContacts,objectives:[{text,done,hidden,revealed}],reward}; timelineEvents {id,title,detail,date,time,earth,location,type,impact}; continuityIssues {id,title,detail,severity:low|medium|high|critical,status,related}; anomalies {id,title,type,originEarth,currentEarth,risk,status,detail,variants}. Percent fields use 0..100.',
     'Allowed verbs are set, inc, upsert, delete. Record only outcomes confirmed by this completed reply; never record plans, questions, failed attempts, hypotheticals, or information hidden from the player.',
     'Evaluate every system once from this reply: identity exposure and who knows it; status/vitals/abilities; each NPC relationship and compartmentalized knowledge; faction reputation/hostility/awareness/influence; discovered facts/theories/contradictions; mission deadlines, threat, consequences and revealed objectives; travel/location/nearby contacts; timeline events and continuity conflicts; incidents; discovered multiverse anomalies/variants/incursion risk; archive facts.',
@@ -245,9 +265,13 @@ function applyPatch(state, patch) {
     } else if ((verb === 'upsert' || verb === 'delete') && COLLECTIONS[path]) {
       const collection = getPath(next, path);
       if (!Array.isArray(collection)) continue;
-      const id = text(value?.id ?? value, '', 80);
+      const identity = text(value?.name || value?.title, '', 140).toLocaleLowerCase();
+      let id = text(value?.id ?? (typeof value === 'string' ? value : ''), '', 80);
+      let index = id ? collection.findIndex(item => item.id === id) : -1;
+      if (index < 0 && identity) index = collection.findIndex(item => text(item?.name || item?.title, '', 140).toLocaleLowerCase() === identity);
+      if (!id && index >= 0) id = collection[index].id;
+      if (!id && verb === 'upsert' && identity) id = `${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}-${identity.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 45) || uid()}`;
       if (!id) continue;
-      const index = collection.findIndex(item => item.id === id);
       if (verb === 'delete') { if (index >= 0) { collection.splice(index, 1); accepted++; } continue; }
       const normalized = normalizeItem({ ...(index >= 0 ? collection[index] : {}), ...value, id }, COLLECTIONS[path]);
       if (!normalized) continue;
@@ -262,11 +286,16 @@ function applyPatch(state, patch) {
 
 function extractPatch(message) {
   const patches = [];
-  const visible = String(message).replace(PATCH_PATTERN, (_match, payload) => {
-    try { const parsed = JSON.parse(payload.trim()); if (parsed && typeof parsed === 'object') patches.push(parsed); }
-    catch (error) { console.warn('[Marvel Nexus] Ignored malformed patch.', error); }
-    return '';
-  }).trimEnd();
+  let visible = String(message);
+  for (const pattern of PATCH_PATTERNS) {
+    pattern.lastIndex = 0;
+    visible = visible.replace(pattern, (_match, payload) => {
+      try { const parsed = JSON.parse(payload.trim().replace(/^```(?:json)?\s*|\s*```$/gi, '')); if (parsed && typeof parsed === 'object') patches.push(parsed); }
+      catch (error) { console.warn('[Marvel Nexus] Ignored malformed patch.', error); }
+      return '';
+    });
+  }
+  visible = visible.trimEnd();
   if (!patches.length) return { visible, found: false, patch: null };
   return { visible, found: true, patch: { ops: patches.flatMap(item => Array.isArray(item.ops) ? item.ops : []).slice(0, 100), ackActions: patches.flatMap(item => Array.isArray(item.ackActions) ? item.ackActions : []).slice(0, 20), summary: patches.map(item => text(item.summary, '', 200)).filter(Boolean).join('; ') } };
 }
@@ -645,6 +674,10 @@ function bindChatEvents() {
   eventSource.on(eventTypes.CHAT_CHANGED, () => { selectedContact=''; selectedArchive=''; clearContactPortraitCache(); updatePrompt(); render(); setSync(hasUserReply() ? 'ready' : 'waiting'); });
   if (eventTypes.MESSAGE_SENT) eventSource.on(eventTypes.MESSAGE_SENT, () => { updatePrompt(); if (getSettings().aiSync) setSync('checking'); });
   eventSource.on(eventTypes.MESSAGE_RECEIVED, (messageId,generationType) => processAssistantPatch(messageId,generationType));
+  if (eventTypes.CHARACTER_MESSAGE_RENDERED) eventSource.on(eventTypes.CHARACTER_MESSAGE_RENDERED, (messageId,generationType) => processAssistantPatch(messageId,generationType));
+  if (eventTypes.MESSAGE_EDITED) eventSource.on(eventTypes.MESSAGE_EDITED, messageId => processAssistantPatch(Number(messageId), 'edit'));
+  if (eventTypes.MESSAGE_SWIPED) eventSource.on(eventTypes.MESSAGE_SWIPED, messageId => processAssistantPatch(Number(messageId), 'swipe'));
+  if (eventTypes.GENERATION_STARTED) eventSource.on(eventTypes.GENERATION_STARTED, () => updatePrompt());
 }
 
 function refreshCharacterLifeContacts() {
@@ -668,7 +701,7 @@ async function initialize() {
       const modal = document.querySelector('#marvel-nexus-overlay .mn-modal:not([hidden])');
       if (modal) closeModal(modal); else closeInterface();
     });
-    console.info('[Marvel Nexus] Extension v2.0.0 loaded.');
+    console.info('[Marvel Nexus] Extension v2.0.1 loaded.');
   } catch (error) { initialized = false; console.error('[Marvel Nexus] Failed to initialize.',error); notify('error','Marvel Nexus could not load. Check the browser console.'); }
 }
 
