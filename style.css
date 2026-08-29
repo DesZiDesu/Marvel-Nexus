@@ -269,6 +269,8 @@ body.marvel-nexus-open { overflow: hidden !important; }
 .mn-incident > b { color: var(--mn-gold); font-size: 10px; }
 .mn-timeline-ledger { position: relative; display: grid; gap: 0; padding-left: 12px; }
 .mn-timeline-ledger::before { content: ""; position: absolute; top: 0; bottom: 0; left: 88px; width: 1px; background: var(--mn-line); }
+.mn-timeline-ledger.is-empty { padding-left: 0; }
+.mn-timeline-ledger.is-empty::before { display: none; }
 .mn-timeline-entry { position: relative; display: grid; grid-template-columns: 70px minmax(0,1fr); gap: 20px; padding: 0 0 18px; }
 .mn-timeline-entry::before { content: ""; position: absolute; top: 13px; left: 72px; width: 9px; height: 9px; border: 1px solid var(--mn-gold); background: var(--mn-bg); transform: rotate(45deg); }
 .mn-timeline-entry > div { padding-top: 6px; text-align: right; }
